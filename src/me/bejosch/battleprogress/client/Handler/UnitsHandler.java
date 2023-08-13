@@ -2,14 +2,14 @@ package me.bejosch.battleprogress.client.Handler;
 
 import me.bejosch.battleprogress.client.Data.Game.UnitData;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class UnitsHandler {
 
 	public static void requestUnitsUpdate() {
 		
 		UnitData.units.clear();
-		ServerConnection.sendData(110, ServerConnection.getNewPacketId(), "Request Units update");
+		MinaClient.sendData(110, "Request Units update");
 		
 	}
 	

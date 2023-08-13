@@ -10,7 +10,7 @@ import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.TextFields.TextFields;
 
 public class MAA_OTW_Login_Login extends MouseActionArea {
@@ -52,7 +52,7 @@ public class MAA_OTW_Login_Login extends MouseActionArea {
 			return;
 		}
 		
-		ServerConnection.sendData(201, ServerConnection.getNewPacketId(), username+";"+password);
+		MinaClient.sendData(201, username+";"+password);
 		
 	}
 	

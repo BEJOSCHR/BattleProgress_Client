@@ -15,7 +15,7 @@ import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.Chat.ChatHistory;
 import me.bejosch.battleprogress.client.Objects.Chat.ChatMessage;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.TextFields.TextFields;
 
 public class MAA_OTW_PlayerChat_Send extends MouseActionArea {
@@ -51,7 +51,7 @@ public class MAA_OTW_PlayerChat_Send extends MouseActionArea {
 			ClientPlayer otherPlayer = ClientPlayerHandler.getNewClientPlayer(activeChat.getOtherPlayerID());
 			if(otherPlayer.getOnlineMin() != -1) {
 				//NOT OFFLINE
-				ServerConnection.sendData(140, ServerConnection.getNewPacketId(), activeChat.getOtherPlayerID()+";"+message);
+				MinaClient.sendData(140, activeChat.getOtherPlayerID()+";"+message);
 				activeChat.addMessage(new ChatMessage(ProfilData.thisClient.getID(), message));
 			}else {
 				//OFFLINE

@@ -10,7 +10,7 @@ import me.bejosch.battleprogress.client.Enum.FriendRequestStatus;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Objects.FriendRequest;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class MAA_OTW_FriendRequests_Accept extends MouseActionArea {
@@ -50,7 +50,7 @@ public class MAA_OTW_FriendRequests_Accept extends MouseActionArea {
 	public void performAction_LEFT_RELEASE() {
 		
 		FriendRequest request =  ProfilData.receivedFriendRequests.get(pos);
-		ServerConnection.sendData(137, ServerConnection.getNewPacketId(), request.getPlayerID()+""); //ANNEHMEN
+		MinaClient.sendData(137, request.getPlayerID()+""); //ANNEHMEN
 		request.setStatus(FriendRequestStatus.Accepted);
 		
 	}

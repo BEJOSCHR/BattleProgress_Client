@@ -7,7 +7,7 @@ import me.bejosch.battleprogress.client.Enum.SpielStatus;
 
 public class StandardData {
 
-	public static final String clientVersion = "1.0.3 [Alpha]";
+	public static final String clientVersion = "1.0.4 [Alpha]";
 	
 	public static final int mapWidth = 60;
 	public static final int mapHight = 60;
@@ -20,8 +20,8 @@ public class StandardData {
 	private static final int HQwallDistance = 15;
 	
 	public static final Point HQ_1_1vs1 = new Point(HQwallDistance-1, HQwallDistance-1), HQ_2_1vs1 = new Point(mapWidth-HQwallDistance, mapHight-HQwallDistance);
-							  //TEAM 1 - Links																//TEAM 2 - Rechts
-	public static final Point HQ_1_2vs2 = new Point(HQwallDistance-1, HQwallDistance-1), 					HQ_3_2vs2 = new Point(mapWidth-HQwallDistance, mapHight-HQwallDistance), 
+							  //TEAM 1 - Links														//TEAM 2 - Rechts
+	public static final Point HQ_1_2vs2 = new Point(HQwallDistance-1, HQwallDistance-1), 			HQ_3_2vs2 = new Point(mapWidth-HQwallDistance, mapHight-HQwallDistance), 
 							  HQ_2_2vs2 = new Point(HQwallDistance-1, mapHight-HQwallDistance) , 	HQ_4_2vs2 = new Point(mapWidth-HQwallDistance, HQwallDistance-1);
 	
 	public static final String messagePrefix = "[BP] ";

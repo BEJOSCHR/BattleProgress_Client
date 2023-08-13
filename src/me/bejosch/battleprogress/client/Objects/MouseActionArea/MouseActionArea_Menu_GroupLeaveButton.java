@@ -10,7 +10,7 @@ import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MouseActionArea_Menu_GroupLeaveButton extends MouseActionArea {
 	
@@ -31,7 +31,7 @@ public class MouseActionArea_Menu_GroupLeaveButton extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		ServerConnection.sendData(304, ServerConnection.getNewPacketId(), "");
+		MinaClient.sendData(304, "");
 		
 		super.performAction_LEFT_RELEASE();
 	}

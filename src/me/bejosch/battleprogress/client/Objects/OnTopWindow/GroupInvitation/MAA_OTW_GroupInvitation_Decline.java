@@ -9,7 +9,7 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MAA_OTW_GroupInvitation_Decline extends MouseActionArea {
 	
@@ -43,7 +43,7 @@ public class MAA_OTW_GroupInvitation_Decline extends MouseActionArea {
 		
 		//SEND DECLINE
 		OnTopWindow_GroupInvitation otw = (OnTopWindow_GroupInvitation) OnTopWindowData.onTopWindow;
-		ServerConnection.sendData(302, ServerConnection.getNewPacketId(), ""+otw.inviter.getID());
+		MinaClient.sendData(302, ""+otw.inviter.getID());
 		OnTopWindowHandler.closeOTW();
 		
 	}

@@ -12,7 +12,7 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.TextFields.TextFields;
 
 public class MAA_OTW_FriendAdd_Add extends MouseActionArea {
@@ -72,7 +72,7 @@ public class MAA_OTW_FriendAdd_Add extends MouseActionArea {
 						return;
 					}
 				}
-				ServerConnection.sendData(136, ServerConnection.getNewPacketId(), username+"");
+				MinaClient.sendData(136, username+"");
 				((OnTopWindow_FriendAdd) OnTopWindowData.onTopWindow).nameErrorMessage = "";
 			}else {
 				//INVALID

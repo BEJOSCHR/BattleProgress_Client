@@ -6,14 +6,14 @@ import java.awt.Graphics;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
 
 public class FieldMessage {
 
-	public int ID = 0; //JUST AN ID FOR COMPARING FIELD MESSAGES
+	public long ID = 0; //JUST AN ID FOR COMPARING FIELD MESSAGES
 	
 	public String message = null;
 	public int fieldX = 0, fieldY = 0;
@@ -27,7 +27,7 @@ public class FieldMessage {
 	 */
 	public FieldMessage(String message_, int fieldX_, int fieldY_, int displayDurationInSec_) {
 		
-		this.ID = ServerConnection.getNewPacketId();
+		this.ID = ConnectionData.getNewPacketId();
 		this.message = message_;
 		this.fieldX = fieldX_;
 		this.fieldY = fieldY_;

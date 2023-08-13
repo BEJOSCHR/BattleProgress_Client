@@ -17,6 +17,7 @@ import me.bejosch.battleprogress.client.DiscordAPI.DiscordAPI;
 import me.bejosch.battleprogress.client.Enum.BuildMenuType;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.GenerelIconType;
+import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.TimeManager;
@@ -28,9 +29,11 @@ import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameStartDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
+import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.Field_Ressource;
+import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea_ActionbarMainBox;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea_ActionbarTask;
@@ -47,7 +50,7 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseAc
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseActionArea_Checkbox_SkipAllTaskDisplays;
 import me.bejosch.battleprogress.client.Objects.Tasks.BuildMenuTasks.BuildMenuTask;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class GameHandler {
@@ -111,7 +114,7 @@ public class GameHandler {
 	public static void requestStartGame() {
 		
 		//ONLY CUSTOM GAME
-		ServerConnection.sendData(107, ServerConnection.getNewPacketId(), GameData.gameID+"");
+		MinaClient.sendData(107, GameData.gameID+"");
 		
 	}
 	
@@ -188,10 +191,10 @@ public class GameHandler {
 		//1vs1
 		if(SpielModus.isGameModus1v1()) {
 			if(GameData.playingPlayer[0].getID() == ProfilData.thisClient.getID()) {
-				ServerConnection.sendData(621, ServerConnection.getNewPacketId(), "Headquarter"+";"+StandardData.HQ_1_1vs1.x+";"+StandardData.HQ_1_1vs1.y);
+				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_1_1vs1.x+";"+StandardData.HQ_1_1vs1.y);
 				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_1_1vs1.x, StandardData.HQ_1_1vs1.y); //MOVE SCREEN TO FOCUS HQ
 			}else if(GameData.playingPlayer[1].getID() == ProfilData.thisClient.getID()) {
-				ServerConnection.sendData(621, ServerConnection.getNewPacketId(), "Headquarter"+";"+StandardData.HQ_2_1vs1.x+";"+StandardData.HQ_2_1vs1.y);
+				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_2_1vs1.x+";"+StandardData.HQ_2_1vs1.y);
 				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_2_1vs1.x, StandardData.HQ_2_1vs1.y); //MOVE SCREEN TO FOCUS HQ
 			}else {
 				ConsoleOutput.printMessageInConsole("Could not create HQ on game start (1vs1)! ClientID: "+ProfilData.thisClient.getID(), true);
@@ -199,16 +202,16 @@ public class GameHandler {
 		//2vs2
 		}else {
 			if(GameData.playingPlayer[0].getID() == ProfilData.thisClient.getID()) {
-				ServerConnection.sendData(621, ServerConnection.getNewPacketId(), "Headquarter"+";"+StandardData.HQ_1_2vs2.x+";"+StandardData.HQ_1_2vs2.y);
+				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_1_2vs2.x+";"+StandardData.HQ_1_2vs2.y);
 				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_1_2vs2.x, StandardData.HQ_1_2vs2.y); //MOVE SCREEN TO FOCUS HQ
 			}else if(GameData.playingPlayer[1].getID() == ProfilData.thisClient.getID()) {
-				ServerConnection.sendData(621, ServerConnection.getNewPacketId(), "Headquarter"+";"+StandardData.HQ_2_2vs2.x+";"+StandardData.HQ_2_2vs2.y);
+				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_2_2vs2.x+";"+StandardData.HQ_2_2vs2.y);
 				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_2_2vs2.x, StandardData.HQ_2_2vs2.y); //MOVE SCREEN TO FOCUS HQ
 			}else if(GameData.playingPlayer[2].getID() == ProfilData.thisClient.getID()) {
-				ServerConnection.sendData(621, ServerConnection.getNewPacketId(), "Headquarter"+";"+StandardData.HQ_3_2vs2.x+";"+StandardData.HQ_3_2vs2.y);
+				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_3_2vs2.x+";"+StandardData.HQ_3_2vs2.y);
 				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_3_2vs2.x, StandardData.HQ_3_2vs2.y); //MOVE SCREEN TO FOCUS HQ
 			}else if(GameData.playingPlayer[3].getID() == ProfilData.thisClient.getID()) {
-				ServerConnection.sendData(621, ServerConnection.getNewPacketId(), "Headquarter"+";"+StandardData.HQ_4_2vs2.x+";"+StandardData.HQ_4_2vs2.y);
+				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_4_2vs2.x+";"+StandardData.HQ_4_2vs2.y);
 				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_4_2vs2.x, StandardData.HQ_4_2vs2.y); //MOVE SCREEN TO FOCUS HQ
 			}else {
 				ConsoleOutput.printMessageInConsole("Could not create HQ on game start (2vs2)! ClientID: "+ProfilData.thisClient.getID(), true);
@@ -402,6 +405,36 @@ public class GameHandler {
 				return null;
 			}catch(ConcurrentModificationException error) { }
 		}
+		
+	}
+	
+	/**
+	 * Creates a Building - Only Used for HQ placement at the start of the game (Normal build method: ExecuteTask_Build)
+	 * @param playerID - {@link Integer} - The id of the player who build it
+	 * @param buildingName - String - The name of the building, is used for identification which building will be created 
+	 * @param X - int - The X-Coordinate of the field
+	 * @param Y - int - The Y-Coordinate of the field
+	 */
+	public static void createBuilding(int playerID, String buildingName, int X, int Y) {
+		
+		Field targetField = GameData.gameMap_FieldList[X][Y];
+		if(targetField == null) { 
+			ConsoleOutput.printMessageInConsole("A createBuilding packet found no targetField for the coordinates '"+X+":"+Y+"'!", true);
+			return; 
+		}
+		
+		new InfoMessage_Located(buildingName+" has been build", ImportanceType.NORMAL, targetField.X, targetField.Y, true);
+		
+		switch (buildingName) {
+		case "Headquarter":
+			new Building_Headquarter(playerID, targetField);
+			break;
+		default:
+			ConsoleOutput.printMessageInConsole("A createBuilding packet found no building for the buildingName '"+buildingName+"'!", true);
+			break;
+		}
+		
+		GameHandler.updateViewAndBuildArea();
 		
 	}
 	

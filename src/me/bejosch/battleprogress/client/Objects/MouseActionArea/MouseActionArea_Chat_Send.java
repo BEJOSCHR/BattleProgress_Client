@@ -7,7 +7,7 @@ import java.awt.Graphics;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.TextFields.TextFields;
 
 public class MouseActionArea_Chat_Send extends MouseActionArea {
@@ -32,7 +32,7 @@ public class MouseActionArea_Chat_Send extends MouseActionArea {
 				message = message.substring(0, 99);
 			}
 			message = Funktions.checkStringForByteUse(message);
-			ServerConnection.sendData(660, ServerConnection.getNewPacketId(), message);
+			MinaClient.sendData(660, message);
 			TextFields.textField_Chat.setText("");
 			
 		}

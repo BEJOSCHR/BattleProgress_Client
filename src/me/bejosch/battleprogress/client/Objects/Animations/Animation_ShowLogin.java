@@ -3,12 +3,12 @@ package me.bejosch.battleprogress.client.Objects.Animations;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.InfoMessage.OnTopWindow_InfoMessage;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Login.OnTopWindow_Login;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
 
 public class Animation_ShowLogin extends Animation {
 	
@@ -16,7 +16,7 @@ public class Animation_ShowLogin extends Animation {
 		super(AnimationType.ShowLogin);
 		
 		//START MENU INIT
-		if(ServerConnection.VerbundenZumServer == true) {
+		if(ConnectionData.serverConnectionEstablished == true) {
 			//CONNECTED - OPEN LOGIN
 			OnTopWindowHandler.openOTW(new OnTopWindow_Login());
 		}else {

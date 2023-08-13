@@ -9,7 +9,7 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MAA_OTW_GameAccept_Accept extends MouseActionArea {
 	
@@ -45,7 +45,7 @@ public class MAA_OTW_GameAccept_Accept extends MouseActionArea {
 		
 		//SEND ACCEPT
 		OnTopWindow_GameAccept otw = ((OnTopWindow_GameAccept) OnTopWindowData.onTopWindow);
-		ServerConnection.sendData(405, ServerConnection.getNewPacketId(), ""+otw.gameID);
+		MinaClient.sendData(405, ""+otw.gameID);
 		otw.accepted = true;
 		
 	}

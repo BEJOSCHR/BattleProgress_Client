@@ -52,7 +52,7 @@ import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Repair;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Upgrade;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_Commander;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class Game_RoundHandler {
 	
@@ -91,7 +91,7 @@ public class Game_RoundHandler {
 		GameData.hoveredField = null;
 		
 		//Sent ready packet
-		ServerConnection.sendData(650, ServerConnection.getNewPacketId(), ProfilData.thisClient.getID()+"; READY [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
+		MinaClient.sendData(650, ProfilData.thisClient.getID()+"; READY [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
 		
 	}
 //==========================================================================================================
@@ -108,7 +108,7 @@ public class Game_RoundHandler {
 		RoundData.clientIsReadyForThisRound = false;
 		
 		//Sent not ready packet
-		ServerConnection.sendData(651, ServerConnection.getNewPacketId(), ProfilData.thisClient.getID()+"; UNREADY [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
+		MinaClient.sendData(651, ProfilData.thisClient.getID()+"; UNREADY [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
 		
 	}
 	
@@ -827,28 +827,28 @@ public class Game_RoundHandler {
 				//ATTACK
 				// startX ; startY ; goalX ; goalY ; Count
 				String data_Building_Attack = task.building.connectedField.X+";"+task.building.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y+";"+task.building.damage;
-				ServerConnection.sendData(600, ServerConnection.getNewPacketId(), data_Building_Attack);
+				MinaClient.sendData(600, data_Building_Attack);
 			}else if(task instanceof Task_Building_Heal) {
 				//HEAL
 				// startX ; startY ; goalX ; goalY ; Count
 				String data_Building_Heal = task.building.connectedField.X+";"+task.building.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y+";"+task.building.heal;
-				ServerConnection.sendData(601, ServerConnection.getNewPacketId(), data_Building_Heal);
+				MinaClient.sendData(601, data_Building_Heal);
 			}else if(task instanceof Task_Building_Repair) {
 				//REPAIR
 				// startX ; startY ; goalX ; goalY ; Count
 				String data_Building_Repair = task.building.connectedField.X+";"+task.building.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y+";"+task.building.repair;
-				ServerConnection.sendData(601, ServerConnection.getNewPacketId(), data_Building_Repair);
+				MinaClient.sendData(601, data_Building_Repair);
 			}else if(task instanceof Task_Building_Produce) {
 				//PRODUCE
 				// troupName ; startX ; startY ; goalX ; goalY
 				String troupName = ((Task_Building_Produce) task).troupName;
 				String data_Building_Produce = troupName+";"+task.building.connectedField.X+";"+task.building.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y;
-				ServerConnection.sendData(603, ServerConnection.getNewPacketId(), data_Building_Produce);
+				MinaClient.sendData(603, data_Building_Produce);
 			}else if(task instanceof Task_Building_Destroy) {
 				//DESTROY
 				// goalX ; goalY
 				String data_Building_Destroy = task.building.connectedField.X+";"+task.building.connectedField.Y;
-				ServerConnection.sendData(605, ServerConnection.getNewPacketId(), data_Building_Destroy);
+				MinaClient.sendData(605, data_Building_Destroy);
 			}
 			RoundData.clientSentBuildingTasks++;
 		}
@@ -858,32 +858,32 @@ public class Game_RoundHandler {
 				//ATTACK
 				// startX ; startY ; goalX ; goalY ; Count
 				String data_Troup_Attack = task.troup.connectedField.X+";"+task.troup.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y+";"+task.troup.damage;
-				ServerConnection.sendData(600, ServerConnection.getNewPacketId(), data_Troup_Attack);
+				MinaClient.sendData(600, data_Troup_Attack);
 			}else if(task instanceof Task_Troup_Heal) {
 				//HEAL
 				// startX ; startY ; goalX ; goalY ; Count
 				String data_Troup_Heal = task.troup.connectedField.X+";"+task.troup.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y+";"+task.troup.heal;
-				ServerConnection.sendData(601, ServerConnection.getNewPacketId(), data_Troup_Heal);
+				MinaClient.sendData(601, data_Troup_Heal);
 			}else if(task instanceof Task_Troup_Repair) {
 				//REPAIR
 				// startX ; startY ; goalX ; goalY ; Count
 				String data_Troup_Repair = task.troup.connectedField.X+";"+task.troup.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y+";"+task.troup.repair;
-				ServerConnection.sendData(601, ServerConnection.getNewPacketId(), data_Troup_Repair);
+				MinaClient.sendData(601, data_Troup_Repair);
 			}else if(task instanceof Task_Troup_Move) {
 				//MOVE
 				// startX ; startY ; goalX ; goalY
 				String data_Troup_Move = task.troup.connectedField.X+";"+task.troup.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y;
-				ServerConnection.sendData(604, ServerConnection.getNewPacketId(), data_Troup_Move);
+				MinaClient.sendData(604, data_Troup_Move);
 			}else if(task instanceof Task_Troup_Remove) {
 				//REMOVE
 				// goalX ; goalY
 				String data_Troup_Remove = task.troup.connectedField.X+";"+task.troup.connectedField.Y;
-				ServerConnection.sendData(605, ServerConnection.getNewPacketId(), data_Troup_Remove);
+				MinaClient.sendData(605, data_Troup_Remove);
 			}else if(task instanceof Task_Troup_Upgrade) {
 				//UPGRADE
 				// upgradeTroupName ; startX ; startY ; goalX ; goalY
 				String data_Troup_Upgrade = ((Task_Troup_Upgrade) task).upgradeTroupName+";"+task.troup.connectedField.X+";"+task.troup.connectedField.Y+";"+task.targetCoordinates.X+";"+task.targetCoordinates.Y;
-				ServerConnection.sendData(606, ServerConnection.getNewPacketId(), data_Troup_Upgrade);
+				MinaClient.sendData(606, data_Troup_Upgrade);
 			}
 			RoundData.clientSentTroupTasks++;
 		}
@@ -893,14 +893,14 @@ public class Game_RoundHandler {
 			// buildingName ; goalX ; goalY
 			BuildMenuTask activeTask = GameData.currentActive_MAA_BuildingTask.connectedBuildingTask;
 			String data_Build = activeTask.name+";"+activeTask.targetCoordinate.X+";"+activeTask.targetCoordinate.Y;
-			ServerConnection.sendData(602, ServerConnection.getNewPacketId(), data_Build);
+			MinaClient.sendData(602, data_Build);
 		}
 		
 		//Send finish packet
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				ServerConnection.sendData(653, ServerConnection.getNewPacketId(), "All tasks sent [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
+				MinaClient.sendData(653, "All tasks sent [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
 			}
 		}, 1000*1); //SAVE DELAY
 		
@@ -968,7 +968,7 @@ public class Game_RoundHandler {
 							RoundData.roundStatusInfo = "Waiting for other player";
 							RoundData.currentActivePlayer = null;
 							RoundData.currentExecuteTask = null;
-							ServerConnection.sendData(654, ServerConnection.getNewPacketId(), "All tasks executed [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
+							MinaClient.sendData(654, "All tasks executed [Round: "+RoundData.currentRound+" | Player: "+ProfilData.thisClient.getID()+" | Name: "+ProfilData.thisClient.getName()+"]");
 							return;
 						}else {
 							//NEXT TYPE

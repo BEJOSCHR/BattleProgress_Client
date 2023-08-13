@@ -10,7 +10,7 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
 import me.bejosch.battleprogress.client.Objects.Tasks.Building.Task_Building;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class Game_ClickEvent {
 
@@ -105,7 +105,7 @@ public class Game_ClickEvent {
 				antiSpamTimeStamp = System.currentTimeMillis();
 				Field field = GameHandler.getFieldByScreenCoordinates(mX, mY);
 				if(field != null) {
-					ServerConnection.sendData(661, ServerConnection.getNewPacketId(), field.X+";"+field.Y);
+					MinaClient.sendData(661, field.X+";"+field.Y);
 				}
 			}
 		}

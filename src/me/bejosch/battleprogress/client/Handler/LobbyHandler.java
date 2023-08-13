@@ -9,7 +9,7 @@ import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.ScrollPanes.ScrollPanes;
 import me.bejosch.battleprogress.client.Window.TextAreas.TextAreas;
 import me.bejosch.battleprogress.client.Window.TextFields.TextFields;
@@ -216,7 +216,7 @@ public class LobbyHandler {
 		String choosenMapName = currentMapList.get(LobbyData.choosenMapNumber);
 //		readOutFieldDataToLoadedMap(FileHandler.readOutData(FileData.file_Maps, choosenMap+"_Fields"));
 		
-		ServerConnection.sendData(106, ServerConnection.getNewPacketId(), choosenMapName+";"+FileHandler.readOutData(FileData.file_Maps, choosenMapName+"_Fields"));
+		MinaClient.sendData(106, choosenMapName+";"+FileHandler.readOutData(FileData.file_Maps, choosenMapName+"_Fields"));
 		
 	}
 	
@@ -227,7 +227,7 @@ public class LobbyHandler {
 	 */
 	public static void updateTeams(boolean up) {
 		
-		ServerConnection.sendData(108, ServerConnection.getNewPacketId(), GameData.gameID+";"+up);
+		MinaClient.sendData(108, GameData.gameID+";"+up);
 		
 	}
 	

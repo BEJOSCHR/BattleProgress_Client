@@ -182,7 +182,7 @@ public class Label extends JLabel {
 	 * Updates the Ping, so the answer time of the server - SEND
 	 * @param sentMiliSeconds - long - The time in miliseconds when the data was sent
 	 */
-	public static void updateDataSentTime(long sentMiliSeconds) {
+	public static void updatePingSent(long sentMiliSeconds) {
 		
 		if(newDataSent == false) {
 			lastSend_MiliSeconds = sentMiliSeconds;
@@ -195,10 +195,10 @@ public class Label extends JLabel {
 	 * Updates the Ping, so the answer time of the server - RECEIVE
 	 * @param receiveMiliSeconds - long - The time in miliseconds when the answer was received
 	 */
-	public static void updateServerAnswerDuration(long receiveMiliSeconds) {
+	public static void updatePingReceive(long receiveMiliSeconds) {
 		
 		if(lastSend_MiliSeconds <= receiveMiliSeconds && newDataSent == true) { 
-			//SEND MUSS FRÜHER ALS RECEIVE SEIN UND NUR UPDATE WENN DATA VON DIESEM CLIENT GESENDET WURDE
+			//SEND MUSS FRï¿½HER ALS RECEIVE SEIN UND NUR UPDATE WENN DATA VON DIESEM CLIENT GESENDET WURDE
 			displayedPING = (int) (receiveMiliSeconds-lastSend_MiliSeconds);
 			newDataSent = false;
 		}

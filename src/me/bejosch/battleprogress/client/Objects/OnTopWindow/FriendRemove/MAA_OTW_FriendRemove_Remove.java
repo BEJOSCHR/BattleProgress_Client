@@ -9,7 +9,7 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MAA_OTW_FriendRemove_Remove extends MouseActionArea {
 	
@@ -43,7 +43,7 @@ public class MAA_OTW_FriendRemove_Remove extends MouseActionArea {
 		
 		//SEND REMOVE
 		OnTopWindow_FriendRemove otw = (OnTopWindow_FriendRemove) OnTopWindowData.onTopWindow;
-		ServerConnection.sendData(139, ServerConnection.getNewPacketId(), ""+otw.removed.getID());
+		MinaClient.sendData(139, ""+otw.removed.getID());
 		OnTopWindowHandler.closeOTW();
 		
 	}

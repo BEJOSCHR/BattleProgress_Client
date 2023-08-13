@@ -1,20 +1,22 @@
 package me.bejosch.battleprogress.client.ServerConnection;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ConnectException;
 import java.net.InetAddress;
-import java.net.Socket;
-import java.net.SocketException;
+import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.apache.mina.core.RuntimeIoException;
+import org.apache.mina.core.future.ConnectFuture;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
+import org.apache.mina.transport.socket.nio.NioSocketConnector;
+
+import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.MenuData;
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
@@ -23,7 +25,6 @@ import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.ResearchData;
 import me.bejosch.battleprogress.client.Data.Game.UnitData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
-import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.PlayerRanking;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
@@ -34,7 +35,6 @@ import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
 import me.bejosch.battleprogress.client.Handler.ChatHandler;
 import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
-import me.bejosch.battleprogress.client.Main.BattleProgress_StartMain_Client;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.FriendRequest;
@@ -42,7 +42,6 @@ import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameChatNotification;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GamePing;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_ShowMainMenu;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
 import me.bejosch.battleprogress.client.Objects.Chat.ChatMessage;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Attack;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Build;
@@ -51,9 +50,7 @@ import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Move;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Produce;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Remove;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Upgrade;
-import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
-import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.OnTopWindow_FriendAdd;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameAccept.OnTopWindow_GameAccept;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GroupInvitation.OnTopWindow_GroupInvitation;
@@ -65,167 +62,95 @@ import me.bejosch.battleprogress.client.Window.Animations.AnimationDisplay;
 import me.bejosch.battleprogress.client.Window.TextAreas.TextAreas;
 import me.bejosch.battleprogress.client.Window.TextFields.TextFields;
 
-public class ServerConnection {
+public class MinaClient {
 	
-	public static Socket socket;
-	public static InetAddress ipAddress;
-	public static String ipAddressString;
-	public static int port;
-	public static int PackageIdLength = 8;
+	private static NioSocketConnector connector;
+	private static IoSession session;
 	
-	public static List<String> sentDataList = new ArrayList<String>();
+	private static Timer pingCalcTimer;
 	
-	public static Timer connectingTimer = null;
-	
-	public static boolean ServerAdresseResolved = false;
-	public static boolean VerbundenZumServer = false;
-	public static boolean socketCreated = false;
-	public static boolean serverClosedConnection = false;
-	public static int MaxVerbindungsVersuche = 3;
-	public static int VerbindungsVersuche = 0;
-	public static int connectingTryDelay = 0;
-	
-	public static Timer timeoutTimer = null;
-	public static int timeoutDelayInSec = 35;
-	public static int timeoutStatus = timeoutDelayInSec;
-	
-//==========================================================================================================
-	/**
-	 * Start to reach many times for a ServerConnection
-	 * @param maxTrys - int - The count of the trys witch will be done
-	 */
-	public static void startToReachForAServerConnection() {
+	public static boolean connectToServer(String ip, int port) {
 		
-		if(connectingTimer != null) {
-			connectingTimer.cancel();
-			connectingTimer = null;
-		}
-		
-		if(ServerAdresseResolved == false) {
-			ConsoleOutput.printMessageInConsole("Unknown Address ("+ipAddressString+") or Port ("+port+")", true);
-			return;
-		}
-		
-		connectingTimer = new Timer();
-		connectingTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
+		boolean valid = checkIpAndPort(ip, port);
+		if(valid) {
+			
+			try {
 				
-				if(VerbindungsVersuche >= MaxVerbindungsVersuche) {
-					ConsoleOutput.printMessageInConsole("No connection established after "+VerbindungsVersuche+" tries!", true);
-					this.cancel();
-				}else {
-					if(connectingTryDelay <= 0) {
-						connectingTryDelay = 100*2; // 2 SEK DELAY
-						VerbindungsVersuche++;
-						if(socketCreated == true) {
-							//WENN VERBUNDEN WECHSEL ZUM MENU MIT DELAY
-							connectingTimer.cancel();
-							connectingTimer = null;
-							serverClosedConnection = false;
-							//START CONNECTION CHECK TIMER
-							startConnectionCheckTimer(); //Timer which checks every X sek for connection - timeoutChecker
-							//WENN VERBUNDEN SEND DATA
-							sendData(100, getNewPacketId(), "Confirm Connection please!");
-							//WENN VERBUNDEN START LISTENER
-							startRecieveScanner();
-							// !!! LOGIN SHOW BY THE CONNECT RECEIVE PART !!!
-						}else {
-							//WENN NICHT VERSUCHS WEITER
-							establishServerConnection("89.247.60.198", port);
-						}
-					}else {
-						connectingTryDelay--;
-					}
-					
+				connector = new NioSocketConnector();
+				connector.setConnectTimeoutMillis(ConnectionData.TIMEOUT_DELAY);
+				connector.setHandler(new MinaClientEvents());
+	//			connector.getFilterChain().addLast("logger", new LoggingFilter()); //USED FOR DEBUGGING IN CONSOLE
+				connector.getFilterChain().addLast("codec",  new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName(ConnectionData.ENCODING))));  
+				
+				int tryCount = 1;
+				for(;;) {
+					ConsoleOutput.printMessageInConsole_NOLN("("+tryCount+"/"+ConnectionData.MAX_CONNECTION_TRIES+") Try conneting to '"+ip+":"+port+"'... ", true);
+				    try {
+				        ConnectFuture future = connector.connect(new InetSocketAddress(ip, port));
+				        future.awaitUninterruptibly();
+				        session = future.getSession();
+				        ConsoleOutput.printMessageInConsole("connected!", false);
+				        startPingCalculationTimer();
+				        return true;
+				    } catch (RuntimeIoException e) {
+				    	ConsoleOutput.printMessageInConsole("failed!", false);
+				        Thread.sleep(ConnectionData.DELAY_BETWEN_TRIES);
+				    }
+				    if(tryCount == ConnectionData.MAX_CONNECTION_TRIES) {
+				    	//ABORT
+				    	ConsoleOutput.printMessageInConsole("Aborting connection after "+ConnectionData.MAX_CONNECTION_TRIES+" failed attempts!", true);
+				    	return false;
+				    }
+				    tryCount++;
 				}
 				
+			} catch (InterruptedException error) {
+				ConsoleOutput.printMessageInConsole("Connecting to server got interrupted! Can't reach server...", true);
+				return false;
 			}
-		}, 100, 10);
+			
+		}else {
+			ConsoleOutput.printMessageInConsole("Invalid port or ipAddress given! ("+ip+":"+port+") Can't reach server...", true);
+			return false;
+		}
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * Trys to initialise a server connection... (resolve ServerAddress)
-	 * @param ipAdress - InetAddress - The InetAddress of the Server should be connected
-	 * @param port - int - The Port of thze Server should be connected
-	 */
-	public static void initialiseServerConnection(String ipAdress, int portInput) {
+	private static boolean checkIpAndPort(String ipAdress, int portInput) {
 		
 		//ADDRESS
 		try {
-			ipAddress = InetAddress.getByName(ipAdress);
-			ipAddressString = ipAddress.getHostAddress();
-			ConsoleOutput.printMessageInConsole("Resolved Address "+ipAdress+" to "+ipAddress.getHostAddress(), true);
-			ServerAdresseResolved = true;
+			InetAddress ipAddress = InetAddress.getByName(ipAdress);
+			String ipAddressString = ipAddress.getHostAddress();
+			ConsoleOutput.printMessageInConsole("Resolved Address "+ipAdress+" to "+ipAddressString, true);
 		}catch (UnknownHostException error) {
-			ipAddress = null;
-			ipAddressString = null;
-			ServerAdresseResolved = false;
+			return false;
 		}
 		
 		//PORT
 		if(portInput > 0 && portInput <= 999999) {
-			port = portInput;
-			//WENN BEI ADDRESS TRUE BLEIBT ES TRUE, BEI FALSE BLEIBT ES FALSE
+			int port = portInput;
+			ConsoleOutput.printMessageInConsole("Port "+port+" is valid", true);
 		}else {
-			port = -1;
-			ServerAdresseResolved = false;
+			return false;
 		}
 		
-//		establishServerConnection(ipAdress, port);
+		return true;
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * Trys to establish a server connection... (Create Server socket)
-	 * @param ipAdress - InetAddress - The InetAddress of the Server should be connected
-	 * @param port - int  - The Port of thze Server should be connected
-	 */
-	public static void establishServerConnection(String ipAdress, int port) {
+	public static void sendData(int signal, String data) {
 		
-		if(ServerAdresseResolved == true) {
-			
-			try {
-				
-				ConsoleOutput.printMessageInConsole("Connecting to "+ipAdress+":"+port+"... ", true);
-				//socket = ( (SSLSocketFactory) SSLSocketFactory.getDefault() ).createSocket(ipAdress, port);
-				socket = BattleProgress_StartMain_Client.getSSLContext().getSocketFactory().createSocket(ipAdress, port);
-				socket.setKeepAlive(true);
-				socket.setSoTimeout(0);
-				socketCreated = true;
-				sendData(0, getNewPacketId(), "Socket initialised!");
-				return;
-				
-			}catch (SecurityException e) {
-				e.printStackTrace();
-				ConsoleOutput.printMessageInConsole("Your connection to the server has been called 'unsave'! You are using a wrong identification key!", true);
-				return;
-			}catch (ConnectException e) {
-				ConsoleOutput.printMessageInConsole("Your connection timed out or was refused!", true);
-//				e.printStackTrace();
-				return; //CONNECTION TIMEOUT
-			}catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-		}else {
-			ConsoleOutput.printMessageInConsole("Unknown or invalid server address or port: "+ipAdress+":"+port, true);
-			return;
+		long id = ConnectionData.getNewPacketId();
+		session.write(signal+"-"+id+"-"+data);
+		
+		if(signal != 997) {
+			ConnectionData.sendedDataList.add(signal+"-"+id+"-"+data);
 		}
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * Read the Data from the server
-	 * @param signal - int - The signal of the data
-	 * @param id - int - The id of the data
-	 * @param data - String - The real data
-	 */
-	public static void receiveData(int signal, int id, String data) {
+	public static void handlePackage(int signal, int id, String data) {
 		
 		int[] signalBlackList = {997};
 		List<Integer> noConsoleOutput = new ArrayList<>();
@@ -243,7 +168,6 @@ public class ServerConnection {
 //========================================================================
 		//CONNECT
 		case 100:
-			VerbundenZumServer = true;
 			ConsoleOutput.printMessageInConsole("Connected to server!", true);
 			break;
 //========================================================================
@@ -319,7 +243,7 @@ public class ServerConnection {
 			for(ClientPlayer player : ProfilData.allCurrentClientPlayer) {
 				if(player.getID() == playerUpdateID) {
 					ProfilData.playerWaitingforDataReceive.add(player);
-					ServerConnection.sendData(120, ServerConnection.getNewPacketId(), ""+player.getID());
+					MinaClient.sendData(120, ""+player.getID());
 					break;
 				}
 			}
@@ -427,7 +351,7 @@ public class ServerConnection {
 			
 			//GET FRIEND REQUESTs
 			ProfilData.receivedFriendRequests.clear();
-			ServerConnection.sendData(135, ServerConnection.getNewPacketId(), "Get FriendRequests");
+			MinaClient.sendData(135, "Get FriendRequests");
 			
 			new Animation_ShowMainMenu();
 			
@@ -629,7 +553,7 @@ public class ServerConnection {
 			String buildingName_HQ = content[1];
 			int X1 = Integer.parseInt(content[2]);
 			int Y1 = Integer.parseInt(content[3]);
-			createBuilding(playerID, buildingName_HQ, X1, Y1);
+			GameHandler.createBuilding(playerID, buildingName_HQ, X1, Y1);
 			break;
 //========================================================================
 		//Client is ready for this round
@@ -719,243 +643,59 @@ public class ServerConnection {
 //========================================================================
 		//CheckConnection request
 		case 997:
-			//CONNECTION STILL THERE - RESETT TIMEOUT
-			timeoutStatus = timeoutDelayInSec;
 			//UPDATE LAST RECEIVE TIME
-			Label.updateServerAnswerDuration(System.currentTimeMillis());
+			Label.updatePingReceive(System.currentTimeMillis());
 			break;
 //========================================================================
 		//ClientPingRequest
 		case 998:
-			sendData(998, getNewPacketId(), data);
+			MinaClient.sendData(998, data);
 			break;
 		}
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * Starts the scanner witch checks all data sent to this client
-	 */
-	public static void startRecieveScanner() {
+	public static void handleConnectionlos() {
 		
-		BufferedReader input;
-		try {
-			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		} catch (SocketException error) {
-			ConsoleOutput.printMessageInConsole("Init inputStream found a closedSocket! Serverconnection could not be fully established!", true);
-			return;
-		} catch (IOException e1) {
-			e1.printStackTrace();
-			return;
+		session = null;
+		if(pingCalcTimer != null) {
+			pingCalcTimer.cancel();
+			pingCalcTimer = null;
 		}
 		
-		while(true) {
-			
-			try {
-				
-				String data = input.readLine();
-				int signal = Integer.parseInt(data.substring(0, 3).trim());
-				int id = Integer.parseInt(data.substring(4, PackageIdLength+4).trim());
-				String answer = null;
-				if(data.length() > PackageIdLength+1+4) {
-					answer = data.substring(PackageIdLength+1+4, data.length()).trim();
-				}
-				
-				receiveData(signal, id, answer);
-				
-			} catch (IOException e) {
-				//e.printStackTrace();
-				
-				serverConnectionLost(); //CONNECTION LOST !!!!!
-				return;
-				
-			}catch(NullPointerException error) {
-				//IGNORE DATA WITH WRONG SYNTAX
-			}
-			
-		}
+		TimeManager.tickList.clear(); //ALL TICKS REMOVED
+		
+		StandardData.spielStatus = SpielStatus.Menu;
+		
+		new OnTopWindow_InfoMessage("Lost connection", "The connection to the server timed out!", "For more information check out our discord...", "Please try again later", true);
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * Creates a Building
-	 * @param playerID - {@link Integer} - The id of the player who build it
-	 * @param buildingName - String - The name of the building, is used for identification which building will be created 
-	 * @param X - int - The X-Coordinate of the field
-	 * @param Y - int - The Y-Coordinate of the field
-	 */
-	public static void createBuilding(int playerID, String buildingName, int X, int Y) {
+	public static void startPingCalculationTimer() {
 		
-		Field targetField = GameData.gameMap_FieldList[X][Y];
-		if(targetField == null) { 
-			ConsoleOutput.printMessageInConsole("A createBuilding packet found no targetField for the coordinates '"+X+":"+Y+"'!", true);
-			return; 
+		if(pingCalcTimer != null) {
+			pingCalcTimer.cancel();
+			pingCalcTimer = null;
 		}
 		
-		new InfoMessage_Located(buildingName+" has been build", ImportanceType.NORMAL, targetField.X, targetField.Y, true);
-		
-		switch (buildingName) {
-		case "Headquarter":
-			new Building_Headquarter(playerID, targetField);
-			break;
-		default:
-			ConsoleOutput.printMessageInConsole("A createBuilding packet found no building for the buildingName '"+buildingName+"'!", true);
-			break;
-		}
-		
-		GameHandler.updateViewAndBuildArea();
-		
-	}
-	
-//==========================================================================================================
-	/**
-	 * Send Data to the Server (with signal and id)
-	 * @param signal - int - The signal of the data
-	 * @param id - int - The id of the data
-	 * @param data - String - The Data which will be sended
-	 */
-	public static void sendData(int signal, int id, String data) {
-		
-		try {
-			PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
-			
-			output.println(signal+"-"+id+"-"+data);
-			
-			if(signal != 997) {
-				sentDataList.add(signal+"-"+id+"-"+data);
-			}	
-			
-		} catch (IOException | NullPointerException error) {
-			error.printStackTrace();
-		}
-		
-		if(VerbundenZumServer == false) {
-			//ConsoleOutput.printMessageInConsole("The ServerConnection isn't confirmed! It could be, that no connection has been established!", true);
-		}
-		
-	}
-	
-//==========================================================================================================
-	/**
-	 * Starts a repeating timer which checks every delay with a data if the server could be reached
-	 */
-	public static void startConnectionCheckTimer() {
-		
-		if(timeoutTimer != null) {
-			timeoutTimer.cancel();
-			timeoutTimer = null;
-		}
-		
-		timeoutTimer = new Timer();
-		timeoutTimer.scheduleAtFixedRate(new TimerTask() {
+		pingCalcTimer = new Timer();
+		pingCalcTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() {
 				
-				if(timeoutStatus <= 0) {
-					//TIMEOUT!!!
-					timeoutTimer.cancel();
-					timeoutTimer = null;
-					timeoutStatus = timeoutDelayInSec;
-					ConsoleOutput.printMessageInConsole("Server connection timed out!", true);
-					serverConnectionLost();
-				}else if(timeoutStatus % 5 == 0) { //JEDE 3te SEK
-					//CHECK IF CONNECTION STILL THERE
-					//UPDATE LAST SEND TIME
-					Label.updateDataSentTime(System.currentTimeMillis());
-					sendData(997, getNewPacketId(), "This is a longer ping check packet, which is used to calculate this ping in ms!");
-					timeoutStatus--;
-				}else {
-					//WAIT TIME
-					timeoutStatus--;
-				}
+				Label.updatePingSent(System.currentTimeMillis());
+				sendData(997, "This is a longer ping check packet, which is used to calculate this ping in ms!");
 				
 			}
 		}, 0, 1000); //EVERY SEK
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * Called if the connection to the server is lost
-	 */
-	public static void serverConnectionLost() {
+	public static void disconnectFromServer() {
 		
-		//SERVER HAS BEEN CLOSED
-		try {
-			if(VerbundenZumServer == true) {
-				ConsoleOutput.printMessageInConsole("Lost connection to server!", true);
-				try{
-					socket.close();
-				}catch(NullPointerException error) {
-					return;
-				}
-				socket = null;
-				if(connectingTimer != null) {
-					connectingTimer.cancel();
-					connectingTimer = null;
-				}
-				VerbindungsVersuche = 0;
-				timeoutStatus = timeoutDelayInSec;
-				socketCreated = false;
-				VerbundenZumServer = false;
-				serverClosedConnection = true;
-				
-				TimeManager.tickList.clear(); //ALL TICKS REMOVED
-				
-				StandardData.spielStatus = SpielStatus.LoadingScreen;
-				
-				new OnTopWindow_InfoMessage("Lost connection", "The connection to the server timed out!", "For more information check out our discord...", "Please try again later", true);
-				
-			}else {
-				//WAR NOCH NIE VERBUNDEN ALSO AUCH NICHT VERSUCHEN WIEDERHERZUSTELLEN
-			}
-		}catch (IOException e1) {
-			e1.printStackTrace();
+		if(session != null) {
+			session.closeNow();
 		}
-		
-	}
-	
-//==========================================================================================================
-	/**
-	 * Gives back a new PacketId
-	 * @return int - The new PacketId
-	 */
-	public static int getNewPacketId() {
-		
-		//ALL NUMBERS BETWEEN MIN AND MAX COUNT
-		return new Random().nextInt( (getMaxPacketIdCount()-getMinPacketIdCount()) )+getMinPacketIdCount();
-		
-	}
-	
-//==========================================================================================================
-	/**
-	 * Gives back the min PacketId count
-	 * @return int - The min PacketId count
-	 */
-	public static int getMinPacketIdCount() {
-		
-		int number = 1;
-		for(int i = PackageIdLength ; i > 1 ; i--) {
-			number = number*10;
-		}
-		return number;
-		
-	}
-	
-//==========================================================================================================
-	/**
-	 * Gives back the max PacketId count
-	 * @return int - The max PacketId count
-	 */
-	public static int getMaxPacketIdCount() {
-		
-		int number = 1;
-		for(int i = PackageIdLength+1 ; i > 1 ; i--) {
-			number = number*10;
-		}
-		return number-1;
 		
 	}
 	

@@ -5,7 +5,7 @@ import java.awt.Image;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Enum.PlayerRanking;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class ClientPlayer {
@@ -50,7 +50,7 @@ public class ClientPlayer {
 		
 		this.ID = ID;
 		ProfilData.playerWaitingforDataReceive.add(this);
-		ServerConnection.sendData(120, ServerConnection.getNewPacketId(), ""+ID);
+		MinaClient.sendData(120, ""+ID);
 		
 	}
 	

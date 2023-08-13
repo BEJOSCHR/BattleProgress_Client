@@ -9,7 +9,7 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MAA_OTW_QueueWaiting_LeaveQueue extends MouseActionArea {
 
@@ -41,7 +41,7 @@ public class MAA_OTW_QueueWaiting_LeaveQueue extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		ServerConnection.sendData(401, ServerConnection.getNewPacketId(), "Leave Queue");
+		MinaClient.sendData(401, "Leave Queue");
 		
 	}
 	

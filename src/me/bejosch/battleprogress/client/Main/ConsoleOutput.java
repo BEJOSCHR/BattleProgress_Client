@@ -1,10 +1,13 @@
 package me.bejosch.battleprogress.client.Main;
 
+import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.LobbyData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.StandardData;
@@ -15,10 +18,11 @@ import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class ConsoleOutput {
 
+	public static boolean closingTheGame = false;
 	public static Timer ConsoleInputScanner = new Timer();
 	
 //==========================================================================================================
@@ -30,9 +34,28 @@ public class ConsoleOutput {
 	public static void printMessageInConsole(String text, boolean prefix) {
 		
 		if(prefix == true) {
-			System.out.println(StandardData.messagePrefix+text);
+			String time = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()).split(" ")[1];
+			System.out.println(StandardData.messagePrefix+"["+time+"] "+text);
 		}else {
 			System.out.println(text);
+		}
+		DebugHandler.printConsole(text);
+		
+	}
+	
+//==========================================================================================================
+	/**
+	 * Print simple Message in the console
+	 * @param text - String - The message to print
+	 * @param prefix - boolean - Enable/Disable Prefix
+	 */
+	public static void printMessageInConsole_NOLN(String text, boolean prefix) {
+		
+		if(prefix == true) {
+			String time = DateFormat.getDateTimeInstance().format(Calendar.getInstance().getTime()).split(" ")[1];
+			System.out.print(StandardData.messagePrefix+"["+time+"] "+text);
+		}else {
+			System.out.print(text);
 		}
 		DebugHandler.printConsole(text);
 		
@@ -75,9 +98,9 @@ public class ConsoleOutput {
 			
 		}else if(commands.get(0).equalsIgnoreCase("/sent")) {		//PACKETS
 			
-			if(!ServerConnection.sentDataList.isEmpty()) {
+			if(!ConnectionData.sendedDataList.isEmpty()) {
 				int i = 1;
-				for(String data : ServerConnection.sentDataList) {
+				for(String data : ConnectionData.sendedDataList) {
 					printMessageInConsole("Data "+i+": "+data, true);
 					i++;
 				}
@@ -117,10 +140,12 @@ public class ConsoleOutput {
 		}else if(commands.get(0).equalsIgnoreCase("/ping")) {		//PING
 			
 			printMessageInConsole("PING", true);
-			ServerConnection.sendData(998, ServerConnection.getNewPacketId(), "Ping;1");
+			MinaClient.sendData(998, "Ping;1");
 			
 		}else if(commands.get(0).equalsIgnoreCase("/stop")) {		//STOP
 			
+			closingTheGame = true;
+			MinaClient.disconnectFromServer();
 			System.exit(0);
 			
 		}else {

@@ -12,6 +12,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
+import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.FileData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
@@ -23,7 +24,7 @@ import me.bejosch.battleprogress.client.Handler.HoverHandler;
 import me.bejosch.battleprogress.client.Handler.MenuHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_BejoschGamingIntro;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.Frame;
 import me.bejosch.battleprogress.client.Window.Label;
 import me.bejosch.battleprogress.client.Window.Buttons.Buttons;
@@ -100,18 +101,17 @@ public class BattleProgress_StartMain_Client {
 		
 		//CONNECTING TO SERVER
 		String serverAdresse = FileHandler.readOutData(FileData.file_Settings, "ServerAdresse");
-		if(serverAdresse == null) { serverAdresse = "ipcwup.no-ip.biz"; }
-		int port = 8998;
+		if(serverAdresse == null) { serverAdresse = ConnectionData.DEFAULT_IP; }
+		int port = ConnectionData.DEFAULT_PORT;
 		try{ port = Integer.parseInt(FileHandler.readOutData(FileData.file_Settings, "Port")); }catch(NumberFormatException error) {}
-		ServerConnection.initialiseServerConnection(serverAdresse, port);
-		ServerConnection.startToReachForAServerConnection();
+		MinaClient.connectToServer(serverAdresse, port);
 		
 		//INIT DISCORD API
 		try {
 			DiscordAPI.initAPI();
 			StandardData.discordAPIloaded = true;
 		}catch(Exception error) {
-			error.printStackTrace();
+			//error.printStackTrace();
 			ConsoleOutput.printMessageInConsole("Error while loading DiscordAPI! Proceed without it...", true);
 		}
 		

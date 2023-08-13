@@ -11,7 +11,7 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MouseActionArea_Menu_GamePickButtons extends MouseActionArea {
 
@@ -69,18 +69,18 @@ public class MouseActionArea_Menu_GamePickButtons extends MouseActionArea {
 		
 		switch(this.position) {
 		case 0:
-			ServerConnection.sendData(400, ServerConnection.getNewPacketId(), ""+SpielModus.Normal_2v2);
+			MinaClient.sendData(400, ""+SpielModus.Normal_2v2);
 			break;
 		case 1:
 			if(ProfilData.otherGroupClient == null) {
 				//STILL A 1er GROUP
-				ServerConnection.sendData(400, ServerConnection.getNewPacketId(), ""+SpielModus.Normal_1v1);
+				MinaClient.sendData(400, ""+SpielModus.Normal_1v1);
 			}
 			break;
 		case 2:
 			if(ProfilData.otherGroupClient == null) {
 				//STILL A 1er GROUP
-				ServerConnection.sendData(400, ServerConnection.getNewPacketId(), ""+SpielModus.Ranked_1v1);
+				MinaClient.sendData(400, ""+SpielModus.Ranked_1v1);
 			}
 			break;
 		case 3: 

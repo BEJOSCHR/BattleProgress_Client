@@ -10,7 +10,7 @@ import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendRemove.OnTopWindow_FriendRemove;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.PlayerChat.OnTopWindow_PlayerChat;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class MouseActionArea_Menu_FriendListButton extends MouseActionArea {
@@ -97,7 +97,7 @@ public class MouseActionArea_Menu_FriendListButton extends MouseActionArea {
 				//Invite
 				if(ProfilData.sendGroupInvite.contains(connectedFriendListSection.getRepresentedClientPlayer()) == false && (ProfilData.otherGroupClient == null || ProfilData.otherGroupClient.getID() != connectedFriendListSection.getRepresentedClientPlayer().getID()) ) {
 					//NOT INVITED and NOT IN GROUP
-					ServerConnection.sendData(300, ServerConnection.getNewPacketId(), ""+connectedFriendListSection.getRepresentedClientPlayer().getID());
+					MinaClient.sendData(300, ""+connectedFriendListSection.getRepresentedClientPlayer().getID());
 					ProfilData.sendGroupInvite.add(connectedFriendListSection.getRepresentedClientPlayer());
 				} //ELSE DO NOTHING
 			}

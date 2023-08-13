@@ -17,7 +17,7 @@ import me.bejosch.battleprogress.client.Objects.Research.Upgrades.ReactorProduct
 import me.bejosch.battleprogress.client.Objects.Research.Upgrades.ReactorProduction2;
 import me.bejosch.battleprogress.client.Objects.Research.Upgrades.ReactorProduction3;
 import me.bejosch.battleprogress.client.Objects.Research.Upgrades.Upgrade;
-import me.bejosch.battleprogress.client.ServerConnection.ServerConnection;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class Game_ResearchHandler {
 	
@@ -44,7 +44,7 @@ public class Game_ResearchHandler {
 	public static void loadUpgradeDataContainer() {
 		
 		ResearchData.upgradeDataContainer.clear();
-		ServerConnection.sendData(111, ServerConnection.getNewPacketId(), "Request UpgradeDataContainer update");
+		MinaClient.sendData(111, "Request UpgradeDataContainer update");
 		
 	}
 	
