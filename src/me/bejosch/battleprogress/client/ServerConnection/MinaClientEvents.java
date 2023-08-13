@@ -30,7 +30,7 @@ public class MinaClientEvents extends IoHandlerAdapter  {
 			ConsoleOutput.printMessageInConsole("Connection closed", true);
 		}else {
 			ConsoleOutput.printMessageInConsole("Lost connection to server!", true);
-			MinaClient.handleConnectionlos();
+			MinaClient.handleConnectionLoss();
 		}
 		
 	}

@@ -10,6 +10,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import org.apache.mina.core.RuntimeIoException;
+import org.apache.mina.core.filterchain.IoFilter;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -80,7 +81,11 @@ public class MinaClient {
 				connector.setConnectTimeoutMillis(ConnectionData.TIMEOUT_DELAY);
 				connector.setHandler(new MinaClientEvents());
 	//			connector.getFilterChain().addLast("logger", new LoggingFilter()); //USED FOR DEBUGGING IN CONSOLE
-				connector.getFilterChain().addLast("codec",  new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName(ConnectionData.ENCODING))));  
+				TextLineCodecFactory factory = new TextLineCodecFactory(Charset.forName(ConnectionData.ENCODING));
+				factory.setDecoderMaxLineLength(ConnectionData.BUFFER_SIZE);
+				factory.setEncoderMaxLineLength(ConnectionData.BUFFER_SIZE);
+				IoFilter codec = new ProtocolCodecFilter(factory);
+				connector.getFilterChain().addLast("codec", codec);
 				
 				int tryCount = 1;
 				for(;;) {
@@ -655,7 +660,7 @@ public class MinaClient {
 		
 	}
 	
-	public static void handleConnectionlos() {
+	public static void handleConnectionLoss() {
 		
 		session = null;
 		if(pingCalcTimer != null) {
@@ -667,7 +672,7 @@ public class MinaClient {
 		
 		StandardData.spielStatus = SpielStatus.Menu;
 		
-		new OnTopWindow_InfoMessage("Lost connection", "The connection to the server timed out!", "For more information check out our discord...", "Please try again later", true);
+		OnTopWindowHandler.openOTW(new OnTopWindow_InfoMessage("Lost connection", "The connection to the server timed out!", "For more information check out our discord...", "Please try again later", true));
 		
 	}
 	

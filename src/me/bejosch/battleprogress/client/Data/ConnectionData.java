@@ -10,6 +10,7 @@ public class ConnectionData {
 	public static final int DEFAULT_PORT = 8998;
 	
 	public static final String ENCODING = "UTF-8";
+	public static final int BUFFER_SIZE = 32768;
 	public static final int PACKAGEIDLENGTH = 8;
 	public static final int TIMEOUT_DELAY = 10*1000;
 	public static final int DELAY_BETWEN_TRIES = 1000;

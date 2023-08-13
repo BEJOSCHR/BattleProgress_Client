@@ -1,17 +1,5 @@
 package me.bejosch.battleprogress.client.Main;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-
 import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.FileData;
 import me.bejosch.battleprogress.client.Data.StandardData;
@@ -41,19 +29,11 @@ public class BattleProgress_StartMain_Client {
 	 */
 	public static void main(String[] args) {
 		
-		//IDENTIFICATION SECURE
-		//System.setProperty("javax.net.ssl.trustStore", "battleprogress.identification"); //TRUSTSTORE
-		//PASSWORT IS ONLY ON THE SERVER!
-		
-		//SERVERCONNECTION:
-		// https://www.youtube.com/watch?v=l4_JIIrMhIQ
+		//TODO IP: ipcwup.no-ip.biz
 		
 		//PATHFINDING ALGORYTHEM:
 		// https://www.youtube.com/watch?v=-L-WgKMFuhE
-		
-		//TODO IP: ipcwup.no-ip.biz
-		
-		// TODO SO NICE: https://www.youtube.com/watch?v=mZfyt03LDH4 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// https://www.youtube.com/watch?v=mZfyt03LDH4 Pathfinding...
 		
 		ConsoleOutput.printMessageInConsole("Starting BattleProgress Client...", true);
 		
@@ -149,40 +129,4 @@ public class BattleProgress_StartMain_Client {
 		
 	}
 	
-//==========================================================================================================
-	/**
-	 * The SSLContext with the battleprogress.identification identification key
-	 * @return SSLContext - The conetxt
-	 */
-	public static SSLContext getSSLContext() {
-		
-		SSLContext sslContext = null;
-		
-		try {
-			
-			TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-			InputStream keystoreStream = BattleProgress_StartMain_Client.class.getResourceAsStream("Identification/battleprogress.identification");
-			keystore.load(keystoreStream, null);
-			trustManagerFactory.init(keystore);
-			TrustManager[] trustManagers = trustManagerFactory.getTrustManagers();
-			sslContext = SSLContext.getInstance("SSL");
-			sslContext.init(null, trustManagers, null);
-			
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		} catch (KeyStoreException e) {
-			e.printStackTrace();
-		} catch (CertificateException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (KeyManagementException e) {
-			e.printStackTrace();
-		}
-		
-		return sslContext;
-		
-	}
-
 }
