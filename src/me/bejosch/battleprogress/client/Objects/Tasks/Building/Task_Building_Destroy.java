@@ -20,15 +20,13 @@ public class Task_Building_Destroy extends Task_Building{
 	@Override
 	public void action_Left_Press() {
 		
-		if(this.building.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
-			this.setToActiveTask();
-			
-			this.targetCoordinates = new FieldCoordinates(this.building.connectedField);
-			List<PathFinding_FieldObject> pathWay = new ArrayList<>();
-			this.targetPath = new Path(new FieldCoordinates(this.building.connectedField), new FieldCoordinates(this.building.connectedField), pathWay);
-			
-		}
+		if(this.building.activeTask != null) { this.building.activeTask.action_Right_Release(); }
+		
+		this.setToActiveTask();
+		
+		this.targetCoordinates = new FieldCoordinates(this.building.connectedField);
+		List<PathFinding_FieldObject> pathWay = new ArrayList<>();
+		this.targetPath = new Path(new FieldCoordinates(this.building.connectedField), new FieldCoordinates(this.building.connectedField), pathWay);
 		
 	}
 	

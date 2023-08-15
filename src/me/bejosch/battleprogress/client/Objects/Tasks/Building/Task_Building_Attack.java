@@ -26,18 +26,17 @@ public class Task_Building_Attack extends Task_Building{
 	@Override
 	public void action_Left_Press() {
 		
-		if(this.building.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
-			if(GameHandler.hasEnoughtEnergy(this.building.energyCostPerAction) == true) {
-				//ENOUGHT ENERGY
-				this.setToActiveTask();
-				GameData.dragAndDropTaskInputActive = true;
-			}else {
-				List<String> message = new ArrayList<String>();
-				message.add("You have not enought energy for this action!");
-				message.add( (this.building.energyCostPerAction-EconomicData.energyAmount)+" energy is missing   ( "+EconomicData.energyAmount+" / "+this.building.energyCostPerAction+" )");
-				new InfoMessage_Located(message, ImportanceType.HIGH, this.building.connectedField.X, this.building.connectedField.Y, true);
-			}
+		if(this.building.activeTask != null) { this.building.activeTask.action_Right_Release(); }
+			
+		if(GameHandler.hasEnoughtEnergy(this.building.energyCostPerAction) == true) {
+			//ENOUGHT ENERGY
+			this.setToActiveTask();
+			GameData.dragAndDropTaskInputActive = true;
+		}else {
+			List<String> message = new ArrayList<String>();
+			message.add("You have not enought energy for this action!");
+			message.add( (this.building.energyCostPerAction-EconomicData.energyAmount)+" energy is missing   ( "+EconomicData.energyAmount+" / "+this.building.energyCostPerAction+" )");
+			new InfoMessage_Located(message, ImportanceType.HIGH, this.building.connectedField.X, this.building.connectedField.Y, true);
 		}
 		
 	}
@@ -45,7 +44,7 @@ public class Task_Building_Attack extends Task_Building{
 	public void action_Left_Release() {
 		
 		if(GameData.dragAndDropTaskInputActive == true) {
-			GameData.dragAndDropTaskInputActive = false; //RESETT
+			GameData.dragAndDropTaskInputActive = false; //RESET
 			Field targetField = GameData.hoveredField;
 			if(targetField != null) {
 				if(this.building.fieldIsIn_SHOT_Range(targetField)) {
@@ -70,7 +69,7 @@ public class Task_Building_Attack extends Task_Building{
 				}
 			}else {
 				//MISSING HOVERED FIELD (TARGET FIELD)
-				new InfoMessage_Located("You need to drag and drop the task to the target field", ImportanceType.LOW, this.building.connectedField.X, this.building.connectedField.Y, true);
+				new InfoMessage_Located("Not a valid target field!", ImportanceType.LOW, this.building.connectedField.X, this.building.connectedField.Y, true);
 				this.removeFromActiveTask();
 			}
 		}

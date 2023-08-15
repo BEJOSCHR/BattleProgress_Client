@@ -113,7 +113,7 @@ public class Task_Troup implements Task {
 		if(this instanceof Task_Troup_Upgrade) {
 			//UPGRADE COST DISPLAY
 			draw_Actionbar_extraCost(g, realX, realY, ((Task_Troup_Upgrade) this).upgradeTroupCost, true);
-		}else if(this instanceof Task_Troup_Attack || /* this instanceof Task_Troup_Move ||*/ this instanceof Task_Troup_Heal || this instanceof Task_Troup_Repair) {
+		}else if(this instanceof Task_Troup_Attack || this instanceof Task_Troup_Move || this instanceof Task_Troup_Heal || this instanceof Task_Troup_Repair) {
 			draw_Actionbar_extraCost(g, realX, realY, this.troup.energyCostPerAction, false);
 		}
 		

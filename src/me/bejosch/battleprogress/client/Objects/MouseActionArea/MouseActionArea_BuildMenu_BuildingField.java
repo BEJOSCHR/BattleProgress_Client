@@ -8,12 +8,12 @@ import java.util.List;
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
-import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -84,7 +84,7 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_PRESS() {
 		
-		if(RoundData.clientIsReadyForThisRound == true || RoundData.roundIsChanging == true || this.connectedBuildingTask.isLocked()) { return; }
+		if(Game_RoundHandler.blockedInput() || this.connectedBuildingTask.isLocked()) { return; }
 		
 		if(GameData.currentActive_MAA_BuildingTask == null) {
 			if(GameHandler.hasEnoughtMaterial(this.connectedBuildingTask.cost) == true) {
@@ -103,7 +103,7 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		if(RoundData.clientIsReadyForThisRound == true || RoundData.roundIsChanging == true || this.connectedBuildingTask.isLocked()) { return; }
+		if(Game_RoundHandler.blockedInput() || this.connectedBuildingTask.isLocked()) { return; }
 		
 		if(GameData.currentActive_MAA_BuildingTask != null && GameData.dragAndDropInputActive_BuildingMenu == true) {
 			
@@ -125,7 +125,7 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 	@Override
 	public void performAction_RIGHT_RELEASE() {
 		
-		if(RoundData.clientIsReadyForThisRound == true || RoundData.roundIsChanging == true || this.connectedBuildingTask.isLocked()) { return; }
+		if(Game_RoundHandler.blockedInput() || this.connectedBuildingTask.isLocked()) { return; }
 		
 		if(GameData.dragAndDropInputActive_BuildingMenu == true) {
 			//IS DRAG AND DROP CANCLE

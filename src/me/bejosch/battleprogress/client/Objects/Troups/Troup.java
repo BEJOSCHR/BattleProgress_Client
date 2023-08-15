@@ -593,6 +593,21 @@ public class Troup {
 	
 //==========================================================================================================
 	/**
+	 * Checks if this troup has a task of the given type
+	 * @return boolean - true if it has the given task type, false if not
+	 */
+	public boolean hasTask(Task_Troup task) {
+		
+		for(Task_Troup t : this.actionTasks) {
+			if(t.title.equals(task.title)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+//==========================================================================================================
+	/**
 	 * Deals the given damage to this troup
 	 */
 	public void damage(int damageCount) {

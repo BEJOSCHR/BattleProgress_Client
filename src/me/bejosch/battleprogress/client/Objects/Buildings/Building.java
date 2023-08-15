@@ -547,6 +547,21 @@ public class Building {
 	
 //==========================================================================================================
 	/**
+	 * Checks if this building has a task of the given type
+	 * @return boolean - true if it has the given task type, false if not
+	 */
+	public Task_Building hasTask(Task_Building task) {
+		
+		for(Task_Building t : this.actionTasks) {
+			if(t.title.equals(task.title)) {
+				return t;
+			}
+		}
+		return null;
+	}
+	
+//==========================================================================================================
+	/**
 	 * Deals the given damage to this building
 	 */
 	public void damage(int damageCount) {

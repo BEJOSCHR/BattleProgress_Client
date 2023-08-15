@@ -26,18 +26,17 @@ public class Task_Troup_Heal extends Task_Troup{
 	@Override
 	public void action_Left_Press() {
 		
-		if(this.troup.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
-			if(GameHandler.hasEnoughtEnergy(this.troup.energyCostPerAction) == true) {
-				//ENOUGHT ENERGY
-				this.setToActiveTask();
-				GameData.dragAndDropTaskInputActive = true;
-			}else {
-				List<String> message = new ArrayList<String>();
-				message.add("You have not enought energy for this action!");
-				message.add( (this.troup.energyCostPerAction-EconomicData.energyAmount)+" energy is missing   ( "+EconomicData.energyAmount+" / "+this.troup.energyCostPerAction+" )");
-				new InfoMessage_Located(message, ImportanceType.HIGH, this.troup.connectedField.X, this.troup.connectedField.Y, true);
-			}
+		if(this.troup.activeTask != null) { this.troup.activeTask.action_Right_Release(); }
+		
+		if(GameHandler.hasEnoughtEnergy(this.troup.energyCostPerAction) == true) {
+			//ENOUGHT ENERGY
+			this.setToActiveTask();
+			GameData.dragAndDropTaskInputActive = true;
+		}else {
+			List<String> message = new ArrayList<String>();
+			message.add("You have not enought energy for this action!");
+			message.add( (this.troup.energyCostPerAction-EconomicData.energyAmount)+" energy is missing   ( "+EconomicData.energyAmount+" / "+this.troup.energyCostPerAction+" )");
+			new InfoMessage_Located(message, ImportanceType.HIGH, this.troup.connectedField.X, this.troup.connectedField.Y, true);
 		}
 		
 	}

@@ -49,4 +49,25 @@ public class StandardData {
 	public static int gIcon_distanceBetween = 30;
 	public static Color gIcon_defaultColor = Color.BLACK, gIcon_backgroundColor = Color.LIGHT_GRAY, gIcon_hoverColor = Color.WHITE;
 	
+	
+	
+	
+	//TODO DOWN BELOW KEEP HIDDEN!!! 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public static final String DISCORD_API_KEY = "825697002410737686";
 }

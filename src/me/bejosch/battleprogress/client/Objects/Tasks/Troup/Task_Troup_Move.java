@@ -1,7 +1,12 @@
 package me.bejosch.battleprogress.client.Objects.Tasks.Troup;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
+import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
@@ -21,10 +26,17 @@ public class Task_Troup_Move extends Task_Troup{
 	@Override
 	public void action_Left_Press() {
 		
-		if(this.troup.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
+		if(this.troup.activeTask != null) { this.troup.activeTask.action_Right_Release(); }
+		
+		if(GameHandler.hasEnoughtEnergy(this.troup.energyCostPerAction) == true) {
+			//ENOUGHT ENERGY
 			this.setToActiveTask();
 			GameData.dragAndDropTaskInputActive = true;
+		}else {
+			List<String> message = new ArrayList<String>();
+			message.add("You have not enought energy for this action!");
+			message.add( (this.troup.energyCostPerAction-EconomicData.energyAmount)+" energy is missing   ( "+EconomicData.energyAmount+" / "+this.troup.energyCostPerAction+" )");
+			new InfoMessage_Located(message, ImportanceType.HIGH, this.troup.connectedField.X, this.troup.connectedField.Y, true);
 		}
 		
 	}
@@ -42,6 +54,7 @@ public class Task_Troup_Move extends Task_Troup{
 						if(this.targetFieldIsBlocked(targetField) == false) {
 							//NOT BLOCKED -> All fine
 							
+							EconomicData.energyAmount -= this.troup.energyCostPerAction; //REMOVE COST
 							this.targetCoordinates = new FieldCoordinates(targetField); //SET TARGET FIELD
 							this.targetPath = new PathFinding_Algorithmus(new FieldCoordinates(this.troup.connectedField), new FieldCoordinates(targetField), true).getPath(this.troup.viewDistance, false, this.troup.canFly);
 							
@@ -72,10 +85,22 @@ public class Task_Troup_Move extends Task_Troup{
 				}
 			}else {
 				//MISSING HOVERED FIELD (TARGET FIELD)
-				new InfoMessage_Located("You need to drag and drop the task to the target field", ImportanceType.LOW, this.troup.connectedField.X, this.troup.connectedField.Y, true);
+				new InfoMessage_Located("Not a valid target field!", ImportanceType.LOW, this.troup.connectedField.X, this.troup.connectedField.Y, true);
 				this.removeFromActiveTask();
 			}
 		}
+		
+	}
+	
+	@Override
+	public void action_Right_Release() {
+		
+		if(this.isActiveTask == true) {
+			//RE ADD COST
+			EconomicData.energyAmount += this.troup.energyCostPerAction;
+		}
+		
+		super.action_Right_Release();
 		
 	}
 	

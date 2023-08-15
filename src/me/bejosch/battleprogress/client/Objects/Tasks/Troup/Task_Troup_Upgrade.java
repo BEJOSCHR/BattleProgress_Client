@@ -56,18 +56,17 @@ public class Task_Troup_Upgrade extends Task_Troup {
 		
 		if(this.isLocked()) { return; }
 		
-		if(this.troup.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
-			if(GameHandler.hasEnoughtMaterial(this.upgradeTroupCost) == true) {
-				//ENOUGHT MASS
-				this.setToActiveTask();
-				GameData.dragAndDropTaskInputActive = true;
-			}else {
-				List<String> message = new ArrayList<String>();
-				message.add("You have not enought materials for this upgrade!");
-				message.add( (this.upgradeTroupCost-EconomicData.materialAmount)+" materials are missing   ( "+EconomicData.materialAmount+" / "+this.upgradeTroupCost+" )");
-				new InfoMessage_Located(message, ImportanceType.HIGH, this.troup.connectedField.X, this.troup.connectedField.Y, true);
-			}
+		if(this.troup.activeTask != null) { this.troup.activeTask.action_Right_Release(); }
+		
+		if(GameHandler.hasEnoughtMaterial(this.upgradeTroupCost) == true) {
+			//ENOUGHT MASS
+			this.setToActiveTask();
+			GameData.dragAndDropTaskInputActive = true;
+		}else {
+			List<String> message = new ArrayList<String>();
+			message.add("You have not enought materials for this upgrade!");
+			message.add( (this.upgradeTroupCost-EconomicData.materialAmount)+" materials are missing   ( "+EconomicData.materialAmount+" / "+this.upgradeTroupCost+" )");
+			new InfoMessage_Located(message, ImportanceType.HIGH, this.troup.connectedField.X, this.troup.connectedField.Y, true);
 		}
 		
 	}

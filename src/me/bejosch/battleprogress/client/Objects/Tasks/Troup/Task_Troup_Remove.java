@@ -21,21 +21,19 @@ public class Task_Troup_Remove extends Task_Troup{
 	@Override
 	public void action_Left_Press() {
 		
+		if(this.troup.activeTask != null) { this.troup.activeTask.action_Right_Release(); }
 		
-		if(this.troup.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
-			if(this.troup.targetUpgradePosition == null) {
-				//NOT TARGETED AS AN UPGRADE PARTNER
-				this.setToActiveTask();
-				
-				this.targetCoordinates = new FieldCoordinates(this.troup.connectedField);
-				List<PathFinding_FieldObject> pathWay = new ArrayList<>();
-				this.targetPath = new Path(new FieldCoordinates(this.troup.connectedField), new FieldCoordinates(this.troup.connectedField), pathWay);
-			}else {
-				//TARGET OF AN UPGRADE
-				new FieldMessage("Blocked by an upgrade", this.troup.targetUpgradePosition.X, this.troup.targetUpgradePosition.Y, 3);
-				this.removeFromActiveTask();
-			}
+		if(this.troup.targetUpgradePosition == null) {
+			//NOT TARGETED AS AN UPGRADE PARTNER
+			this.setToActiveTask();
+			
+			this.targetCoordinates = new FieldCoordinates(this.troup.connectedField);
+			List<PathFinding_FieldObject> pathWay = new ArrayList<>();
+			this.targetPath = new Path(new FieldCoordinates(this.troup.connectedField), new FieldCoordinates(this.troup.connectedField), pathWay);
+		}else {
+			//TARGET OF AN UPGRADE
+			new FieldMessage("Blocked by an upgrade", this.troup.targetUpgradePosition.X, this.troup.targetUpgradePosition.Y, 3);
+			this.removeFromActiveTask();
 		}
 		
 	}

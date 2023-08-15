@@ -1,5 +1,6 @@
 package me.bejosch.battleprogress.client.DiscordAPI;
 
+import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import net.arikia.dev.drpc.DiscordEventHandlers;
 import net.arikia.dev.drpc.DiscordRPC;
@@ -12,7 +13,7 @@ public class DiscordAPI {
 	public static void initAPI() { 
 		
 		DiscordEventHandlers handlers = new DiscordEventHandlers.Builder().build();
-		DiscordRPC.discordInitialize("825697002410737686", handlers, true);
+		DiscordRPC.discordInitialize(StandardData.DISCORD_API_KEY, handlers, true);
 		apiLoaded = true;
 		ConsoleOutput.printMessageInConsole("DiscordAPI initialised!", true);
 		

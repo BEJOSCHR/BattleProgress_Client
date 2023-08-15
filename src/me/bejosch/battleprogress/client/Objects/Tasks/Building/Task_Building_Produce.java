@@ -72,18 +72,17 @@ public class Task_Building_Produce extends Task_Building{
 		
 		if(this.isLocked()) { return; }
 		
-		if(this.building.activeTask == null) {
-			//ONLY SET TASK IF THERE IS NO ACTIVE TASK YET
-			if(GameHandler.hasEnoughtMaterial(troupProduceCost) == true) {
-				//ENOUGHT MASS
-				this.setToActiveTask();
-				GameData.dragAndDropTaskInputActive = true;
-			}else {
-				List<String> message = new ArrayList<String>();
-				message.add("You have not enought materials for this production!");
-				message.add( (this.troupProduceCost-EconomicData.materialAmount)+" materials are missing   ( "+EconomicData.materialAmount+" / "+this.troupProduceCost+" )");
-				new InfoMessage_Located(message, ImportanceType.HIGH, this.building.connectedField.X, this.building.connectedField.Y, true);
-			}
+		if(this.building.activeTask != null) { this.building.activeTask.action_Right_Release(); }
+		
+		if(GameHandler.hasEnoughtMaterial(troupProduceCost) == true) {
+			//ENOUGHT MASS
+			this.setToActiveTask();
+			GameData.dragAndDropTaskInputActive = true;
+		}else {
+			List<String> message = new ArrayList<String>();
+			message.add("You have not enought materials for this production!");
+			message.add( (this.troupProduceCost-EconomicData.materialAmount)+" materials are missing   ( "+EconomicData.materialAmount+" / "+this.troupProduceCost+" )");
+			new InfoMessage_Located(message, ImportanceType.HIGH, this.building.connectedField.X, this.building.connectedField.Y, true);
 		}
 		
 	}
