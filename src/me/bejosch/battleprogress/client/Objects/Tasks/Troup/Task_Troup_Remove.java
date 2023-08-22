@@ -13,7 +13,7 @@ import me.bejosch.battleprogress.client.Window.Images.Images;
 public class Task_Troup_Remove extends Task_Troup{
 
 	public Task_Troup_Remove(Troup connectedTroup) {
-		super(connectedTroup, Images.taskIcon_Troup_Remove, "Remove", 11, 3, null);
+		super(connectedTroup, Images.taskIcon_Troup_Remove, "Remove", 11, false, false, 3, null);
 		String[] hoverText = {"This task removes this troup from the game", "You gain back 1/3 of the troup producing cost", "All tasks are executed at the end of the round"};
 		this.hoverMessage = hoverText;
 	}

@@ -12,7 +12,7 @@ import me.bejosch.battleprogress.client.Window.Images.Images;
 public class Task_Building_Destroy extends Task_Building{
 
 	public Task_Building_Destroy(Building connectedBuilding) {
-		super(connectedBuilding, Images.taskIcon_Building_Destroy, "Destroy", 11, 3, null);
+		super(connectedBuilding, Images.taskIcon_Building_Destroy, "Destroy", 11, false, false, 3, null);
 		String[] hoverText = {"This task destroys this building", "You gain back 1/3 of the building material cost","All tasks are executed at the end of the round"};
 		this.hoverMessage = hoverText;
 	}

@@ -36,6 +36,10 @@ public class OnTopWindowData {
 	
 	//ROUND SUMMARY
 	public static int roundSum_width = 700, roundSum_height = 550;
+	public static int roundSum_heightPerEco = 130;
+	public static int roundSum_smallDistanceBetween = 25, roundSum_bigDistanceBetween = 45;
+	public static int roundSum_details_width = 320, roundSum_details_udBorder = 20, roundSum_details_leftAmountBorder = 80;
+	public static int roundSum_details_smallHeight = 30, roundSum_details_bigHeight = 40, roundSum_details_titelHeight = 20;
 	
 		//GENERAL CONFIRM BUTTON WIDTH
 		public static int generalConfirm_MAA_width = 160, generallConfirm_MAA_height = 45;

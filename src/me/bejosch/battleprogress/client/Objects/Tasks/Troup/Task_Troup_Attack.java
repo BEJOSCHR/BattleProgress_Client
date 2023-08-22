@@ -18,7 +18,7 @@ import me.bejosch.battleprogress.client.Window.Images.Images;
 public class Task_Troup_Attack extends Task_Troup {
 
 	public Task_Troup_Attack(Troup connectedTroup) {
-		super(connectedTroup, Images.taskIcon_Troup_Attack, "Attack", 11, 3, null);
+		super(connectedTroup, Images.taskIcon_Troup_Attack, "Attack", 11, false, true, 3, null);
 		String[] hoverText = {"This task attacks an enemy troup or building","All tasks are executed at the end of the round"};
 		this.hoverMessage = hoverText;
 	}

@@ -94,7 +94,7 @@ public class GameData {
 	public static boolean coordsUpdatedNeeded = true;
 	
 	//InfoMessages
-	public static List<InfoMessage> NotificationList = new ArrayList<InfoMessage>();
+	public static List<InfoMessage> notificationList = new ArrayList<InfoMessage>();
 	
 	//FieldMessage
 	public static FieldMessage activeMessage = null;
@@ -107,6 +107,8 @@ public class GameData {
 	public static int chatButton_width = 50, chatButton_height = 60, chatButton_roundPartWidth = 16, chatbutton_showXausgleich = 14;
 	
 	//ECONOMIC DISPLAY
+	public static final Color color_Material = Color.YELLOW, color_Energy = new Color(102, 204, 255), color_Research = new Color(255, 0, 255);
+	public static final Color color_positiv = Color.GREEN, color_negative = Color.RED, color_highlight = Color.ORANGE;
 	public static int ecoDisp_width = 120, ecoDisp_height = 40;
 	public static int ecoDisp_distanceTotalSegment = ecoDisp_height+20, ecoDisp_cornerRound = 15;
 	public static int ecoDisp_rightBorder = 50, ecoDisp_totalDownBorder = ecoDisp_distanceTotalSegment* 2 +GameData.ecoDisp_height+StandardData.rahmen/2+50;

@@ -10,6 +10,7 @@ import me.bejosch.battleprogress.client.Data.CreateMapData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
@@ -582,13 +583,19 @@ public class Building {
 	public void repair(int repairCount) {
 		
 		if(shouldBeDestroyedAtRoundEnd == true) {
-			return; //IS DESTORYED SO NO REPAIR CHANCE
+			return; //IS DESTROYED SO NO REPAIR CHANCE
 		}
 		
 		totalHealth += repairCount;
+		int realRepairAmount = repairCount;
 		
 		if(totalHealth > maxHealth) {
+			realRepairAmount = maxHealth-totalHealth;
 			totalHealth = maxHealth;
+		}
+		
+		if(this.playerID == ProfilData.thisClient.getID()) {
+			RoundData.currentStatsContainer.registerBuildingRepair(this, realRepairAmount);
 		}
 		
 	}
@@ -629,6 +636,15 @@ public class Building {
 					ConsoleOutput.printMessageInConsole("Removing building to player list found no matching player! (2v2 - ID: "+playerID+")", true);
 				}
 			}
+			
+			//STATS
+			if(this.playerID == ProfilData.thisClient.getID()) {
+				RoundData.currentStatsContainer.registerDeath(this);
+			}else if(GameHandler.checkPlayerIDForAllied(this.playerID, ProfilData.thisClient.getID()) == false) {
+				//ENEMY
+				RoundData.currentStatsContainer.registerKill(this);
+			}
+			
 		}else {
 			//CreateMap modus
 			CreateMapData.HQdisplayList.remove(this);

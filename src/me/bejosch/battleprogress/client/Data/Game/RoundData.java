@@ -1,11 +1,14 @@
 package me.bejosch.battleprogress.client.Data.Game;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
+import me.bejosch.battleprogress.client.Objects.RoundStatsContainer;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Attack;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Build;
@@ -58,7 +61,7 @@ public class RoundData {
 	//THIS CLIENT - LOCAL TASK
 	public static List<Task_Building> clientTasks_BuildingTasks = new ArrayList<Task_Building>();
 	public static List<Task_Troup> clientTasks_TroupTasks = new ArrayList<Task_Troup>();
-	//IM HANDLER IM RESETT CLEAR ADDEN! \/
+	//IM HANDLER IM RESET CLEAR ADDEN! \/
 	//public static List<Task_BuildMenu> clientTasks_BuildmenuTasks = new ArrayList<Task_BuildMenu>();
 	
 	//ALL PLAYER - GLOBAL EXECUTE TASK
@@ -76,6 +79,10 @@ public class RoundData {
 	public static List<ExecuteTask_Move> allTasks_Move = new ArrayList<ExecuteTask_Move>();
 	public static int totalRemoveTasks = 0;
 	public static List<ExecuteTask_Remove> allTasks_Remove = new ArrayList<ExecuteTask_Remove>();
+	
+	//ROUND STATS
+	public static RoundStatsContainer currentStatsContainer = null;
+	public static Map<Integer, RoundStatsContainer> statsContainer = new HashMap<Integer, RoundStatsContainer>();
 	
 	//BLOCKED TASKS
 	public static int blockedTasks = 0;

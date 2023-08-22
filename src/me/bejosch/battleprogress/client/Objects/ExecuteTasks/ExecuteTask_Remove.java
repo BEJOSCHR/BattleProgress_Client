@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.Game.EconomicData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
@@ -80,14 +81,20 @@ public class ExecuteTask_Remove extends ExecuteTask{
 		}else if(foundTargetTroup != null) {
 			//TROUP
 			cost = UnitsHandler.getUnitByName(foundTargetTroup.name).kosten;
-			foundTargetTroup.delete();
+			foundTargetTroup.delete(false);
 		}else {
 			ConsoleOutput.printMessageInConsole("A REMOVE executeTask found no building or troup at the target to remove [X: "+executeCoordinate.X+"-Y: "+executeCoordinate.Y+"]", true);
 		}
 		
 		//REFUND
 		if(this.playerID == ProfilData.thisClient.getID() && cost != 0) {
-			EconomicData.materialAmount += (int) ( cost / 3.0 );
+			int addAmount = (int) ( cost / 3.0 );
+			EconomicData.materialAmount += addAmount;
+			if(foundTargetBuilding != null) {
+				RoundData.currentStatsContainer.addMassEntry(foundTargetBuilding, addAmount);
+			}else if(foundTargetTroup != null) {
+				RoundData.currentStatsContainer.addMassEntry(foundTargetTroup, addAmount);
+			}
 		}
 		
 		//FINISHED

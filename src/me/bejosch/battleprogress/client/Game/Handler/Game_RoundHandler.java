@@ -1,5 +1,6 @@
 package me.bejosch.battleprogress.client.Game.Handler;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -18,6 +19,7 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
+import me.bejosch.battleprogress.client.Objects.RoundStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Converter;
@@ -237,17 +239,20 @@ public class Game_RoundHandler {
 					if(building instanceof Building_Mine) {
 						Building_Mine mine = (Building_Mine) building;
 						int amount = mine.produceMass();
+						RoundData.currentStatsContainer.addMassEntry(mine, amount);
 						numberOfMaterialBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(mine.connectedField), hqPosition, false);
 					}else if(building instanceof Building_Converter) {
 						Building_Converter converter = (Building_Converter) building;
 						int amount = converter.convertMaterial();
+						RoundData.currentStatsContainer.addMassEntry(converter, amount);
 						numberOfMaterialBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(converter.connectedField), hqPosition, false);
 					}else if(building instanceof Building_Headquarter) {
 						//HQ
 						Building_Headquarter hq = (Building_Headquarter) building;
 						int amount = hq.produceMass_HQ();
+						RoundData.currentStatsContainer.addMassEntry(hq, amount);
 						numberOfMaterialBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
 					}
@@ -316,12 +321,14 @@ public class Game_RoundHandler {
 					if(building instanceof Building_Reactor) {
 						Building_Reactor reactor = (Building_Reactor) building;
 						int amount = reactor.produceEnergy();
+						RoundData.currentStatsContainer.addEnergyEntry(reactor, amount);
 						numberOfEnergyBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Energy, amount, new FieldCoordinates(reactor.connectedField), hqPosition, false);
 					}else if(building instanceof Building_Headquarter) {
 						//HQ
 						Building_Headquarter hq = (Building_Headquarter) building;
 						int amount = hq.produceEnergy_HQ();
+						RoundData.currentStatsContainer.addEnergyEntry(hq, amount);
 						numberOfEnergyBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Energy, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
 					}
@@ -390,11 +397,13 @@ public class Game_RoundHandler {
 					if(building instanceof Building_Headquarter) {
 						Building_Headquarter hq = (Building_Headquarter) building;
 						int amount = hq.produceResearch_HQ();
+						RoundData.currentStatsContainer.addResearchEntry(hq, amount);
 						numberOfResearchBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Research, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
 					}else if(building instanceof Building_Laboratory) {
 						Building_Laboratory laboratory = (Building_Laboratory) building;
 						int amount = laboratory.produceResearch();
+						RoundData.currentStatsContainer.addResearchEntry(laboratory, amount);
 						numberOfResearchBuildings++;
 						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Research, amount, new FieldCoordinates(laboratory.connectedField), hqPosition, false);
 					}
@@ -451,10 +460,14 @@ public class Game_RoundHandler {
 			for(Building building : Funktions.getAllBuildingList()) { building.roundEnd_3(); }
 			for(Troup troup : Funktions.getAllTroupList()) { troup.roundEnd_3(); }
 			
+			//UPDATE STATS CONTAINER
+			RoundData.statsContainer.put(RoundData.currentRound, RoundData.currentStatsContainer);
+			RoundData.currentRound++;
+			RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
+			
 			RoundData.roundStatusInfo = "Round has finished";
 			RoundData.roundIsChanging = false;
 			RoundData.currentlyPerformingTasks = false;
-			RoundData.currentRound++;
 			
 			RoundData.readyPlayerCount = 0;
 			RoundData.clientIsReadyForThisRound = false;
@@ -894,6 +907,10 @@ public class Game_RoundHandler {
 			BuildMenuTask activeTask = GameData.currentActive_MAA_BuildingTask.connectedBuildingTask;
 			String data_Build = activeTask.name+";"+activeTask.targetCoordinate.X+";"+activeTask.targetCoordinate.Y;
 			MinaClient.sendData(602, data_Build);
+			//STATS
+			Point hqCords = GameHandler.getHQCoordinates();
+			Building hq = GameData.gameMap_FieldList[hqCords.x][hqCords.y].building;
+			RoundData.currentStatsContainer.addMassEntry(hq, -activeTask.cost);
 		}
 		
 		//Send finish packet
@@ -1202,7 +1219,19 @@ public class Game_RoundHandler {
 		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
 			Task_Building task = building.activeTask;
 			if(task != null) {
+				
 				RoundData.clientTasks_BuildingTasks.add(task);
+				
+				//STATS
+				if(task.costsMass) {
+					if(task instanceof Task_Building_Produce) {
+						Task_Building_Produce prodTask = (Task_Building_Produce) task;
+						RoundData.currentStatsContainer.addMassEntry(building, -prodTask.troupProduceCost);
+					}
+				}
+				if(task.costsEnergy) {
+					RoundData.currentStatsContainer.addEnergyEntry(building, -building.energyCostPerAction);
+				}
 			}
 		}
 		
@@ -1216,7 +1245,19 @@ public class Game_RoundHandler {
 		for(Troup troup : Funktions.getTroupListByPlayerID(ProfilData.thisClient.getID())) {
 			Task_Troup task = troup.activeTask;
 			if(task != null) {
+				
 				RoundData.clientTasks_TroupTasks.add(task);
+				
+				//STATS
+				if(task.costsMass) {
+					if(task instanceof Task_Troup_Upgrade) {
+						Task_Troup_Upgrade upgTask = (Task_Troup_Upgrade) task;
+						RoundData.currentStatsContainer.addMassEntry(troup, -upgTask.upgradeTroupCost);
+					}
+				}
+				if(task.costsEnergy) {
+					RoundData.currentStatsContainer.addEnergyEntry(troup, -troup.energyCostPerAction);
+				}
 			}
 		}
 		

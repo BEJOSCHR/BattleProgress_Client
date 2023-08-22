@@ -39,9 +39,9 @@ public class InfoMessage {
 		loadTypeSettings(importance_);
 		
 		//ADD
-		while(!GameData.NotificationList.contains(thisGet())) {
+		while(!GameData.notificationList.contains(thisGet())) {
 			try{
-				GameData.NotificationList.add(thisGet());
+				GameData.notificationList.add(thisGet());
 			}catch(ConcurrentModificationException error) {}
 		}
 		//REQUEST COORDS UPDATE FOR ACTION AREAS
@@ -69,9 +69,9 @@ public class InfoMessage {
 		loadTypeSettings(importance_);
 		
 		//ADD
-		while(!GameData.NotificationList.contains(thisGet())) {
+		while(!GameData.notificationList.contains(thisGet())) {
 			try{
-				GameData.NotificationList.add(thisGet());
+				GameData.notificationList.add(thisGet());
 			}catch(ConcurrentModificationException error) {}
 		}
 		//REQUEST COORDS UPDATE FOR ACTION AREAS
@@ -185,9 +185,9 @@ public class InfoMessage {
 	public void remove() {
 		
 		//REMOVE
-		while(GameData.NotificationList.contains(thisGet())) {
+		while(GameData.notificationList.contains(thisGet())) {
 			try{
-				GameData.NotificationList.remove(thisGet());
+				GameData.notificationList.remove(thisGet());
 			}catch(ConcurrentModificationException error) {}
 		}
 		//REQUEST COORDS UPDATE FOR ACTION AREAS

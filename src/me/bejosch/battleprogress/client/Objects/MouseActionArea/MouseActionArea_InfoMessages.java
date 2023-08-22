@@ -34,7 +34,7 @@ public class MouseActionArea_InfoMessages extends MouseActionArea{
 	public void updateCoordinates() {
 		
 		if(isActiv() == true) {
-			InfoMessage connectedInfoMessage = GameData.NotificationList.get(infoMessageNumber);
+			InfoMessage connectedInfoMessage = GameData.notificationList.get(infoMessageNumber);
 			xTL = connectedInfoMessage.current_TR_X-connectedInfoMessage.getWidth();
 			xBR = connectedInfoMessage.current_TR_X;
 			yTL = connectedInfoMessage.current_TR_Y;
@@ -46,7 +46,7 @@ public class MouseActionArea_InfoMessages extends MouseActionArea{
 	@Override
 	public void performAction_HOVER() {
 		
-		if(GameData.NotificationList.get(infoMessageNumber) instanceof InfoMessage_Located) {
+		if(GameData.notificationList.get(infoMessageNumber) instanceof InfoMessage_Located) {
 			String[] hoverText_ = {"Left click - Jump to location", "Right click - Remove"};
 			HoverHandler.updateHoverMessage(this.idName, hoverText_);
 //		}else if( ### [TODO OTHER SPECIAL INFOMESSAGES] ) {
@@ -61,7 +61,7 @@ public class MouseActionArea_InfoMessages extends MouseActionArea{
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		InfoMessage connectedInfoMessage = GameData.NotificationList.get(infoMessageNumber);
+		InfoMessage connectedInfoMessage = GameData.notificationList.get(infoMessageNumber);
 		if(connectedInfoMessage instanceof InfoMessage_Located) {
 			InfoMessage_Located infoMessage_Located = (InfoMessage_Located) connectedInfoMessage;
 			infoMessage_Located.jumpToConnectedLocation();
@@ -72,7 +72,7 @@ public class MouseActionArea_InfoMessages extends MouseActionArea{
 	@Override
 	public void performAction_RIGHT_RELEASE() {
 		
-		InfoMessage connectedInfoMessage = GameData.NotificationList.get(infoMessageNumber);
+		InfoMessage connectedInfoMessage = GameData.notificationList.get(infoMessageNumber);
 		connectedInfoMessage.remove();
 		
 	}
@@ -85,7 +85,7 @@ public class MouseActionArea_InfoMessages extends MouseActionArea{
 	@Override
 	public boolean isActiv() {
 		try{
-			if(GameData.NotificationList.get(infoMessageNumber) != null) {
+			if(GameData.notificationList.get(infoMessageNumber) != null) {
 				return true;
 			}else {
 				return false;

@@ -93,7 +93,7 @@ public class Game_DrawOverlay {
 		//MATERIAL
 		g.setColor(Color.DARK_GRAY);
 		g.fillRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
-		g.setColor(Color.YELLOW);
+		g.setColor(GameData.color_Material);
 		g.drawRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
 		g.drawString(""+EconomicData.materialAmount, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
@@ -102,7 +102,7 @@ public class Game_DrawOverlay {
 		//ENERGY
 		g.setColor(Color.DARK_GRAY);
 		g.fillRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
-		g.setColor(new Color(102, 204, 255));
+		g.setColor(GameData.color_Energy);
 		g.drawRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
 		g.drawString(""+EconomicData.energyAmount, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
@@ -111,7 +111,7 @@ public class Game_DrawOverlay {
 		//RESEARCH
 		g.setColor(Color.DARK_GRAY);
 		g.fillRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
-		g.setColor(new Color(255, 0, 255)); //PURPLE
+		g.setColor(GameData.color_Research);
 		g.drawRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
 		g.drawString(""+ResearchData.researchPoints, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
@@ -293,7 +293,7 @@ public class Game_DrawOverlay {
 		int durchlauf = 0, extraSpace = 0;
 		
 		try{
-			for(InfoMessage infoMessage : GameData.NotificationList) {
+			for(InfoMessage infoMessage : GameData.notificationList) {
 				infoMessage.draw(g, GameData.startX, GameData.startY + (GameData.space_MAArea*durchlauf) + extraSpace );
 				extraSpace += infoMessage.getHeight();
 				durchlauf++;

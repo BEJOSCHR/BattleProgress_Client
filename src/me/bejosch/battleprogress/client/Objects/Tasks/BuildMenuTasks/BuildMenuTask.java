@@ -2,6 +2,7 @@ package me.bejosch.battleprogress.client.Objects.Tasks.BuildMenuTasks;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,7 +80,8 @@ public class BuildMenuTask {
 		if(GameData.dragAndDropInputActive_BuildingMenu == true) {
 			//WIRD NOCH BEWEGT
 			if(GameData.hoveredField != null) {
-				Funktions.drawLineBetweenFields(g, GameHandler.get_MID_Field(false), GameData.hoveredField, Color.WHITE);
+				Point hqCords = GameHandler.getHQCoordinates();
+				Funktions.drawLineBetweenFields(g, GameData.gameMap_FieldList[hqCords.x][hqCords.y], GameData.hoveredField, Color.WHITE);
 			}
 		}else {
 			//WIRD NICHT MEHR BEWEGT
@@ -133,33 +135,33 @@ public class BuildMenuTask {
 		
 		switch(type) {
 		case Fight:
-			String[] hovermessage_01 = {"Turret"+" is used to attack nearby enemy","Small range with singletarget damage"};
+			String[] hovermessage_01 = {"The "+"Turret"+" is used to attack nearby enemy","Small range with singletarget damage"};
 			output.add(new BuildMenuTask(BuildMenuType.Fight, "Turret", hovermessage_01, null));
-			String[] hovermessage_02 = {"Artillery"+" is used to attack far away enemy","Huge range with multitarget damage"};
+			String[] hovermessage_02 = {"The "+"Artillery"+" is used to attack far away enemy","Huge range with multitarget damage"};
 			output.add(new BuildMenuTask(BuildMenuType.Fight, "Artillery", hovermessage_02, null));
 			break;
 		case Economic:
-			String[] hovermessage_10 = {"Mine"+" is used to produce mass","Can only be placed on ressource fields"};
+			String[] hovermessage_10 = {"The "+"Mine"+" is used to produce mass","Can only be placed on ressource fields"};
 			output.add(new BuildMenuTask(BuildMenuType.Economic, "Mine", hovermessage_10, null));
-			String[] hovermessage_11 = {"Reactor"+" is used to produce energy"};
+			String[] hovermessage_11 = {"The "+"Reactor"+" is used to produce energy"};
 			output.add(new BuildMenuTask(BuildMenuType.Economic, "Reactor", hovermessage_11, null));
-			String[] hovermessage_12 = {"Laboratory"+" is used to produce research points"};
+			String[] hovermessage_12 = {"The "+"Laboratory"+" is used to produce research points"};
 			output.add(new BuildMenuTask(BuildMenuType.Economic, "Laboratory", hovermessage_12, null));
-			String[] hovermessage_13 = {"Converter"+" is used to exchange energy into material","It only convertes if enough energy is available!"};
+			String[] hovermessage_13 = {"The "+"Converter"+" is used to exchange energy into material","It only convertes if enough energy is available!"};
 			output.add(new BuildMenuTask(BuildMenuType.Economic, "Converter", hovermessage_13, UpgradeType.Converter));
 			break;
 		case Production:
-			String[] hovermessage_20 = {"Barracks"+" is used to produce LAND-Soldier troups"};
+			String[] hovermessage_20 = {"The "+"Barracks"+" is used to produce LAND-Soldier troups"};
 			output.add(new BuildMenuTask(BuildMenuType.Production, "Barracks", hovermessage_20, null));
-			String[] hovermessage_21 = {"Garage"+" is used to produce LAND-Vehicle troups"};
+			String[] hovermessage_21 = {"The "+"Garage"+" is used to produce LAND-Vehicle troups"};
 			output.add(new BuildMenuTask(BuildMenuType.Production, "Garage", hovermessage_21, null));
-			String[] hovermessage_22 = {"Airport"+" is used to produce AIR troups"};
+			String[] hovermessage_22 = {"The "+"Airport"+" is used to produce AIR troups"};
 			output.add(new BuildMenuTask(BuildMenuType.Production, "Airport", hovermessage_22, null));
 			break;
 		case Special:
-			String[] hovermessage_30 = {"Hospital"+" is used to heal troups"};
+			String[] hovermessage_30 = {"The "+"Hospital"+" is used to heal troups"};
 			output.add(new BuildMenuTask(BuildMenuType.Special, "Hospital", hovermessage_30, null));
-			String[] hovermessage_31 = {"Workshop"+" is used to repair buildings"};
+			String[] hovermessage_31 = {"The "+"Workshop"+" is used to repair buildings"};
 			output.add(new BuildMenuTask(BuildMenuType.Special, "Workshop", hovermessage_31, null));
 			break;
 		default:

@@ -18,7 +18,7 @@ import me.bejosch.battleprogress.client.Window.Images.Images;
 public class Task_Building_Heal extends Task_Building{
 
 	public Task_Building_Heal(Building connectedBuilding) {
-		super(connectedBuilding, Images.taskIcon_Building_Heal, "Heal", 11, 3, null);
+		super(connectedBuilding, Images.taskIcon_Building_Heal, "Heal", 11, false, true, 3, null);
 		String[] hoverText = {"This task heals an allied troup","All tasks are executed at the end of the round"};
 		this.hoverMessage = hoverText;
 	}

@@ -161,7 +161,11 @@ public class Game_ClickEvent {
 								}
 							}
 						}
-						if(!hit) { GameData.clickedField = choosenField; }
+						if(!hit) { 
+							GameData.clickedField = choosenField; 
+						}else { 
+							GameData.clickedField = null; 
+						}
 					}else {
 						GameData.clickedField = choosenField;
 					}

@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -13,16 +14,17 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
+import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Airport;
+import me.bejosch.battleprogress.client.Objects.Buildings.Building_Artillery;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Barracks;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Converter;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Garage;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Hospital;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Laboratory;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Artillery;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Turret;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Mine;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Reactor;
+import me.bejosch.battleprogress.client.Objects.Buildings.Building_Turret;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Workshop;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
@@ -105,44 +107,51 @@ public class ExecuteTask_Build extends ExecuteTask{
 		this.performedAction = true;
 		this.animationIsRunning = false;
 		
+		Building newBuilding = null;
+		
 		//CREATE NEW BUILDING
 		switch (buildingName) {
 		case "Mine":
-			new Building_Mine(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Mine(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Reactor":
-			new Building_Reactor(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Reactor(playerID, targetCoordinate.getConnectedField());
 			break;
-		case "Light Turret":
-			new Building_Turret(playerID, targetCoordinate.getConnectedField());
+		case "Turret":
+			newBuilding = new Building_Turret(playerID, targetCoordinate.getConnectedField());
 			break;
-		case "Light Artillery":
-			new Building_Artillery(playerID, targetCoordinate.getConnectedField());
+		case "Artillery":
+			newBuilding = new Building_Artillery(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Hospital":
-			new Building_Hospital(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Hospital(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Workshop":
-			new Building_Workshop(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Workshop(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Barracks":
-			new Building_Barracks(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Barracks(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Garage":
-			new Building_Garage(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Garage(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Airport":
-			new Building_Airport(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Airport(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Laboratory":
-			new Building_Laboratory(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Laboratory(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Converter":
-			new Building_Converter(playerID, targetCoordinate.getConnectedField());
+			newBuilding = new Building_Converter(playerID, targetCoordinate.getConnectedField());
 			break;
 		default:
 			ConsoleOutput.printMessageInConsole("A BUILD executeTask found no building for the given buildingName [BuildingName: "+buildingName+"]", true);
 			break;
+		}
+		
+		//STATS
+		if(newBuilding != null && newBuilding.playerID == ProfilData.thisClient.getID()) {
+			RoundData.currentStatsContainer.registerBuild(newBuilding);
 		}
 		
 		//FINISHED

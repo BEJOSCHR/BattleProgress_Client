@@ -1,6 +1,7 @@
 package me.bejosch.battleprogress.client.Objects.Buildings;
 
 import me.bejosch.battleprogress.client.Data.Game.EconomicData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Game.Handler.Game_ResearchHandler;
 import me.bejosch.battleprogress.client.Handler.UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
@@ -36,7 +37,7 @@ public class Building_Converter extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is an economical building","It exchanges energy into material, but only if enough energy is available at the end of the round!"};
+		String[] hoverDescription_ = {"This is an economical building","It exchanges energy into material,", "but only if enough energy is available at the end of the round!"};
 		hoverDescription = hoverDescription_;
 		
 		//EXTRA
@@ -72,6 +73,7 @@ public class Building_Converter extends Building {
 		if(EconomicData.energyAmount >= this.getTotalNeededEnergy()) {
 			//ENOUGH ENERGY
 			EconomicData.energyAmount -= this.getTotalNeededEnergy();
+			RoundData.currentStatsContainer.addEnergyEntry(this, -this.getTotalNeededEnergy());
 			return this.getTotalProducedMaterial();
 		}else {
 			return 0;

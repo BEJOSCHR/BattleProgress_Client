@@ -11,6 +11,7 @@ import me.bejosch.battleprogress.client.Data.CreateMapData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
@@ -262,7 +263,7 @@ public class Troup {
 	public void roundEnd_1() {
 		
 		if(shouldBeDeletedAtRoundEnd == true) {
-			this.delete();
+			this.delete(false);
 		}
 		
 	}
@@ -633,9 +634,15 @@ public class Troup {
 		}
 		
 		totalHealth += healCount;
+		int realHealAmount = healCount;
 		
 		if(totalHealth > maxHealth) {
+			realHealAmount = maxHealth-totalHealth;
 			totalHealth = maxHealth;
+		}
+		
+		if(this.playerID == ProfilData.thisClient.getID()) {
+			RoundData.currentStatsContainer.registerTroupHeal(this, realHealAmount);
 		}
 		
 	}
@@ -644,7 +651,7 @@ public class Troup {
 	/**
 	 * Deletes this troup
 	 */
-	public void delete() {
+	public void delete(boolean fromUpgrade) {
 		
 		if(SpielModus.isGameModus1v1()) {
 			//1v1
@@ -673,6 +680,16 @@ public class Troup {
 				GameData.player4_troups.remove(this);
 			}else {
 				ConsoleOutput.printMessageInConsole("Removing troup to player list found no matching player! (2v2 - ID: "+playerID+")", true);
+			}
+		}
+		
+		//STATS
+		if(fromUpgrade == false) {
+			if(this.playerID == ProfilData.thisClient.getID()) {
+				RoundData.currentStatsContainer.registerDeath(this);
+			}else if(GameHandler.checkPlayerIDForAllied(this.playerID, ProfilData.thisClient.getID()) == false) {
+				//ENEMY
+				RoundData.currentStatsContainer.registerKill(this);
 			}
 		}
 		

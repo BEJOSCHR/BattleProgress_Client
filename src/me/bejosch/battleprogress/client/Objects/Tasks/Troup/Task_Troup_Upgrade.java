@@ -25,7 +25,7 @@ public class Task_Troup_Upgrade extends Task_Troup {
 	public UpgradeType researchDependency = null;
 	
 	public Task_Troup_Upgrade(Troup connectedTroup, String upgradeTroupName, int upgradeTroupCost, UpgradeType researchDependency_) {
-		super(connectedTroup, Images.taskIcon_Troup_Upgrade, "Upgrade", 11, 3, null);
+		super(connectedTroup, Images.taskIcon_Troup_Upgrade, "Upgrade", 11, true, false, 3, null);
 		
 		String[] hoverText = {"This task upgrades this and another troup of the same type to a better one","All tasks are executed at the end of the round"};
 		this.hoverMessage = hoverText;
@@ -90,6 +90,7 @@ public class Task_Troup_Upgrade extends Task_Troup {
 								EconomicData.materialAmount -= this.upgradeTroupCost; //REMOVE COST
 								this.targetCoordinates = new FieldCoordinates(targetField); //SET TARGET FIELD
 								this.targetPath = new PathFinding_Algorithmus(new FieldCoordinates(this.troup.connectedField), new FieldCoordinates(targetField), true).getPath(this.troup.actionRange, true, this.troup.canFly);
+								GameData.clickedField = null; 
 								
 								targetField.troup.targetUpgradePosition = new FieldCoordinates(this.troup.connectedField);
 								

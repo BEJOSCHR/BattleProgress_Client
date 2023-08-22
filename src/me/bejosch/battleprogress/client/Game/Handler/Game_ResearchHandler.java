@@ -1,6 +1,7 @@
 package me.bejosch.battleprogress.client.Game.Handler;
 
 import me.bejosch.battleprogress.client.Data.Game.ResearchData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ResearchCategory;
 import me.bejosch.battleprogress.client.Enum.UpgradeType;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
@@ -98,9 +99,9 @@ public class Game_ResearchHandler {
 	public static void researchUpgrade(UpgradeType type) {
 		
 		Upgrade upgrade = null;
-		for(Upgrade u1 : ResearchData.possibleUpgrades) {
-			if(u1.getType() == type) {
-				upgrade = u1;
+		for(Upgrade u : ResearchData.possibleUpgrades) {
+			if(u.getType() == type) {
+				upgrade = u;
 				break;
 			}
 		}
@@ -109,6 +110,8 @@ public class Game_ResearchHandler {
 		ResearchData.possibleUpgrades.remove(upgrade);
 		ResearchData.researchedUpgrades.add(upgrade);
 		ResearchData.researchPoints -= upgrade.getDataContainer().researchCost;
+		//STATS
+		RoundData.currentStatsContainer.addResearchEntry(upgrade);
 		
 	}
 	

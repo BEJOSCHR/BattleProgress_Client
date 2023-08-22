@@ -3,6 +3,8 @@ package me.bejosch.battleprogress.client.Objects.ExecuteTasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -88,19 +90,20 @@ public class ExecuteTask_Upgrade extends ExecuteTask{
 		double percentageLeft = ((double) totalHealthOldCombined) / ((double) maxHealthOldCombined);
 		
 		//DESTROY OLD TROUPS
-		troupOld1.delete();
-		troupOld2.delete();
+		troupOld1.delete(true);
+		troupOld2.delete(true);
 		
 		//CREATE NEW TROUP
 		Troup troup = null;
 		switch (this.upgradeTroupName) {
-		//================= LAND
+		//================= VEHICLE
 		case "Medium Tank":
 			troup = new Troup_Land_MediumTank(playerID, targetCoordinate.getConnectedField());
 			break;
 		case "Heavy Tank":
 			troup = new Troup_Land_HeavyTank(playerID, targetCoordinate.getConnectedField());
 			break;
+		//================= SOLDIER
 		case "Medium Soldier":
 			troup = new Troup_Land_MediumSoldier(playerID, targetCoordinate.getConnectedField());
 			break;
@@ -119,6 +122,11 @@ public class ExecuteTask_Upgrade extends ExecuteTask{
 			break;
 		}
 		if(troup != null) { troup.totalHealth = (int) Math.round(troup.totalHealth*percentageLeft); } //SET DAMAGED HP
+		
+		//STATS
+		if(troup != null && troup.playerID == ProfilData.thisClient.getID()) {
+			RoundData.currentStatsContainer.registerUpgrade(troup);
+		}
 		
 		//FINISHED
 		actionFinished();

@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -96,11 +97,37 @@ public class ExecuteTask_Attack extends ExecuteTask{
 		if(foundTargetBuilding != null) {
 			//BUILDING
 			foundTargetBuilding.damage(attackCount);
+			
+			//STATS
+			if(foundTargetBuilding.playerID == ProfilData.thisClient.getID()) { 
+				RoundData.currentStatsContainer.registerDamageReceived(foundTargetBuilding, attackCount);
+			}
+			
 		}else if(foundTargetTroup != null) {
 			//TROUP
 			foundTargetTroup.damage(attackCount);
+			
+			//STATS
+			if(foundTargetTroup.playerID == ProfilData.thisClient.getID()) { 
+				RoundData.currentStatsContainer.registerDamageReceived(foundTargetTroup, attackCount);
+			}
 		}else {
 			ConsoleOutput.printMessageInConsole("An ATTACK executeTask found no building or troup at the target to damage [X: "+targetCoordinate.X+"-Y: "+targetCoordinate.Y+"]", true);
+		}
+		
+		//STATS
+		Building damageExecuteBuilding = GameHandler.getBuildingByCoordinates(executeCoordinate.X, executeCoordinate.Y);
+		Troup damageExecuteTroup = GameHandler.getTroupByCoordinates(executeCoordinate.X, executeCoordinate.Y);
+		if(damageExecuteBuilding != null) {
+			if(damageExecuteBuilding.playerID == ProfilData.thisClient.getID()) { 
+				RoundData.currentStatsContainer.registerDamageDealt(damageExecuteBuilding, attackCount);
+			}
+		}else if(damageExecuteTroup != null) {
+			if(damageExecuteTroup.playerID == ProfilData.thisClient.getID()) { 
+				RoundData.currentStatsContainer.registerDamageDealt(damageExecuteTroup, attackCount);
+			}
+		}else {
+			ConsoleOutput.printMessageInConsole("An ATTACK executeTask found no building or troup as damage source [X: "+executeCoordinate.X+"-Y: "+executeCoordinate.Y+"]", true);
 		}
 		
 		//FINISHED

@@ -65,7 +65,7 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 				//LOCKED
 				this.standardColor = Color.LIGHT_GRAY;
 			}else if(GameData.currentActive_MAA_BuildingTask != null) {
-				if(GameData.currentActive_MAA_BuildingTask.Xcords == this.Xcords && GameData.currentActive_MAA_BuildingTask.Ycords == this.Ycords && this.connectedBuildingTask.name.equalsIgnoreCase(GameData.currentActive_MAA_BuildingTask.connectedBuildingTask.name)) {
+				if(GameData.currentActive_MAA_BuildingTask.xNumber == this.xNumber && GameData.currentActive_MAA_BuildingTask.yNumber == this.yNumber && this.connectedBuildingTask.name.equalsIgnoreCase(GameData.currentActive_MAA_BuildingTask.connectedBuildingTask.name)) {
 					//THIS IS THE CURRENT ACTIVE TASK
 					this.standardColor = Color.GREEN;
 				}else {
@@ -132,7 +132,7 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 			removeActiveTask();
 		}else {
 			if(GameData.currentActive_MAA_BuildingTask != null) {
-				if(GameData.currentActive_MAA_BuildingTask.Xcords == this.Xcords && GameData.currentActive_MAA_BuildingTask.Ycords == this.Ycords && this.connectedBuildingTask.name.equalsIgnoreCase(GameData.currentActive_MAA_BuildingTask.connectedBuildingTask.name)) {
+				if(GameData.currentActive_MAA_BuildingTask.xNumber == this.xNumber && GameData.currentActive_MAA_BuildingTask.yNumber == this.yNumber && this.connectedBuildingTask.name.equalsIgnoreCase(GameData.currentActive_MAA_BuildingTask.connectedBuildingTask.name)) {
 					//THIS IS THE CURRENT ACTIVE TASK
 					//SO CANCLE
 					removeActiveTask();
@@ -226,10 +226,9 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 		return false;
 	}
 	
-	int Xcords = 1, Ycords = 1;
 	public BuildMenuTask getTaskByNumbers(int checkX, int checkY) {
 		
-		Xcords = 1; Ycords = 1;
+		int Xcords = 1, Ycords = 1;
 		
 		for(BuildMenuTask task : GameData.buildMenu_displayedBuildings) {
 			

@@ -29,6 +29,8 @@ public class Task_Troup implements Task {
 	public int textSize = 0; //MIN 8
 	public int xMovingPerLetter = 0;
 	public boolean isActiveTask = false;
+	public boolean costsMass = false;
+	public boolean costsEnergy = false;
 	
 	public String[] hoverMessage = null;
 	
@@ -39,15 +41,19 @@ public class Task_Troup implements Task {
 	 * @param img_ - {@link Image} - The image which is displayed to represent this task
 	 * @param title_ - String - The title of the task
 	 * @param textSize_ - int - The textSize of the title
+	 * @param costsMass - boolean - true if the task consumes materials, false if not
+	 * @param costsEnergy - boolean - true if the task consumes energy, false if not
 	 * @param xMovingPerLetter_ - int - The value which is multiplied per letter of the title to move it to the left for a center focus
 	 * @param hoverMessage_ - String[] - The message/description which is shown on hover
 	 */
-	public Task_Troup(Troup connectedTroup, Image img_, String title_, int textSize_, int xMovingPerLetter_, String[] hoverMessage_) {
+	public Task_Troup(Troup connectedTroup, Image img_, String title_, int textSize_, boolean costsMass, boolean costsEnergy, int xMovingPerLetter_, String[] hoverMessage_) {
 		
 		this.troup = connectedTroup;
 		this.img = img_;
 		this.title = title_;
 		this.textSize = textSize_;
+		this.costsMass = costsMass;
+		this.costsEnergy = costsEnergy;
 		this.xMovingPerLetter = xMovingPerLetter_;
 		this.hoverMessage = hoverMessage_;
 		

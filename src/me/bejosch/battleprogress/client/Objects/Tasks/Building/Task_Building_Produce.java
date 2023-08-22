@@ -40,7 +40,7 @@ public class Task_Building_Produce extends Task_Building{
 	 * @param troupProduceCost_ - int - The cost of the troup to be produced
 	 */
 	public Task_Building_Produce(Building connectedBuilding, TroupType troupType_, String troupName_, int troupProduceCost_, UpgradeType researchDependency_) {
-		super(connectedBuilding, Images.taskIcon_Building_Produce, "Produce", 11, 3, null);
+		super(connectedBuilding, Images.taskIcon_Building_Produce, "Produce", 11, true, false, 3, null);
 		
 		String[] hoverText = {"This task produces a new troup","Troup: "+troupName_,"Cost: "+troupProduceCost_,"All tasks are executed at the end of the round"};
 		this.hoverMessage = hoverText;
@@ -118,6 +118,7 @@ public class Task_Building_Produce extends Task_Building{
 							
 							EconomicData.materialAmount -= this.troupProduceCost; //REMOVE COST
 							this.targetCoordinates = new FieldCoordinates(targetField); //SET TARGET FIELD
+							GameData.clickedField = null; 
 							if(troupType == TroupType.LAND) {
 								//NO WATER
 								this.targetPath = new PathFinding_Algorithmus(new FieldCoordinates(this.building.connectedField), new FieldCoordinates(targetField), true).getPath(this.building.viewDistance, false, false);

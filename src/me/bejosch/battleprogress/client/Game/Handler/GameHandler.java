@@ -1,6 +1,7 @@
 package me.bejosch.battleprogress.client.Game.Handler;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -13,6 +14,7 @@ import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.DiscordAPI.DiscordAPI;
 import me.bejosch.battleprogress.client.Enum.BuildMenuType;
 import me.bejosch.battleprogress.client.Enum.FieldType;
@@ -27,6 +29,7 @@ import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Handler.UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
+import me.bejosch.battleprogress.client.Objects.RoundStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameStartDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
@@ -188,35 +191,9 @@ public class GameHandler {
 	public static void initialiseGame() {
 		
 		//CreateOwnHQ
-		//1vs1
-		if(SpielModus.isGameModus1v1()) {
-			if(GameData.playingPlayer[0].getID() == ProfilData.thisClient.getID()) {
-				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_1_1vs1.x+";"+StandardData.HQ_1_1vs1.y);
-				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_1_1vs1.x, StandardData.HQ_1_1vs1.y); //MOVE SCREEN TO FOCUS HQ
-			}else if(GameData.playingPlayer[1].getID() == ProfilData.thisClient.getID()) {
-				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_2_1vs1.x+";"+StandardData.HQ_2_1vs1.y);
-				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_2_1vs1.x, StandardData.HQ_2_1vs1.y); //MOVE SCREEN TO FOCUS HQ
-			}else {
-				ConsoleOutput.printMessageInConsole("Could not create HQ on game start (1vs1)! ClientID: "+ProfilData.thisClient.getID(), true);
-			}
-		//2vs2
-		}else {
-			if(GameData.playingPlayer[0].getID() == ProfilData.thisClient.getID()) {
-				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_1_2vs2.x+";"+StandardData.HQ_1_2vs2.y);
-				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_1_2vs2.x, StandardData.HQ_1_2vs2.y); //MOVE SCREEN TO FOCUS HQ
-			}else if(GameData.playingPlayer[1].getID() == ProfilData.thisClient.getID()) {
-				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_2_2vs2.x+";"+StandardData.HQ_2_2vs2.y);
-				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_2_2vs2.x, StandardData.HQ_2_2vs2.y); //MOVE SCREEN TO FOCUS HQ
-			}else if(GameData.playingPlayer[2].getID() == ProfilData.thisClient.getID()) {
-				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_3_2vs2.x+";"+StandardData.HQ_3_2vs2.y);
-				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_3_2vs2.x, StandardData.HQ_3_2vs2.y); //MOVE SCREEN TO FOCUS HQ
-			}else if(GameData.playingPlayer[3].getID() == ProfilData.thisClient.getID()) {
-				MinaClient.sendData(621, "Headquarter"+";"+StandardData.HQ_4_2vs2.x+";"+StandardData.HQ_4_2vs2.y);
-				Funktions.moveScreenToFieldCoordinates(StandardData.HQ_4_2vs2.x, StandardData.HQ_4_2vs2.y); //MOVE SCREEN TO FOCUS HQ
-			}else {
-				ConsoleOutput.printMessageInConsole("Could not create HQ on game start (2vs2)! ClientID: "+ProfilData.thisClient.getID(), true);
-			}
-		}
+		Point hqCords = getHQCoordinates();
+		MinaClient.sendData(621, "Headquarter"+";"+hqCords.x+";"+hqCords.y);
+		Funktions.moveScreenToFieldCoordinates(hqCords.x, hqCords.y); //MOVE SCREEN TO FOCUS HQ
 		
 		//Setup the research after loaded UpgradeDataContainer earlyer
 		Game_ResearchHandler.initUpgrades();
@@ -286,10 +263,44 @@ public class GameHandler {
 //--------------------------------------------------------------------------------------------------------
 		
 		//CALCULATE VIEW RANGE
-		//TODO: IS CALLED BY THE CREATE HQ PART ON THE SERVER RECEIVER DOWN BELOW
+		//IS CALLED BY THE CREATE HQ PART ON THE SERVER RECEIVER DOWN BELOW
+		
+		//STATS CONTAINER
+		RoundData.currentRound = 1;
+		RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
 		
 		//START ROUND TIMER
 		Game_RoundHandler.startRoundTimer();
+		
+	}
+	
+	public static Point getHQCoordinates() { return getHQCoordinates(ProfilData.thisClient.getID()); }
+	public static Point getHQCoordinates(int playerID) {
+		
+		if(SpielModus.isGameModus1v1()) {
+			if(GameData.playingPlayer[0].getID() == playerID) {
+				return StandardData.HQ_1_1vs1;
+			}else if(GameData.playingPlayer[1].getID() == playerID) {
+				return StandardData.HQ_2_1vs1;
+			}else {
+				ConsoleOutput.printMessageInConsole("Could not get HQ on game start (1vs1)! PlayerID: "+playerID, true);
+			}
+		//2vs2
+		}else {
+			if(GameData.playingPlayer[0].getID() == playerID) {
+				return StandardData.HQ_1_2vs2;
+			}else if(GameData.playingPlayer[1].getID() == playerID) {
+				return StandardData.HQ_2_2vs2;
+			}else if(GameData.playingPlayer[2].getID() == playerID) {
+				return StandardData.HQ_3_2vs2;
+			}else if(GameData.playingPlayer[3].getID() == playerID) {
+				return StandardData.HQ_4_2vs2;
+			}else {
+				ConsoleOutput.printMessageInConsole("Could not get HQ on game start (2vs2)! PlayerID: "+playerID, true);
+			}
+		}
+		
+		return null;
 		
 	}
 	
@@ -543,7 +554,7 @@ public class GameHandler {
 		
 		try{
 			return GameData.gameMap_FieldList[fieldX][fieldY].building;
-		}catch(IndexOutOfBoundsException | NullPointerException error) {}
+		}catch(IndexOutOfBoundsException | NullPointerException error) { error.printStackTrace(); }
 		return null;
 		
 	}
@@ -559,7 +570,7 @@ public class GameHandler {
 		
 		try{
 			return GameData.gameMap_FieldList[fieldX][fieldY].troup;
-		}catch(IndexOutOfBoundsException | NullPointerException error) {}
+		}catch(IndexOutOfBoundsException | NullPointerException error) { error.printStackTrace(); }
 		return null;
 		
 	}
