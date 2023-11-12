@@ -61,6 +61,8 @@ import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW_RoundSum_Details_KillsDeaths;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW_RoundSum_Details_Mass;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW_RoundSum_Details_Research;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW_RoundSum_NextSum;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW_RoundSum_PrevSum;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Settings.MAA_OTW_Settings_Cancel;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Settings.MAA_OTW_Settings_Save;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.UnitDetailInfo.MAA_OTW_UnitDetailInfo_Confirm;
@@ -96,6 +98,8 @@ public class OnTopWindowHandler {
 		
 		//ROUND SUMMARY
 		new MAA_OTW_RoundSum_Confirm();
+		new MAA_OTW_RoundSum_NextSum();
+		new MAA_OTW_RoundSum_PrevSum();
 		new MAA_OTW_RoundSum_Details_Mass();
 		new MAA_OTW_RoundSum_Details_Energy();
 		new MAA_OTW_RoundSum_Details_Research();

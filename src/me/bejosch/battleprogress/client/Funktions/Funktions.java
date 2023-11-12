@@ -41,9 +41,9 @@ public class Funktions {
 	
 	
 	//TODO FORMELN:
-	// FieldXY = (screenCoordinate - LRUD_count) / fiedlSize 	//FORMEL FÜR FIELD COORDINATES
-	// screenCoordinate = (FieldXY * fieldSize) + LRUD_count 	//FORMEL FÜR SCREEN COORDINATES
-	// LRUD_count = (FieldXY * fieldSize) 						//FORMEL FÜR LR/UD COUNT
+	// FieldXY = (screenCoordinate - LRUD_count) / fiedlSize 	//FORMEL Fï¿½R FIELD COORDINATES
+	// screenCoordinate = (FieldXY * fieldSize) + LRUD_count 	//FORMEL Fï¿½R SCREEN COORDINATES
+	// LRUD_count = (FieldXY * fieldSize) 						//FORMEL Fï¿½R LR/UD COUNT
 	
 	private static Comparator<Integer> sorter = new Comparator<Integer>() {
 
@@ -73,9 +73,9 @@ public class Funktions {
 	 */
 	public static void moveScreenToFieldCoordinates(int fieldX, int fieldY) {
 		
-		// LRUD_count = -(FieldXY * fieldSize) + mitteVerschiebungXY      [BEI Y +1 BEIM FIELD DAMIT DAS MENU NICHT ÜBERDECKT USW]
-		int mitteVerschiebungX = ( (WindowData.FrameWidth/StandardData.fieldSize)/2)*StandardData.fieldSize; //ZAHL AN FELDERN AUF DEM SCREEN UND DAVON DIE HÄLFTE UND DAS DANN MAL FIELDSIZE
-		int mitteVerschiebungY = ( (WindowData.FrameHeight/StandardData.fieldSize)/2)*StandardData.fieldSize; //ZAHL AN FELDERN AUF DEM SCREEN UND DAVON DIE HÄLFTEUND DAS DANN MAL FIELDSIZE
+		// LRUD_count = -(FieldXY * fieldSize) + mitteVerschiebungXY      [BEI Y +1 BEIM FIELD DAMIT DAS MENU NICHT ï¿½BERDECKT USW]
+		int mitteVerschiebungX = ( (WindowData.FrameWidth/StandardData.fieldSize)/2)*StandardData.fieldSize; //ZAHL AN FELDERN AUF DEM SCREEN UND DAVON DIE Hï¿½LFTE UND DAS DANN MAL FIELDSIZE
+		int mitteVerschiebungY = ( (WindowData.FrameHeight/StandardData.fieldSize)/2)*StandardData.fieldSize; //ZAHL AN FELDERN AUF DEM SCREEN UND DAVON DIE Hï¿½LFTEUND DAS DANN MAL FIELDSIZE
 		int newLR_count = -(fieldX * StandardData.fieldSize) + mitteVerschiebungX;
 		int newUD_count = -( (fieldY+1) * StandardData.fieldSize) + mitteVerschiebungY;
 		GameData.scroll_LR_count = newLR_count;
@@ -769,14 +769,14 @@ public class Funktions {
 		
 		input = input.replace(";", ":");
 		input = input.replace("-", "_");
-		input = input.replace("ö", "oe");
-		input = input.replace("ä", "ae");
-		input = input.replace("ü", "ue");
-		input = input.replace("ß", "ss");
-		input = input.replace("´", "'");
+		input = input.replace("ï¿½", "oe");
+		input = input.replace("ï¿½", "ae");
+		input = input.replace("ï¿½", "ue");
+		input = input.replace("ï¿½", "ss");
+		input = input.replace("ï¿½", "'");
 		input = input.replace("`", "'");
-		input = input.replace("§", "?");
-		input = input.replace("°", "?");
+		input = input.replace("ï¿½", "?");
+		input = input.replace("ï¿½", "?");
 		
 		return input;
 		

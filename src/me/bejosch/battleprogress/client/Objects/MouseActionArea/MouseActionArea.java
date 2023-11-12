@@ -142,19 +142,18 @@ public class MouseActionArea {
 	 **/
 	public void draw(Graphics g) { 
 		
-		if(isActiv() == true) {
+		if(this.isActiv() == true) {
 			switch(showBorderType) {
 			case ShowAlways:
-				if(checkArea(MouseHandler.mouseX, MouseHandler.mouseY) == true && (OnTopWindowData.onTopWindow == null || this.OTWMMA == true) ) { //WENN OTW DA IST UND KEIN OTW MAA DANN KEIN HOVER MÖGLICH
+				if(checkArea(MouseHandler.mouseX, MouseHandler.mouseY) == true && (OnTopWindowData.onTopWindow == null || this.OTWMMA == true) ) { //WENN OTW DA IST UND KEIN OTW MAA DANN KEIN HOVER Mï¿½GLICH
 					g.setColor(hoverColor);
-					g.drawRect(xTL, yTL, xBR-xTL, yBR-yTL);
 				}else {
 					g.setColor(standardColor);
-					g.drawRect(xTL, yTL, xBR-xTL, yBR-yTL);
 				}
+				g.drawRect(xTL, yTL, xBR-xTL, yBR-yTL);
 				break;
 			case ShowOnHover:
-				if(checkArea(MouseHandler.mouseX, MouseHandler.mouseY) == true && (OnTopWindowData.onTopWindow == null || this.OTWMMA == true) ) { //WENN OTW DA IST UND KEIN OTW MAA DANN KEIN HOVER MÖGLICH
+				if(checkArea(MouseHandler.mouseX, MouseHandler.mouseY) == true && (OnTopWindowData.onTopWindow == null || this.OTWMMA == true) ) { //WENN OTW DA IST UND KEIN OTW MAA DANN KEIN HOVER Mï¿½GLICH
 					g.setColor(hoverColor);
 					g.drawRect(xTL, yTL, xBR-xTL, yBR-yTL);
 				}

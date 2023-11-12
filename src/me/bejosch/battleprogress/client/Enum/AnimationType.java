@@ -21,6 +21,7 @@ public enum AnimationType {
 	Game_ChatNotification,
 	Game_Ping,
 	Game_ShowRoundSummary,
+	Game_EcoOverview,
 	
 	MovingCircleDisplay;
 	

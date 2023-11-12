@@ -14,7 +14,7 @@ public class Animation_ShowRoundSummary extends Animation {
 
 	@Override
 	public void getParametersFromType() {
-		speed = 22;
+		speed = 20;
 		super.getParametersFromType();
 	}
 	

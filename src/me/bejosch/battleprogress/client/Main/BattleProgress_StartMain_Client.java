@@ -1,5 +1,8 @@
 package me.bejosch.battleprogress.client.Main;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import me.bejosch.battleprogress.client.Data.ConnectionData;
 import me.bejosch.battleprogress.client.Data.FileData;
 import me.bejosch.battleprogress.client.Data.StandardData;
@@ -11,7 +14,7 @@ import me.bejosch.battleprogress.client.Handler.FileHandler;
 import me.bejosch.battleprogress.client.Handler.HoverHandler;
 import me.bejosch.battleprogress.client.Handler.MenuHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
-import me.bejosch.battleprogress.client.Objects.Animations.Animation_BejoschGamingIntro;
+import me.bejosch.battleprogress.client.Objects.Animations.Animation_ShowLogin;
 import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 import me.bejosch.battleprogress.client.Window.Frame;
 import me.bejosch.battleprogress.client.Window.Label;
@@ -56,7 +59,13 @@ public class BattleProgress_StartMain_Client {
 		ClientPlayerHandler.startPlayerOnlineTimer();
 		
 		//START ANIMATION
-		new Animation_BejoschGamingIntro();
+		//TODO new Animation_BejoschGamingIntro();
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				new Animation_ShowLogin();
+			}
+		}, 1000);
 		
 		//CREATE BUTTONS
 		Buttons.loadButtons();
