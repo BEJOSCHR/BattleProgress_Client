@@ -56,7 +56,6 @@ public class Building {
 	public int damage = 0; //The count how many damage this building could deal per attack
 	public int heal = 0; //The count how many heal this building could deal per action
 	public int repair = 0; //The count how many repair this building could deal per action
-	public int research = 0; //The count how many research points this building produce per round
 	
 	public boolean shouldBeDestroyedAtRoundEnd = false; //If true this building will be destroyed at the next round end (by damage taken or destroy dask)
 	

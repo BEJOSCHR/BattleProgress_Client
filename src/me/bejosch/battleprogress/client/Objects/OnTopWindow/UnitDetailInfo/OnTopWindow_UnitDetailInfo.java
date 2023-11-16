@@ -75,11 +75,11 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 		
 		categories.add("Damage: "+building.damage);
 		categories.add("EnergyConsume: "+building.energyCostPerAction);
-		if(container.energieProduktion != -1) { categories.add("EnergyProduction: "+container.energieProduktion); }else { categories.add("EnergyProduction: 0"); }
-		if(container.materialProduktion != -1) { categories.add("MaterialProduction: "+container.materialProduktion); }else { categories.add("MaterialProduction: 0"); }
 		categories.add("Heal: "+building.heal);
 		categories.add("Repair: "+building.repair);
-		categories.add("Research: "+building.research);
+		if(container.energieProduktion != -1) { categories.add("EnergyProduction: "+container.energieProduktion); }else { categories.add("EnergyProduction: 0"); }
+		if(container.materialProduktion != -1) { categories.add("MaterialProduction: "+container.materialProduktion); }else { categories.add("MaterialProduction: 0"); }
+		if(container.research != -1) { categories.add("ResearchProduction: "+container.research); }else { categories.add("ResearchProduction: 0"); }
 		//...
 		
 		if(building instanceof Building_Mine) {

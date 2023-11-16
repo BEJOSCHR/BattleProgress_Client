@@ -8,6 +8,8 @@ import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class Building_Laboratory extends Building {
 	
+	private int researchProduktion;
+	
 //==========================================================================================================
 	/**
 	 * The constructor of the LABORATORY class, this building is producing research points
@@ -36,7 +38,7 @@ public class Building_Laboratory extends Building {
 		hoverDescription = hoverDescription_;
 		
 		//EXTRA
-		research = container.research;
+		researchProduktion = container.research;
 		
 		super.load_TypeSettings();
 	}
@@ -55,7 +57,7 @@ public class Building_Laboratory extends Building {
 	 * @return int - The amount of research points which was produced by this laboratory
 	 */
 	public int produceResearch() {
-		return this.research;
+		return this.researchProduktion;
 	}
 	
 }

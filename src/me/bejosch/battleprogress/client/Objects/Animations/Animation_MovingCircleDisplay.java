@@ -293,13 +293,13 @@ public class Animation_MovingCircleDisplay extends Animation {
 			//FINISH EXECUTE TASK
 			if(this.displayType == MovingCircleDisplayTypes.Energy) {
 				EconomicData.energyAmount += this.value; //UPDATE ENERGY VALUE
-				Game_RoundHandler.endRoundEnergyUpdate();
+				Game_RoundHandler.endRoundEconomicsUpdate();
 			}else if(this.displayType == MovingCircleDisplayTypes.Material) {
 				EconomicData.materialAmount += this.value; //UPDATE MATERIAL VALUE
-				Game_RoundHandler.endRoundMaterialUpdate();
+				Game_RoundHandler.endRoundEconomicsUpdate();
 			}else if(this.displayType == MovingCircleDisplayTypes.Research) {
 				ResearchData.researchPoints += this.value; //UPDATE RESEARCH VALUE
-				Game_RoundHandler.endRoundResearchUpdate();
+				Game_RoundHandler.endRoundEconomicsUpdate();
 			}else if(RoundData.currentExecuteTask != null) {
 				RoundData.currentExecuteTask.performAction(); //PERFORM TASK
 			}else {

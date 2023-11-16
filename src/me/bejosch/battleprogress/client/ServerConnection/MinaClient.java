@@ -585,7 +585,7 @@ public class MinaClient {
 //========================================================================
 		//All task executed
 		case 654:
-			Game_RoundHandler.startRoundMaterialUpdate(); //AFTER TASK... SHOW ENERGY AND MATERIAL PRODUCTION... THEN NEXT ROUND
+			Game_RoundHandler.startRoundEconomicsUpdate(); //AFTER TASK... SHOW ENERGY AND MATERIAL PRODUCTION... THEN NEXT ROUND
 			break;
 //========================================================================
 		//Chat Message
