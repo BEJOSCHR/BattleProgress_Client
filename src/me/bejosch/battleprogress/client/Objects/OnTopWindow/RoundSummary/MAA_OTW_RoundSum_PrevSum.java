@@ -43,7 +43,7 @@ public class MAA_OTW_RoundSum_PrevSum extends MouseActionArea {
 		
 		OnTopWindow_RoundSummary otw = (OnTopWindow_RoundSummary) OnTopWindowData.onTopWindow;
 		int currentShownRound = otw.displayedRound;
-		OnTopWindowHandler.openOTW(new OnTopWindow_RoundSummary(currentShownRound-1, true));
+		OnTopWindowHandler.openOTW(new OnTopWindow_RoundSummary(currentShownRound-1, true), true);
 		
 	}
 	

@@ -30,6 +30,8 @@ public class Images {
 	public static Image generalIcon_Home;
 	public static Image generalIcon_PowerButton;
 	public static Image generalIcon_ResearchGlas;
+	public static Image generalIcon_Dictonary;
+	public static Image generalIcon_RoundSummary;
 	
 	//MENU ICONS
 	public static Image menuIcon_friendInvite;
@@ -231,6 +233,9 @@ public class Images {
 		generalIcon_Home = Funktions.loadImageFromName("generalIcon_Home.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
 		generalIcon_PowerButton = Funktions.loadImageFromName("generalIcon_PowerButton.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
 		generalIcon_ResearchGlas = Funktions.loadImageFromName("generalIcon_Glas.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
+		generalIcon_Dictonary = Funktions.loadImageFromName("generalIcon_Dictonary.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
+		generalIcon_RoundSummary = Funktions.loadImageFromName("generalIcon_RoundSummary.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
+		
 	}
 //==========================================================================================================
 	/**

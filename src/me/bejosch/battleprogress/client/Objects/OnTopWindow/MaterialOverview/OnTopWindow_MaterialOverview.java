@@ -61,11 +61,12 @@ public class OnTopWindow_MaterialOverview extends OnTopWindow{
 	int tableHeight = this.height-topBorder-botBorder-tableBorder*2;
 	int tableX = x+tableBorder, tableY = y+topBorder+tableBorder+tableHeight/2;
 	int tableWidth = this.width-tableBorder*2;
-	int sections = 10;
-	int sectionWidth = (int) (tableWidth/ (double) sections);
 	
 	@Override
 	public void draw(Graphics g) {
+		
+		int sections = RoundData.currentRound-1;
+		int sectionWidth = (int) (tableWidth/ (double) sections);
 		
 		int maxMassDisplayed = 1;
 		for(int i = 0 ; i < sections ; i++) {
@@ -105,7 +106,7 @@ public class OnTopWindow_MaterialOverview extends OnTopWindow{
 					int displayedHeight = (int) (sectionHeight*(animation.faktor/100D));
 					
 					g.setColor(GameData.color_Material);
-					g.setFont(new Font("Arial", Font.CENTER_BASELINE, 22));
+					g.setFont(new Font("Arial", Font.CENTER_BASELINE, 10));
 					if(massBalance >= 0) {
 						g.fillRect(tableX+sectionWidth*i+sectionBorder, tableY-displayedHeight, sectionWidth-sectionBorder*2, displayedHeight-1);
 						g.drawString(""+massBalance, tableX+sectionWidth*i+sectionBorder, tableY-displayedHeight-5);
@@ -115,7 +116,7 @@ public class OnTopWindow_MaterialOverview extends OnTopWindow{
 					}
 					
 					g.setColor(Color.WHITE);
-					g.setFont(new Font("Arial", Font.CENTER_BASELINE, 30));
+					g.setFont(new Font("Arial", Font.CENTER_BASELINE, 12));
 					g.drawString(""+roundNumber+".", tableX+sectionWidth*i+sectionBorder+10, tableY+tableHeight/2+25);
 				}
 			}

@@ -18,6 +18,7 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.MultiSwitch.Mous
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.OnTopWindow;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.ConfirmSurrender.MAA_OTW_ConfSur_Cancel;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.ConfirmSurrender.MAA_OTW_ConfSur_Surrender;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.EnergyOverview.MAA_OTW_EnergyOverview_Close;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.MAA_OTW_FriendAdd_Add;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.MAA_OTW_FriendAdd_Cancel;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendRemove.MAA_OTW_FriendRemove_Cancel;
@@ -38,6 +39,7 @@ import me.bejosch.battleprogress.client.Objects.OnTopWindow.InfoMessage.MAA_OTW_
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Login.MAA_OTW_Login_Close;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Login.MAA_OTW_Login_Login;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Login.MAA_OTW_Login_Register;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.MaterialOverview.MAA_OTW_MaterialOverview_Close;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.MenuMenu.MAA_OTW_MenuMenu_1Continue;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.MenuMenu.MAA_OTW_MenuMenu_2Settings;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.MenuMenu.MAA_OTW_MenuMenu_3Credits;
@@ -108,6 +110,12 @@ public class OnTopWindowHandler {
 		new MAA_OTW_RoundSum_Details_Damage();
 		new MAA_OTW_RoundSum_Details_BuildProduceUpgrade();
 		
+		//MATERIAL OVERVIEW
+		new MAA_OTW_MaterialOverview_Close();
+		
+		//ENERGY OVERVIEW
+		new MAA_OTW_EnergyOverview_Close();
+		
 		//SETTINGS
 		new MAA_OTW_Settings_Cancel();
 		new MAA_OTW_Settings_Save();
@@ -173,7 +181,8 @@ public class OnTopWindowHandler {
 		
 	}
 	
-	public static void openOTW(OnTopWindow otw) {
+	public static void openOTW(OnTopWindow otw) { openOTW(otw, false); }
+	public static void openOTW(OnTopWindow otw, boolean withoutAnimation) {
 		
 		if(RoundData.roundIsChanging == true) {
 			//NO OTW DURING ROUND CHANGES
@@ -185,8 +194,12 @@ public class OnTopWindowHandler {
 		}
 		AnimationDisplay.stopAnimationType(AnimationType.OTW_Close);
 		OnTopWindowData.onTopWindow = otw;
-		new Animation_OTW_Open(otw.width, otw.height);
-		//INIT ON OPEN CALL IN ANIMATION
+		if(withoutAnimation == false) {
+			new Animation_OTW_Open(otw.width, otw.height);
+			//INIT ON OPEN CALL IN ANIMATION
+		}else {
+			otw.initOnOpen();
+		}
 		
 	}
 	

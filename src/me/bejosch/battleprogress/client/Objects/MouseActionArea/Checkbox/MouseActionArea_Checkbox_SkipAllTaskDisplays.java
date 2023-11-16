@@ -19,7 +19,7 @@ public class MouseActionArea_Checkbox_SkipAllTaskDisplays extends MouseActionAre
 		this.yTL = Y+(height-size)/2;
 		this.yBR = this.yTL+size;
 		
-		String[] hovertext = {"Enable/Disable Auto-Skip for this Round"};
+		String[] hovertext = {"Enable/Disable task animation skipping"};
 		this.hoverText = hovertext;
 		
 	}
@@ -27,7 +27,7 @@ public class MouseActionArea_Checkbox_SkipAllTaskDisplays extends MouseActionAre
 	@Override
 	public boolean isActiv() {
 		
-		if(RoundData.currentExecuteTask != null) {
+		if(RoundData.currentlyPerformingTasks == true) {
 			return true;
 		}else {
 			return false;

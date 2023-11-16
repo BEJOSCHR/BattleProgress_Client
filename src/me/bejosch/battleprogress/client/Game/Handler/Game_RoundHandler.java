@@ -36,7 +36,6 @@ import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Produce
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Remove;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Upgrade;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
-import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseActionArea_Checkbox;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.OnTopWindow_RoundSummary;
 import me.bejosch.battleprogress.client.Objects.Tasks.BuildMenuTasks.BuildMenuTask;
 import me.bejosch.battleprogress.client.Objects.Tasks.Building.Task_Building;
@@ -203,7 +202,7 @@ public class Game_RoundHandler {
 		
 	}
 	
-	private static int numberOfMaterialBuildings = 0, finishedMaterialAnimations = 0, i = 0;
+	private static int numberOfMaterialBuildings = 0, finishedMaterialAnimations = 0;
 //==========================================================================================================
 	/**
 	 * Manages the economic round ending (Material)
@@ -220,46 +219,28 @@ public class Game_RoundHandler {
 		RoundData.roundStatusInfo = "Producing Material";
 		
 		//COLLECT PRODUCE BUILDINGS
-		List<Building> producingBuildings = new ArrayList<Building>();
 		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
-			if(building instanceof Building_Mine || building instanceof Building_Converter || building instanceof Building_Headquarter) {
-				producingBuildings.add(building);
+			if(building instanceof Building_Mine) {
+				Building_Mine mine = (Building_Mine) building;
+				int amount = mine.produceMass();
+				RoundData.currentStatsContainer.addMassEntry(mine, amount);
+				numberOfMaterialBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(mine.connectedField), hqPosition, false);
+			}else if(building instanceof Building_Converter) {
+				Building_Converter converter = (Building_Converter) building;
+				int amount = converter.convertMaterial();
+				RoundData.currentStatsContainer.addMassEntry(converter, amount);
+				numberOfMaterialBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(converter.connectedField), hqPosition, false);
+			}else if(building instanceof Building_Headquarter) {
+				//HQ
+				Building_Headquarter hq = (Building_Headquarter) building;
+				int amount = hq.produceMass_HQ();
+				RoundData.currentStatsContainer.addMassEntry(hq, amount);
+				numberOfMaterialBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
 			}
 		}
-		
-		//START ANIMATIONS
-		i = 0;
-		new Timer().scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				if(i == producingBuildings.size()) {
-					this.cancel();
-				}else {
-					Building building = producingBuildings.get(i);
-					if(building instanceof Building_Mine) {
-						Building_Mine mine = (Building_Mine) building;
-						int amount = mine.produceMass();
-						RoundData.currentStatsContainer.addMassEntry(mine, amount);
-						numberOfMaterialBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(mine.connectedField), hqPosition, false);
-					}else if(building instanceof Building_Converter) {
-						Building_Converter converter = (Building_Converter) building;
-						int amount = converter.convertMaterial();
-						RoundData.currentStatsContainer.addMassEntry(converter, amount);
-						numberOfMaterialBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(converter.connectedField), hqPosition, false);
-					}else if(building instanceof Building_Headquarter) {
-						//HQ
-						Building_Headquarter hq = (Building_Headquarter) building;
-						int amount = hq.produceMass_HQ();
-						RoundData.currentStatsContainer.addMassEntry(hq, amount);
-						numberOfMaterialBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Material, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
-					}
-					i++;
-				}
-			}
-		}, 0, 200);
 		
 	}
 //==========================================================================================================
@@ -283,7 +264,7 @@ public class Game_RoundHandler {
 		
 	}
 	
-	private static int numberOfEnergyBuildings = 0, finishedEnergyAnimations = 0, j = 0;
+	private static int numberOfEnergyBuildings = 0, finishedEnergyAnimations = 0;
 //==========================================================================================================
 	/**
 	 * Manages the economic round ending (Energy)
@@ -302,40 +283,22 @@ public class Game_RoundHandler {
 		RoundData.roundStatusInfo = "Producing Energy";
 		
 		//COLLECT PRODUCE BUILDINGS
-		List<Building> producingBuildings = new ArrayList<Building>();
 		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
-			if(building instanceof Building_Reactor || building instanceof Building_Headquarter) {
-				producingBuildings.add(building);
+			if(building instanceof Building_Reactor) {
+				Building_Reactor reactor = (Building_Reactor) building;
+				int amount = reactor.produceEnergy();
+				RoundData.currentStatsContainer.addEnergyEntry(reactor, amount);
+				numberOfEnergyBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Energy, amount, new FieldCoordinates(reactor.connectedField), hqPosition, false);
+			}else if(building instanceof Building_Headquarter) {
+				//HQ
+				Building_Headquarter hq = (Building_Headquarter) building;
+				int amount = hq.produceEnergy_HQ();
+				RoundData.currentStatsContainer.addEnergyEntry(hq, amount);
+				numberOfEnergyBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Energy, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
 			}
 		}
-		
-		//START ANIMATIONS
-		j = 0;
-		new Timer().scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				if(j == producingBuildings.size()) {
-					this.cancel();
-				}else {
-					Building building = producingBuildings.get(j);
-					if(building instanceof Building_Reactor) {
-						Building_Reactor reactor = (Building_Reactor) building;
-						int amount = reactor.produceEnergy();
-						RoundData.currentStatsContainer.addEnergyEntry(reactor, amount);
-						numberOfEnergyBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Energy, amount, new FieldCoordinates(reactor.connectedField), hqPosition, false);
-					}else if(building instanceof Building_Headquarter) {
-						//HQ
-						Building_Headquarter hq = (Building_Headquarter) building;
-						int amount = hq.produceEnergy_HQ();
-						RoundData.currentStatsContainer.addEnergyEntry(hq, amount);
-						numberOfEnergyBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Energy, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
-					}
-					j++;
-				}
-			}
-		}, 0, 200);
 		
 	}
 	
@@ -361,7 +324,7 @@ public class Game_RoundHandler {
 		
 	}
 	
-	private static int numberOfResearchBuildings = 0, finishedResearchAnimations = 0, k = 0;
+	private static int numberOfResearchBuildings = 0, finishedResearchAnimations = 0;
 //==========================================================================================================
 	/**
 	 * Manages the economic round ending (Research)
@@ -378,39 +341,21 @@ public class Game_RoundHandler {
 		RoundData.roundStatusInfo = "Researching Points";
 		
 		//COLLECT PRODUCE BUILDINGS
-		List<Building> producingBuildings = new ArrayList<Building>();
 		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
-			if(building instanceof Building_Laboratory || building instanceof Building_Headquarter) {
-				producingBuildings.add(building);
+			if(building instanceof Building_Headquarter) {
+				Building_Headquarter hq = (Building_Headquarter) building;
+				int amount = hq.produceResearch_HQ();
+				RoundData.currentStatsContainer.addResearchEntry(hq, amount);
+				numberOfResearchBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Research, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
+			}else if(building instanceof Building_Laboratory) {
+				Building_Laboratory laboratory = (Building_Laboratory) building;
+				int amount = laboratory.produceResearch();
+				RoundData.currentStatsContainer.addResearchEntry(laboratory, amount);
+				numberOfResearchBuildings++;
+				new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Research, amount, new FieldCoordinates(laboratory.connectedField), hqPosition, false);
 			}
 		}
-		
-		//START ANIMATIONS
-		k = 0;
-		new Timer().scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				if(k == producingBuildings.size()) {
-					this.cancel();
-				}else {
-					Building building = producingBuildings.get(k);
-					if(building instanceof Building_Headquarter) {
-						Building_Headquarter hq = (Building_Headquarter) building;
-						int amount = hq.produceResearch_HQ();
-						RoundData.currentStatsContainer.addResearchEntry(hq, amount);
-						numberOfResearchBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Research, amount, new FieldCoordinates(hq.connectedField), hqPosition, false);
-					}else if(building instanceof Building_Laboratory) {
-						Building_Laboratory laboratory = (Building_Laboratory) building;
-						int amount = laboratory.produceResearch();
-						RoundData.currentStatsContainer.addResearchEntry(laboratory, amount);
-						numberOfResearchBuildings++;
-						new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.Research, amount, new FieldCoordinates(laboratory.connectedField), hqPosition, false);
-					}
-					k++;
-				}
-			}
-		}, 0, 200);
 		
 	}
 //==========================================================================================================
@@ -484,8 +429,8 @@ public class Game_RoundHandler {
 			GameData.currentActive_MAA_BuildingTask = null;
 			GameData.dragAndDropInputActive_BuildingMenu = false;
 			
-			//RESETT SKIP ALL DISPLAYS
-			((MouseActionArea_Checkbox) GameHandler.getMouseActionAreaByName("Checkbox_SkipAllTaskDisplays")).checkState = false;
+			//DONT!!! RESET SKIP ALL DISPLAYS
+			//((MouseActionArea_Checkbox) GameHandler.getMouseActionAreaByName("Checkbox_SkipAllTaskDisplays")).checkState = false;
 			
 			startRoundTimer();
 			
@@ -968,7 +913,7 @@ public class Game_RoundHandler {
 	public static void performNextExecuteTask(boolean withDelay) {
 		
 		int delay = 250;
-		if(withDelay == true) { delay = 500; }
+		if(withDelay == true) { delay = 400; }
 		
 		//DELAY 
 		new Timer().schedule(new TimerTask() {

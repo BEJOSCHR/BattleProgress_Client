@@ -42,7 +42,7 @@ public class OnTopWindow_ResearchConfirm extends OnTopWindow {
 		
 		//REOPEN RESEARCH
 		this.closed = true;
-		OnTopWindowHandler.openOTW(new OnTopWindow_Research());
+		OnTopWindowHandler.openOTW(new OnTopWindow_Research(), true);
 
 		
 	}

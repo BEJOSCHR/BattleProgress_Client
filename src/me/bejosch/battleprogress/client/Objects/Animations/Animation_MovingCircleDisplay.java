@@ -32,7 +32,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 	public int distanceTravledOnX = 0;
 	public float distancePerTravelOnX = 1.5F;
 	public int distancePerTravelOnY = 4; //ONLY USED IF THERE IS ONLY AN Y TRAVELING (SAME X LINE)
-	public int waitingDelayAfterMovementEnd = 1000; //IN MS
+	public int waitingDelayAfterMovementEnd = 300; //IN MS
 	
 	public boolean repeating = false; //IF FALSE IT STOPPS IT SELF AFTER ONE ROUND, IF TRUE IT REPEATS UNTIL IT IS STOPPED MANUAL
 	
@@ -292,16 +292,16 @@ public class Animation_MovingCircleDisplay extends Animation {
 			
 			//FINISH EXECUTE TASK
 			if(this.displayType == MovingCircleDisplayTypes.Energy) {
-				EconomicData.energyAmount += this.value; //TODO UPDATE ENERGY VALUE
+				EconomicData.energyAmount += this.value; //UPDATE ENERGY VALUE
 				Game_RoundHandler.endRoundEnergyUpdate();
 			}else if(this.displayType == MovingCircleDisplayTypes.Material) {
-				EconomicData.materialAmount += this.value; //TODO UPDATE MATERIAL VALUE
+				EconomicData.materialAmount += this.value; //UPDATE MATERIAL VALUE
 				Game_RoundHandler.endRoundMaterialUpdate();
 			}else if(this.displayType == MovingCircleDisplayTypes.Research) {
-				ResearchData.researchPoints += this.value; //TODO UPDATE RESEARCH VALUE
+				ResearchData.researchPoints += this.value; //UPDATE RESEARCH VALUE
 				Game_RoundHandler.endRoundResearchUpdate();
 			}else if(RoundData.currentExecuteTask != null) {
-				RoundData.currentExecuteTask.performAction(); //TODO PERFORM TASK
+				RoundData.currentExecuteTask.performAction(); //PERFORM TASK
 			}else {
 				ConsoleOutput.printMessageInConsole("A movingCircleAnmiation ended and found no executeTask to perform action and is NOT Energy or Material or Research type [CurrentExecuteTask: "+RoundData.currentExecuteTask+"]", true);
 			}

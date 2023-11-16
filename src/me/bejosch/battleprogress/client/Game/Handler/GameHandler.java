@@ -200,36 +200,55 @@ public class GameHandler {
 		
 		//Preset BuildMenu (NEED SOME TIME AFTER UNITS LOAD SO IT IS LOADED THEN BUILDMENU TRIES TO INIT)
 		presetBuildMenu();
+				
+		//MAAS
+		initMAAS();
 		
-//--------------------------------------------------------------------------------------------------------
-		//Start MouseActionAreas
+		//CALCULATE VIEW RANGE
+		//IS CALLED BY THE CREATE HQ PART ON THE SERVER RECEIVER DOWN BELOW
+		
+		//STATS CONTAINER
+		RoundData.currentRound = 1;
+		RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
+		
+		//START ROUND TIMER
+		Game_RoundHandler.startRoundTimer();
+		
+	}
+	
+	private static void initMAAS() {
+		
 		//General Buttons
 		String[] hoverMessage_1 = {"Menu"};
 		new MouseActionArea_generalIconButtons(0, "gIcon_HomeMenu", hoverMessage_1, GenerelIconType.HomeMenu, Images.generalIcon_Home);
 		String[] hoverMessage_2 = {"Settings"};
 		new MouseActionArea_generalIconButtons(1, "gIcon_Settings", hoverMessage_2, GenerelIconType.Settings, Images.generalIcon_Gear);
+		String[] hoverMessage_6 = {"Dictonary"};
+		new MouseActionArea_generalIconButtons(2, "gIcon_Dictonary", hoverMessage_6, GenerelIconType.Dictionary, Images.generalIcon_Dictonary);
 		String[] hoverMessage_3 = {"Material"};
-		new MouseActionArea_generalIconButtons(2, "gIcon_Material", hoverMessage_3, GenerelIconType.Material, Images.generalIcon_Material);
+		new MouseActionArea_generalIconButtons(3, "gIcon_Material", hoverMessage_3, GenerelIconType.Material, Images.generalIcon_Material);
 		String[] hoverMessage_4 = {"Energy"};
-		new MouseActionArea_generalIconButtons(3, "gIcon_Energy", hoverMessage_4, GenerelIconType.Energy, Images.generalIcon_Energy);
+		new MouseActionArea_generalIconButtons(4, "gIcon_Energy", hoverMessage_4, GenerelIconType.Energy, Images.generalIcon_Energy);
 		String[] hoverMessage_5 = {"Research"};
-		new MouseActionArea_generalIconButtons(4, "gIcon_Research", hoverMessage_5, GenerelIconType.Research, Images.generalIcon_ResearchGlas);
+		new MouseActionArea_generalIconButtons(5, "gIcon_Research", hoverMessage_5, GenerelIconType.Research, Images.generalIcon_ResearchGlas);
+		String[] hoverMessage_7 = {"Summary"};
+		new MouseActionArea_generalIconButtons(6, "gIcon_RoundSummary", hoverMessage_7, GenerelIconType.RoundSummary, Images.generalIcon_RoundSummary);
 		//	InfoMessages
 		for(int i = 0 ; i < GameData.maxDisplayedInfoMessages ; i++) {
 			new MouseActionArea_InfoMessages(i);
 		}
 		//	MiniMap Settings
 		int borderDistance_Left = 26, borderDistance_Down = 50, size = 16, space = size+5, startX = WindowData.FrameWidth-borderDistance_Left, startY = WindowData.FrameHeight-borderDistance_Down-(space*5);
-		String[] hoverMessage_6 = {"Show/Hide all"};
-		new MouseActionArea_Checkbox(startX, startY+(space*0), startX+size, startY+(space*0)+size, "MiniMap_ShowAll", hoverMessage_6, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
-		String[] hoverMessage_7 = {"Show/Hide map"};
-		new MouseActionArea_Checkbox(startX, startY+(space*1), startX+size, startY+(space*1)+size, "MiniMap_ShowMap", hoverMessage_7, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
-		String[] hoverMessage_8 = {"Show/Hide visible Area"};
-		new MouseActionArea_Checkbox(startX, startY+(space*2), startX+size, startY+(space*2)+size, "MiniMap_ShowVisible", hoverMessage_8, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
-		String[] hoverMessage_9 = {"Show/Hide buildings"};
-		new MouseActionArea_Checkbox(startX, startY+(space*3), startX+size, startY+(space*3)+size, "MiniMap_ShowBuildings", hoverMessage_9, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
-		String[] hoverMessage_10 = {"Show/Hide troups"};
-		new MouseActionArea_Checkbox(startX, startY+(space*4), startX+size, startY+(space*4)+size, "MiniMap_ShowTroups", hoverMessage_10, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
+		String[] hoverMessage_20 = {"Show/Hide all"};
+		new MouseActionArea_Checkbox(startX, startY+(space*0), startX+size, startY+(space*0)+size, "MiniMap_ShowAll", hoverMessage_20, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
+		String[] hoverMessage_21 = {"Show/Hide map"};
+		new MouseActionArea_Checkbox(startX, startY+(space*1), startX+size, startY+(space*1)+size, "MiniMap_ShowMap", hoverMessage_21, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
+		String[] hoverMessage_22 = {"Show/Hide visible Area"};
+		new MouseActionArea_Checkbox(startX, startY+(space*2), startX+size, startY+(space*2)+size, "MiniMap_ShowVisible", hoverMessage_22, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
+		String[] hoverMessage_23 = {"Show/Hide buildings"};
+		new MouseActionArea_Checkbox(startX, startY+(space*3), startX+size, startY+(space*3)+size, "MiniMap_ShowBuildings", hoverMessage_23, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
+		String[] hoverMessage_24 = {"Show/Hide troups"};
+		new MouseActionArea_Checkbox(startX, startY+(space*4), startX+size, startY+(space*4)+size, "MiniMap_ShowTroups", hoverMessage_24, Color.BLACK, Color.WHITE, Color.GREEN, true, true, Color.DARK_GRAY);
 		//	ChatHandler
 		new MouseActionArea_Chat_ShowHide(true);
 		new MouseActionArea_Chat_ShowHide(false);
@@ -259,18 +278,6 @@ public class GameHandler {
 		new MouseActionArea_EconomicDisplay(1);
 		new MouseActionArea_EconomicDisplay(2);
 		new MouseActionArea_EconomicDisplay(3);
-				
-//--------------------------------------------------------------------------------------------------------
-		
-		//CALCULATE VIEW RANGE
-		//IS CALLED BY THE CREATE HQ PART ON THE SERVER RECEIVER DOWN BELOW
-		
-		//STATS CONTAINER
-		RoundData.currentRound = 1;
-		RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
-		
-		//START ROUND TIMER
-		Game_RoundHandler.startRoundTimer();
 		
 	}
 	

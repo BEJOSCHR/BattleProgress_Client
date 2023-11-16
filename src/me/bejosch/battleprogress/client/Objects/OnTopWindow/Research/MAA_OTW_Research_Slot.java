@@ -48,7 +48,7 @@ public class MAA_OTW_Research_Slot extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		OnTopWindowHandler.openOTW(new OnTopWindow_ResearchConfirm(getRepresentedUpgrade(this.slotX, this.slotY)));
+		OnTopWindowHandler.openOTW(new OnTopWindow_ResearchConfirm(getRepresentedUpgrade(this.slotX, this.slotY)), true);
 		
 	}
 	
