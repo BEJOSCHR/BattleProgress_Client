@@ -14,8 +14,10 @@ public class OnTopWindowDisplay {
 		if(OnTopWindowData.onTopWindow != null) {
 			
 			//DARK BACKGROUND
-			g.setColor(new Color(0, 0, 0, 200));
-			g.fillRect(0, 0, WindowData.FrameWidth+2*WindowData.rahmen, WindowData.FrameHeight+2*WindowData.rahmen);
+			if(OnTopWindowData.onTopWindow.darkBackground) {
+				g.setColor(new Color(0, 0, 0, 200));
+				g.fillRect(0, 0, WindowData.FrameWidth+2*WindowData.rahmen, WindowData.FrameHeight+2*WindowData.rahmen);
+			}
 			
 			OnTopWindowData.onTopWindow.draw(g);
 			Game_DrawOverlay.draw_MouseActionAreas(g, true);

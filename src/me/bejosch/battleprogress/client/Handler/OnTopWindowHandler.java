@@ -203,7 +203,8 @@ public class OnTopWindowHandler {
 		
 	}
 	
-	public static void closeOTW() {
+	public static void closeOTW() { closeOTW(false); }
+	public static void closeOTW(boolean withoutAnimation) {
 		
 		boolean wasNotFullyOpened = OnTopWindowData.otwAnimationRunning;
 		AnimationDisplay.stopAnimationType(AnimationType.OTW_Open);
@@ -214,7 +215,7 @@ public class OnTopWindowHandler {
 			OnTopWindowData.onTopWindow.performClose(); //COULD OPEN AN OTHER OTW (research as example)
 			if(idName.equalsIgnoreCase(OnTopWindowData.onTopWindow.name)) {
 				//NO NEW OTW SO DELETE OLD
-				if(wasNotFullyOpened == false) { 
+				if(!withoutAnimation && wasNotFullyOpened == false) { 
 					new Animation_OTW_Close(OnTopWindowData.onTopWindow.width, OnTopWindowData.onTopWindow.height);
 				}
 				OnTopWindowData.onTopWindow = null;

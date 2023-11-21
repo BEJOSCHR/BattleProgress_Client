@@ -12,6 +12,7 @@ import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameAccept.OnTopWindow_GameAccept;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.QueueWaiting.OnTopWindow_QueueWaiting;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.TabGameInfo.OnTopWindow_TabGameInfo;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class KeyHandler implements KeyListener {
@@ -71,7 +72,10 @@ public class KeyHandler implements KeyListener {
 			//HAS OTW OPEN
 			
 			//SPECIAL ESC PRIO FOR CLOSING OTW
-			if(e.getKeyCode() == KeyEvent.VK_ESCAPE && (OnTopWindowData.onTopWindow instanceof OnTopWindow_QueueWaiting) == false && (OnTopWindowData.onTopWindow instanceof OnTopWindow_GameAccept) == false) {
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE 
+					&& (OnTopWindowData.onTopWindow instanceof OnTopWindow_QueueWaiting) == false 
+					&& (OnTopWindowData.onTopWindow instanceof OnTopWindow_GameAccept) == false 
+					&& (OnTopWindowData.onTopWindow instanceof OnTopWindow_TabGameInfo) == false) {
 				//ESC AND NOT QUEUE WAITING or GAME ACCEPT (Cant be closed by ESC)
 				OnTopWindowHandler.closeOTW();
 			}else {

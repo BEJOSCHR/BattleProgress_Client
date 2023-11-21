@@ -1,7 +1,9 @@
 package me.bejosch.battleprogress.client.Window;
 
 import java.awt.BorderLayout;
+import java.awt.KeyboardFocusManager;
 import java.io.File;
+import java.util.Collections;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -40,6 +42,7 @@ public class Frame {
 		Frame1.addMouseMotionListener(new MouseHandler());
 		Frame1.addMouseWheelListener(new MouseHandler());
 		Frame1.addWindowListener(new WindowHandler());
+		Frame1.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
 		
 		try { //TRY TO SET ICON
 			Frame1.setIconImage(ImageIO.read(new File(FileData.Ordner+"/Images/"+"Logo.png")));

@@ -65,7 +65,7 @@ public class BattleProgress_StartMain_Client {
 			public void run() {
 				new Animation_ShowLogin();
 			}
-		}, 1000);
+		}, 1000*2);
 		
 		//CREATE BUTTONS
 		Buttons.loadButtons();

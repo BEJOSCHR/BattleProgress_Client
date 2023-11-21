@@ -34,6 +34,10 @@ public class OnTopWindowData {
 	public static int confSur_width = 577, confSur_height = 120;
 	public static int confSur_MAA_yOffSet = 5, confSur_MAA_height = 45;
 	
+	//TABGAMEINFO
+	public static int tabGameInfo_width = 850, tabGameInfo_height = 150;
+	public static int tabGameInfo_ = 0;
+	
 	//ROUND SUMMARY
 	public static int roundSum_width = 700, roundSum_height = 550;
 	public static int roundSum_heightPerEco = 130;

@@ -6,6 +6,7 @@ public class OnTopWindow {
 
 	public String name = "Missing";
 	public int width = 0, height = 0;
+	public boolean darkBackground = true;
 	
 	public OnTopWindow(String name_, int width_, int height_) {
 		

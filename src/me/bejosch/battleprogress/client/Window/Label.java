@@ -5,7 +5,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.KeyboardFocusManager;
 import java.awt.RenderingHints;
+import java.util.Collections;
 
 import javax.swing.JLabel;
 
@@ -59,6 +61,7 @@ public class Label extends JLabel {
 		
 		setSize();
 		this.setVisible(true);
+		this.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
 		WindowData.Frame.add(this, BorderLayout.CENTER);
 		
 	}
