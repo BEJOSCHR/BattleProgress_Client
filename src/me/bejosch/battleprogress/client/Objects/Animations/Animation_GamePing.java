@@ -3,6 +3,7 @@ package me.bejosch.battleprogress.client.Objects.Animations;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 
@@ -49,7 +50,7 @@ public class Animation_GamePing extends Animation {
 	@Override
 	public void drawPart(Graphics g) {
 		
-		if(blink == true) {
+		if(blink == true && OnTopWindowData.onTopWindow == null) {
 			this.pingedField.drawHighlight(g, Color.YELLOW);
 		}
 		

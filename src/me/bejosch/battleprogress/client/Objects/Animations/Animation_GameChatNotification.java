@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 
@@ -41,7 +42,7 @@ public class Animation_GameChatNotification extends Animation {
 	@Override
 	public void drawPart(Graphics g) {
 		
-		if(GameData.chatIsShown == false) {
+		if(GameData.chatIsShown == false && OnTopWindowData.onTopWindow == null) {
 			if(blink == true) {
 				g.setColor(Color.ORANGE);
 				g.drawRect(GameData.chatX_hide-GameData.chatButton_width-distanceToButton, GameData.chatY_hide+GameData.chat_height-GameData.chatButton_height-distanceToButton, GameData.chatButton_width+(distanceToButton*2), GameData.chatButton_height+(distanceToButton*2));

@@ -28,15 +28,19 @@ public class OnTopWindowData {
 	public static int login_button_width = 130, login_button_spaceBetween = 30*2;
 	public static int login_topSpacerHeight = 60, login_textFieldWidth = 350, login_textFieldHeight = 30, login_textFieldSectionHeight = 70;
 	public static String login_message = "";
-	public static String login_password = "benno";
+	public static String login_password = "benno"; //TODO!!!
 	
 	//CONFIRM SURRENDER
 	public static int confSur_width = 577, confSur_height = 120;
 	public static int confSur_MAA_yOffSet = 5, confSur_MAA_height = 45;
 	
 	//TABGAMEINFO
-	public static int tabGameInfo_width = 850, tabGameInfo_height = 150;
-	public static int tabGameInfo_ = 0;
+	public static int tabGameInfo_y = 150;
+	public static int tabGameInfo_border = 20, tabGameInfo_borderBetween = 70, tabGameInfo_extraCenterWidth = 120;
+	public static int tabGameInfo_colorBlockWidth = 30, tabGameInfo_sectionWidth = MenuData.mpd_profileImage_width+tabGameInfo_colorBlockWidth;
+	public static int tabGameInfo_infoBlockHeight = 30, tabGameInfo_sectionHeight = MenuData.mpd_profileImage_height+tabGameInfo_infoBlockHeight;
+	public static int tabGameInfo_gameInfoSectionHeight = 35;
+	public static int tabGameInfo_width = tabGameInfo_border*2+tabGameInfo_borderBetween+2*tabGameInfo_sectionWidth+tabGameInfo_extraCenterWidth, tabGameInfo_height = tabGameInfo_border*2+tabGameInfo_borderBetween+2*tabGameInfo_sectionHeight+tabGameInfo_gameInfoSectionHeight;
 	
 	//ROUND SUMMARY
 	public static int roundSum_width = 700, roundSum_height = 550;

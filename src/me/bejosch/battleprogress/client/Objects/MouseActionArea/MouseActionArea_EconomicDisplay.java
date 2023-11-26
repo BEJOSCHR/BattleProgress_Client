@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
@@ -88,16 +89,18 @@ public class MouseActionArea_EconomicDisplay extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		switch(position) {
-		case 1: //MATERIAL
-			OnTopWindowHandler.openOTW(new OnTopWindow_MaterialOverview());
-			break;
-		case 2: //ENERGY
-			OnTopWindowHandler.openOTW(new OnTopWindow_EnergyOverview());
-			break;
-		case 3: //RESERACH
-			OnTopWindowHandler.openOTW(new OnTopWindow_Research());
-			break;
+		if(RoundData.currentRound > 1) {
+			switch(position) {
+			case 1: //MATERIAL
+				OnTopWindowHandler.openOTW(new OnTopWindow_MaterialOverview());
+				break;
+			case 2: //ENERGY
+				OnTopWindowHandler.openOTW(new OnTopWindow_EnergyOverview());
+				break;
+			case 3: //RESERACH
+				OnTopWindowHandler.openOTW(new OnTopWindow_Research());
+				break;
+			}
 		}
 		
 	}

@@ -1,8 +1,7 @@
 package me.bejosch.battleprogress.client.Window.Images;
 
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import me.bejosch.battleprogress.client.Data.CreateMapData;
 import me.bejosch.battleprogress.client.Data.MenuData;
@@ -43,8 +42,8 @@ public class Images {
 	public static Image menuIcon_friendRequest_Decline;
 	
 	//PLAYER IMAGES
-	public static List<Image> profileImages = new ArrayList<Image>();
-	public static List<Image> backgroundImages = new ArrayList<Image>();
+	public static LinkedList<Image> profileImages = new LinkedList<Image>();
+	public static LinkedList<Image> backgroundImages = new LinkedList<Image>();
 	
 	//RANKING
 	public static Image ranking_Unranked;
