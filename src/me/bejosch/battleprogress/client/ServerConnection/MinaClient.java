@@ -157,7 +157,7 @@ public class MinaClient {
 	
 	public static void handlePackage(int signal, int id, String data) {
 		
-		int[] signalBlackList = {997};
+		int[] signalBlackList = {997, 699}; 
 		List<Integer> noConsoleOutput = new ArrayList<>();
 		for(int i : signalBlackList) {noConsoleOutput.add(i);}
 		if(noConsoleOutput.contains(signal) == false) {
@@ -631,6 +631,23 @@ public class MinaClient {
 			}
 			break;
 //========================================================================
+		//Client Game Ping
+		case 699:
+			// playerID;ping OR sendTimeStamp
+			
+			if(data.contains(";")) {
+				//UPDATE PING
+				int playerUpdatePingID = Integer.parseInt(content[0]);
+				int playerPing = Integer.parseInt(content[1]);
+				ClientPlayer pingUpdatePlayer = ClientPlayerHandler.getNewClientPlayer(playerUpdatePingID);
+				pingUpdatePlayer.updatePing(playerPing);
+			}else {
+				//PING ANSWER REQUEST
+				sendData(699, data);
+			}
+			
+			break;
+//========================================================================
 //		//Switch FieldType
 //		case 802: TODO
 //			// X ; Y ; fieldTypeSignal
@@ -688,8 +705,11 @@ public class MinaClient {
 			@Override
 			public void run() {
 				
-				Label.updatePingSent(System.currentTimeMillis());
-				sendData(997, "This is a longer ping check packet, which is used to calculate this ping in ms!");
+				if(GameData.gameIsRunning == false) {
+					//ONLY SEND WHEN NOT IN GAME - OTHERWISE GAME PING IS CALC AND REQUESTED BY THE SERVER/RUNNING GAME
+					Label.updatePingSent(System.currentTimeMillis());
+					sendData(997, "This is a longer ping check packet, which is used to calculate this ping in ms!");
+				}
 				
 			}
 		}, 0, 1000); //EVERY SEK

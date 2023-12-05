@@ -157,10 +157,11 @@ public class Game_DrawOverlay {
 		g.setColor(Color.WHITE);
 		g.drawString("GameID: "+GameData.gameID, abstandX+lßngeSection*1+47, textY);
 		//Ping
-		if(Label.getCurrentPingValue() > 1000) { g.setColor(Color.RED); }else { g.setColor(Color.WHITE); }
-		g.drawString("Ping: "+Label.getCurrentPingValue()+"ms", abstandX+lßngeSection*2+58, textY);
+		int ping = ProfilData.thisClient.getPing();
+		if(ping > 100) { g.setColor(Color.RED); }else { g.setColor(Color.WHITE); }
+		g.drawString("Ping: "+ping+" ms", abstandX+lßngeSection*2+58, textY);
 		//FPS
-		if(Label.getCurrentFPSValue() < 10) { g.setColor(Color.RED); }else { g.setColor(Color.WHITE); }
+		if(Label.getCurrentFPSValue() < 20) { g.setColor(Color.RED); }else { g.setColor(Color.WHITE); }
 		g.drawString("Fps: "+Label.getCurrentFPSValue(), abstandX+lßngeSection*3+65, textY);
 		//SPIELDAUER [HOUR:MIN:SEC]
 		g.setColor(Color.WHITE);

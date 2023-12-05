@@ -76,14 +76,14 @@ public class OnTopWindow_TabGameInfo extends OnTopWindow {
 			}else {
 				drawSection(g, null, getPlayerDisplayCoords(0));
 			}
-			drawSection(g, null, getPlayerDisplayCoords(1));
-			drawSection(g, null, getPlayerDisplayCoords(2));
 			if(GameData.playingPlayer[1] != null) {
 				//PLAYER 2
-				drawSection(g, GameData.playingPlayer[1], getPlayerDisplayCoords(2));
+				drawSection(g, GameData.playingPlayer[1], getPlayerDisplayCoords(1));
 			}else {
-				drawSection(g, null, getPlayerDisplayCoords(2));
+				drawSection(g, null, getPlayerDisplayCoords(1));
 			}
+			drawSection(g, null, getPlayerDisplayCoords(2));
+			drawSection(g, null, getPlayerDisplayCoords(3));
 			
 		}else {
 			// 2V2
@@ -125,37 +125,86 @@ public class OnTopWindow_TabGameInfo extends OnTopWindow {
 		String name = "Empty";
 		Color nameColor = Color.LIGHT_GRAY;
 		Color standardColor = Color.LIGHT_GRAY;
+		int ping = 0;
 		
 		if(player != null) {
 			name = player.getName();
 			nameColor = player.getNameColor();
 			standardColor = Color.WHITE;
+			ping = player.getPing();
 			g.drawImage(player.getProfileImg(), cords.x, cords.y, null);
 			g.setColor(Funktions.getColorByPlayerID(player.getID()));
 			g.fillRect(cords.x+MenuData.mpd_profileImage_width, cords.y, OnTopWindowData.tabGameInfo_colorBlockWidth, MenuData.mpd_profileImage_height);
+			drawPingDisplay(g, cords, ping);
 		}
 		
 		g.setColor(nameColor);
 		g.setFont(new Font("Arial", Font.BOLD, 24));
-		g.drawString(name, cords.x+10, cords.y+OnTopWindowData.tabGameInfo_sectionHeight-6);
+		g.drawString(name, cords.x+5, cords.y+OnTopWindowData.tabGameInfo_sectionHeight-6);
 		
 		g.setColor(standardColor);
 		g.drawRect(cords.x, cords.y, OnTopWindowData.tabGameInfo_sectionWidth, OnTopWindowData.tabGameInfo_sectionHeight);
 		g.drawLine(cords.x, cords.y+MenuData.mpd_profileImage_height, cords.x+OnTopWindowData.tabGameInfo_sectionWidth, cords.y+MenuData.mpd_profileImage_height);
-
+		
+	}
+	
+	private void drawPingDisplay(Graphics g, Point cords, int ping) {
+		
+		int space = 2, width = 4, height1 = 5, height2 = 10, height3 = 15, height4 = 20;
+		
+		Color color = Color.RED; //OVER 100
+		if(ping <= 25) { color = Color.GREEN; } //UNDER 25
+		else if(ping <= 50) { color = Color.GREEN.darker().darker(); } //UNDER 50
+		else if(ping <= 100) { color = Color.YELLOW; } //UNDER 75
+		
+		// 1. RECT
+		g.setColor(color);
+		g.fillRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*1), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height1, width, height1);
+		g.setColor(Color.WHITE);
+		g.drawRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*1), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height1, width, height1);
+		
+		// 2. RECT
+		g.setColor(color);
+		if(ping < 100) { g.fillRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*2), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height2, width, height2); }
+		g.setColor(Color.WHITE);
+		g.drawRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*2), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height2, width, height2);
+		
+		// 3. RECT
+		g.setColor(color);
+		if(ping < 50) { g.fillRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*3), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height3, width, height3); }
+		g.setColor(Color.WHITE);
+		g.drawRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*3), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height3, width, height3);
+				
+		// 4. RECT
+		g.setColor(color);
+		if(ping < 25) { g.fillRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*4), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height4, width, height4); }
+		g.setColor(Color.WHITE);
+		g.drawRect(cords.x+OnTopWindowData.tabGameInfo_sectionWidth-5-((width+space)*4), cords.y+OnTopWindowData.tabGameInfo_sectionHeight-5-height4, width, height4);
 		
 	}
 	
 	public static Point getPlayerDisplayCoords(int playerNumber) {
 		
-		if(playerNumber == 0) {
-			return new Point(getX()+OnTopWindowData.tabGameInfo_border, getY()+OnTopWindowData.tabGameInfo_border);
-		}else if(playerNumber == 1) {
-			return new Point(getX()+OnTopWindowData.tabGameInfo_border, getY()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionHeight);
-		}else if(playerNumber == 2) {
-			return new Point(getX()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionWidth+OnTopWindowData.tabGameInfo_extraCenterWidth, getY()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionHeight);
-		}else if(playerNumber == 3) {
-			return new Point(getX()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_extraCenterWidth+OnTopWindowData.tabGameInfo_sectionWidth, getY()+OnTopWindowData.tabGameInfo_border);
+		if(SpielModus.isGameModus1v1()) {
+			if(playerNumber == 0) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border, getY()+OnTopWindowData.tabGameInfo_border);
+			}else if(playerNumber == 2) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border, getY()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionHeight);
+			}else if(playerNumber == 1) { //DIFFERENT ORDER SO THAT PLAYER 2 IS AT POS 2 BUT STILL WITH INPUT 1
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionWidth+OnTopWindowData.tabGameInfo_extraCenterWidth, getY()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionHeight);
+			}else if(playerNumber == 3) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_extraCenterWidth+OnTopWindowData.tabGameInfo_sectionWidth, getY()+OnTopWindowData.tabGameInfo_border);
+			}
+		}else {
+			if(playerNumber == 0) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border, getY()+OnTopWindowData.tabGameInfo_border);
+			}else if(playerNumber == 1) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border, getY()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionHeight);
+			}else if(playerNumber == 2) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionWidth+OnTopWindowData.tabGameInfo_extraCenterWidth, getY()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_sectionHeight);
+			}else if(playerNumber == 3) {
+				return new Point(getX()+OnTopWindowData.tabGameInfo_border+OnTopWindowData.tabGameInfo_borderBetween+OnTopWindowData.tabGameInfo_extraCenterWidth+OnTopWindowData.tabGameInfo_sectionWidth, getY()+OnTopWindowData.tabGameInfo_border);
+			}
 		}
 		return null;
 		

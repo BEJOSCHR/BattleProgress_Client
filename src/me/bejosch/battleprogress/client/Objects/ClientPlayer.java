@@ -27,6 +27,8 @@ public class ClientPlayer {
 	private int nameColorNumber = 0;
 	private int statusNumber = 0;
 	
+	private int ping = 0;
+	
 	//MANUEL LOAD
 	public ClientPlayer(int ID, String name, int level, int XP, int onlineMin, int PIN, int BIN, int NCN, int SN, PlayerRanking ranking, int RP, String currentActivity) {
 		
@@ -193,6 +195,14 @@ public class ClientPlayer {
 	}
 	public void setCurrentActivity(String currentActivity) {
 		this.currentActivity = currentActivity;
+	}
+	
+	//PING
+	public void updatePing(int ping) {
+		this.ping = ping;
+	}
+	public int getPing() {
+		return this.ping;
 	}
 	
 }
