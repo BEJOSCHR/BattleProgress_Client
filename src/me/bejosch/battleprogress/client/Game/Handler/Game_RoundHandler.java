@@ -10,6 +10,7 @@ import java.util.TimerTask;
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.StandardData;
+import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
@@ -207,7 +208,7 @@ public class Game_RoundHandler {
 	/**
 	 * Manages the economic round ending
 	 */
-	private static int numberOfEcoAnimations = 0, ecoStartingPos = 0;
+	private static int numberOfEcoAnimations = 0;
 	public static void startRoundEconomicsUpdate() {
 		
 		numberOfEcoAnimations = 0;
@@ -219,77 +220,96 @@ public class Game_RoundHandler {
 		//CHANGE INFO
 		RoundData.roundStatusInfo = "Producing Resources";
 		
+		//CLEAR ENERGY
+		EconomicData.energyAmount = 0;
+		
+		List<Building> playerBuildings = Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID());
+		
 		//COLLECT RESOURCES
-		LinkedList<ResourceProductionContainer> rpcs = new LinkedList<ResourceProductionContainer>();
+		LinkedList<ResourceProductionContainer> rpcs_material = new LinkedList<ResourceProductionContainer>();
+		LinkedList<ResourceProductionContainer> rpcs_energy = new LinkedList<ResourceProductionContainer>();
+		LinkedList<ResourceProductionContainer> rpcs_research = new LinkedList<ResourceProductionContainer>();
 		
 		//1. MATERIAL
-		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
+		for(Building building : playerBuildings) {
 			if(building instanceof Building_Mine) {
 				Building_Mine mine = (Building_Mine) building;
 				int amount = mine.produceMass();
 				RoundData.currentStatsContainer.addMassEntry(mine, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(mine.connectedField), amount, MovingCircleDisplayTypes.Material));
+				rpcs_material.add(new ResourceProductionContainer(new FieldCoordinates(mine.connectedField), amount, MovingCircleDisplayTypes.Material));
 			}else if(building instanceof Building_Converter) {
 				Building_Converter converter = (Building_Converter) building;
 				int amount = converter.convertMaterial();
 				RoundData.currentStatsContainer.addMassEntry(converter, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(converter.connectedField), amount, MovingCircleDisplayTypes.Material));
+				rpcs_material.add(new ResourceProductionContainer(new FieldCoordinates(converter.connectedField), amount, MovingCircleDisplayTypes.Material));
 			}else if(building instanceof Building_Headquarter) {
 				//HQ
 				Building_Headquarter hq = (Building_Headquarter) building;
 				int amount = hq.produceMass_HQ();
 				RoundData.currentStatsContainer.addMassEntry(hq, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(hq.connectedField), amount, MovingCircleDisplayTypes.Material));
+				rpcs_material.add(new ResourceProductionContainer(new FieldCoordinates(hq.connectedField), amount, MovingCircleDisplayTypes.Material));
 			}
 		}
 		//ENERGY
-		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
+		for(Building building : playerBuildings) {
 			if(building instanceof Building_Reactor) {
 				Building_Reactor reactor = (Building_Reactor) building;
 				int amount = reactor.produceEnergy();
 				RoundData.currentStatsContainer.addEnergyEntry(reactor, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(reactor.connectedField), amount, MovingCircleDisplayTypes.Energy));
+				rpcs_energy.add(new ResourceProductionContainer(new FieldCoordinates(reactor.connectedField), amount, MovingCircleDisplayTypes.Energy));
 			}else if(building instanceof Building_Headquarter) {
 				//HQ
 				Building_Headquarter hq = (Building_Headquarter) building;
 				int amount = hq.produceEnergy_HQ();
 				RoundData.currentStatsContainer.addEnergyEntry(hq, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(hq.connectedField), amount, MovingCircleDisplayTypes.Energy));
+				rpcs_energy.add(new ResourceProductionContainer(new FieldCoordinates(hq.connectedField), amount, MovingCircleDisplayTypes.Energy));
 			}
 		}
 		//RESEARCH
-		for(Building building : Funktions.getBuildingListByPlayerID(ProfilData.thisClient.getID())) {
+		for(Building building : playerBuildings) {
 			if(building instanceof Building_Laboratory) {
 				Building_Laboratory laboratory = (Building_Laboratory) building;
 				int amount = laboratory.produceResearch();
 				RoundData.currentStatsContainer.addResearchEntry(laboratory, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(laboratory.connectedField), amount, MovingCircleDisplayTypes.Research));
+				rpcs_research.add(new ResourceProductionContainer(new FieldCoordinates(laboratory.connectedField), amount, MovingCircleDisplayTypes.Research));
 			}else if(building instanceof Building_Headquarter) {
 				Building_Headquarter hq = (Building_Headquarter) building;
 				int amount = hq.produceResearch_HQ();
 				RoundData.currentStatsContainer.addResearchEntry(hq, amount);
-				numberOfEcoAnimations++;
-				rpcs.add(new ResourceProductionContainer(new FieldCoordinates(hq.connectedField), amount, MovingCircleDisplayTypes.Research));
+				rpcs_research.add(new ResourceProductionContainer(new FieldCoordinates(hq.connectedField), amount, MovingCircleDisplayTypes.Research));
 			}
 		}
 		
 		//START ANIMATIONS
-		ecoStartingPos = 0;
-		new Timer().scheduleAtFixedRate(new TimerTask() {
+		numberOfEcoAnimations = rpcs_material.size()+rpcs_energy.size()+rpcs_research.size();
+		int interval = 300, offset = 100;
+		//RESEARCH
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						for(ResourceProductionContainer rpc : rpcs_research) {
+							new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+						}
+					}
+				}, interval*3-offset);
+		//ENERGY
+		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
-				ResourceProductionContainer rpc = rpcs.get(ecoStartingPos);
-				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), hqPosition, false);
-				ecoStartingPos++;
-				if(ecoStartingPos == numberOfEcoAnimations) { this.cancel(); }
+				for(ResourceProductionContainer rpc : rpcs_energy) {
+					new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+				}
 			}
-		}, 0, 250);
+		}, interval*2-offset);
+		//MATERIAL
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				for(ResourceProductionContainer rpc : rpcs_material) {
+					new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+				}
+			}
+		}, interval*1-offset);
 		
 		//THIS STARTS ALL THE ANIMATIONS CALLING THE NEXT FUNCTION TO PROCEED THE ROUND CHANGE CYCLE
 		

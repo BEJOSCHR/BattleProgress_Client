@@ -29,7 +29,8 @@ public class Animation_MovingCircleDisplay extends Animation {
 	public FieldCoordinates goField = null;
 	public FieldCoordinates toField = null;
 	
-	public int distanceTravledOnX = 0;
+	public int distanceTravledOnX = 0, yOffSet = 0;
+	public double yOffSetFactor = 0.8D;
 	public float distancePerTravelOnX = 1.5F;
 	public int distancePerTravelOnY = 4; //ONLY USED IF THERE IS ONLY AN Y TRAVELING (SAME X LINE)
 	public int waitingDelayAfterMovementEnd = 300; //IN MS
@@ -140,12 +141,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 					distanceTravledOnX = 0;
 				}else {
 					//STOP - AFTER DELAY
-					new Timer().schedule(new TimerTask() {
-						@Override
-						public void run() {
-							cancle();
-						}
-					}, waitingDelayAfterMovementEnd); //CANCLE DELAY
+					movmentFinished(waitingDelayAfterMovementEnd); //CANCLE DELAY
 				}
 			}
 		}else if(goPixleX < toPixleX) {
@@ -159,12 +155,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 					distanceTravledOnX = 0;
 				}else {
 					//STOP - AFTER DELAY
-					new Timer().schedule(new TimerTask() {
-						@Override
-						public void run() {
-							cancle();
-						}
-					}, waitingDelayAfterMovementEnd); //CANCLE DELAY
+					movmentFinished(waitingDelayAfterMovementEnd); //CANCLE DELAY
 				}
 			}
 		}else {
@@ -180,12 +171,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 						distanceTravledOnX = 0;
 					}else {
 						//STOP - AFTER DELAY
-						new Timer().schedule(new TimerTask() {
-							@Override
-							public void run() {
-								cancle();
-							}
-						}, waitingDelayAfterMovementEnd); //CANCLE DELAY
+						movmentFinished(waitingDelayAfterMovementEnd); //CANCLE DELAY
 					}
 				}
 			}else if(goPixleY < toPixleY) {
@@ -199,29 +185,35 @@ public class Animation_MovingCircleDisplay extends Animation {
 						distanceTravledOnX = 0;
 					}else {
 						//STOP - AFTER DELAY
-						new Timer().schedule(new TimerTask() {
-							@Override
-							public void run() {
-								cancle();
-							}
-						}, waitingDelayAfterMovementEnd); //CANCLE DELAY
+						movmentFinished(waitingDelayAfterMovementEnd); //CANCLE DELAY
 					}
 				}
 			}else {
 				//SAME FIELD (X==X AND Y==Y)
-				new Timer().schedule(new TimerTask() {
-					@Override
-					public void run() {
-						
-						//SHOWING - THEN CANCLE WITHOUT MOVEMENT
-						cancle();
-						
-					}
-				}, 1000*2+200); //DISPLAY DURATION
+				yOffSet++;
+				movmentFinished(1000*2+200); //DISPLAY DURATION
 			}
 		}
 		
 		super.changeAction();
+	}
+	
+	private boolean movmentFinished = false;
+	private void movmentFinished(int finishDelay) {
+		
+		if(movmentFinished == false) {
+			movmentFinished = true;
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					
+					//SHOWING - THEN CANCLE WITHOUT MOVEMENT
+					cancle();
+					
+				}
+			}, finishDelay);
+		}
+		
 	}
 	
 	@Override
@@ -243,11 +235,11 @@ public class Animation_MovingCircleDisplay extends Animation {
 		if(goPixleX-toPixleX == 0) {
 			//ON THE SAME X LINE
 			pixleX = goPixleX;
-			pixleY = goPixleY+getYValueByFunktion(distanceTravledOnX);
+			pixleY = goPixleY+getYValueByFunktion(distanceTravledOnX)-((int)(yOffSet*yOffSetFactor));
 		}else {
 			//NORMAL FUNKTION
 			pixleX = goPixleX+distanceTravledOnX;
-			pixleY = goPixleY+getYValueByFunktion(distanceTravledOnX);
+			pixleY = goPixleY+getYValueByFunktion(distanceTravledOnX)-((int)(yOffSet*yOffSetFactor));
 		}
 		
 		GameData.gameMap_FieldList[goField.X][goField.Y].drawHighlight(g, Color.YELLOW);
@@ -319,7 +311,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 		
 		if(goPixleX-toPixleX == 0) {
 			if(goPixleY-toPixleY == 0) {
-				//SAME FIELD SO NO MOVEMENT
+				//SAME FIELD SO SMALL MOVEMENT
 				return 0;
 			}
 			//ON THE SAME X LINE

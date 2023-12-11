@@ -98,7 +98,7 @@ public class AnimationDisplay {
 			for(Animation animation : RunningAnimations) {
 				animation.drawPart(g);
 			}
-		}catch(ConcurrentModificationException | NoSuchElementException error) {}
+		}catch(ConcurrentModificationException | NoSuchElementException | NullPointerException error) {}
 		
 	}
 	
