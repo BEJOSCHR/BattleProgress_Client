@@ -67,6 +67,7 @@ import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.MAA_OTW_RoundSum_PrevSum;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Settings.MAA_OTW_Settings_Cancel;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Settings.MAA_OTW_Settings_Save;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.TabGameInfo.MAA_OTW_TabGameInfo_BugReport;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.TabGameInfo.MAA_OTW_TabGameInfo_JumpToHQ;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.UnitDetailInfo.MAA_OTW_UnitDetailInfo_Confirm;
 import me.bejosch.battleprogress.client.Window.Animations.AnimationDisplay;
@@ -104,6 +105,7 @@ public class OnTopWindowHandler {
 		new MAA_OTW_TabGameInfo_JumpToHQ(1);
 		new MAA_OTW_TabGameInfo_JumpToHQ(2);
 		new MAA_OTW_TabGameInfo_JumpToHQ(3);
+		new MAA_OTW_TabGameInfo_BugReport();
 		
 		//ROUND SUMMARY
 		new MAA_OTW_RoundSum_Confirm();

@@ -54,6 +54,8 @@ public class Game_DrawOverlay {
 		}catch(NullPointerException error) {} //NULLPOINTER HAPPENS AT THE START BECAUSE DRAW COME BEFOR GAME INITIALISE
 		//Headline Info
 		draw_HeadlineInfo(g);
+		//Round change Info
+		draw_RoundChangeInfo(g);
 		//Notifications
 		draw_Notifications(g);
 		//ChatHandler
@@ -127,47 +129,49 @@ public class Game_DrawOverlay {
 	 */
 	public static void draw_HeadlineInfo(Graphics g) {
 		
-		// MID FIELD ; GAMEID ; PING ; FPS ; SPIELDAUER
+		// GAMEID ; FPS ; SPIELDAUER
 		
-		int abstandX = 600, abstandY = 20, anzahlSections = 5;
+		int gameHeaderWidth = 135, fpsWidth = 45, durationWidth = 55;
+		int totalWidth = gameHeaderWidth+fpsWidth+durationWidth;
+		int distanceBorder = 5;
+		
+		int totalHeight = 20, textHeight = totalHeight-6;
+		
+		//BACKGROUND
 		g.setColor(Color.DARK_GRAY);
-		g.fillRect(abstandX, 0-WindowData.rahmen, WindowData.FrameWidth+WindowData.rahmen*2-abstandX, WindowData.rahmen+abstandY);
+		g.fillRect(WindowData.FrameWidth-totalWidth, 0-WindowData.rahmen, totalWidth+WindowData.rahmen, totalHeight);
+		
 		g.setColor(Color.WHITE);
-		g.drawLine(abstandX, abstandY, WindowData.FrameWidth+WindowData.rahmen*2, abstandY);
+		g.drawRect(WindowData.FrameWidth-totalWidth, 0-WindowData.rahmen, totalWidth+WindowData.rahmen, totalHeight);
 		
-		int lßngeSection = (int) ( (int) (WindowData.FrameWidth+WindowData.rahmen*2-abstandX) / (int) (anzahlSections) );
-		for(int i = 0 ; i < anzahlSections ; i++) {
-			int X1 = abstandX + (i*lßngeSection); int X2 = abstandX + ((i+1)*lßngeSection);
-			g.drawLine(X1, 0-WindowData.rahmen, X1, abstandY);
-			g.drawLine(X2, 0-WindowData.rahmen, X2, abstandY);
-		}
+		g.drawLine(WindowData.FrameWidth-totalWidth+gameHeaderWidth, 0-WindowData.rahmen, WindowData.FrameWidth-totalWidth+gameHeaderWidth, totalHeight);
+		g.drawLine(WindowData.FrameWidth-totalWidth+gameHeaderWidth+fpsWidth, 0-WindowData.rahmen, WindowData.FrameWidth-totalWidth+gameHeaderWidth+fpsWidth, totalHeight);
 		
-		int textY = 14;
+		//CONTENT
 		g.setFont(new Font("Arial", Font.BOLD, 10));
-		//MidField
-		if(GameHandler.get_MID_Field(true) != null) {
-			Field midField = GameHandler.get_MID_Field(true);
-			g.setColor(Color.WHITE);
-			g.drawString("MidField: "+Funktions.getDoubleWritenNumber(midField.X)+" - "+Funktions.getDoubleWritenNumber(midField.Y), abstandX+47, textY);
-		}else {
-			g.setColor(Color.RED);
-			g.drawString("MidField: "+"##"+" - "+"##", abstandX+50, textY);
-		}
-		//GameID
-		g.setColor(Color.WHITE);
-		g.drawString("GameID: "+GameData.gameID, abstandX+lßngeSection*1+47, textY);
-		//Ping
-		int ping = ProfilData.thisClient.getPing();
-		if(ping > 100) { g.setColor(Color.RED); }else { g.setColor(Color.WHITE); }
-		g.drawString("Ping: "+ping+" ms", abstandX+lßngeSection*2+58, textY);
-		//FPS
-		if(Label.getCurrentFPSValue() < 20) { g.setColor(Color.RED); }else { g.setColor(Color.WHITE); }
-		g.drawString("Fps: "+Label.getCurrentFPSValue(), abstandX+lßngeSection*3+65, textY);
-		//SPIELDAUER [HOUR:MIN:SEC]
-		g.setColor(Color.WHITE);
-		g.drawString("GameDuration: "+Funktions.getDoubleWritenNumber(TimeManager.gameDuration_Hour)+":"+Funktions.getDoubleWritenNumber(TimeManager.gameDuration_Min)+":"+Funktions.getDoubleWritenNumber(TimeManager.gameDuration_Sec), abstandX+lßngeSection*4+22, textY);
 		
-		//CHANGING ROUND INFO
+		String gameHeader = GameData.gameMode.toString()+" ("+GameData.gameID+")";
+		g.drawString(gameHeader, WindowData.FrameWidth-totalWidth+distanceBorder, textHeight);
+		
+		String fps = Label.getCurrentFPSValue()+" FPS";
+		g.drawString(fps, WindowData.FrameWidth-totalWidth+gameHeaderWidth+distanceBorder, textHeight);
+		
+		String duration = ""+Funktions.getDoubleWritenNumber(TimeManager.gameDuration_Hour)+":"+Funktions.getDoubleWritenNumber(TimeManager.gameDuration_Min)+":"+Funktions.getDoubleWritenNumber(TimeManager.gameDuration_Sec);
+		g.drawString(duration, WindowData.FrameWidth-totalWidth+gameHeaderWidth+fpsWidth+distanceBorder, textHeight);
+		
+		g.setColor(Color.RED);
+		String alphaMessage = "Alpha version! Please report all bugs and give some feedback, thanks!";
+		int messageWidth = g.getFontMetrics().stringWidth(alphaMessage);
+		g.drawString(alphaMessage, WindowData.FrameWidth-totalWidth-messageWidth-10, textHeight);
+		
+	}
+	
+//==========================================================================================================
+	/**
+	 * Draws the info in the top Headline
+	 */
+	public static void draw_RoundChangeInfo(Graphics g) {
+		
 		if(Game_RoundHandler.blockedInput() == true) {
 			
 			int width = 400, height = 50, X = ((WindowData.FrameWidth+WindowData.rahmen*2)/2)-(width/2), Y = 120;
@@ -181,10 +185,13 @@ public class Game_DrawOverlay {
 			g.drawRect(X, Y, width, height);
 			g.setColor(Color.RED);
 			g.setFont(new Font("Arial", Font.BOLD, 17));
-			g.drawString(RoundData.roundStatusInfo, X+(width/2)-(RoundData.roundStatusInfo.length()*4), Y+22);
+			int infoWidth = g.getFontMetrics().stringWidth(RoundData.roundStatusInfo);
+			g.drawString(RoundData.roundStatusInfo, X+(width/2)-(infoWidth/2), Y+22);
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Arial", Font.BOLD, 12));
-			g.drawString("Round "+RoundData.currentRound, X+(width/2)-( ("Round "+RoundData.currentRound).length()*3), Y+40);
+			String round = "Round "+RoundData.currentRound;
+			int roundWidth = g.getFontMetrics().stringWidth(round);
+			g.drawString(round, X+(width/2)-(roundWidth/2), Y+40);
 			if(RoundData.currentExecuteTask != null) {
 				g.setColor(Color.LIGHT_GRAY);
 				g.fillRect(skipButton_X, skipButton_Y, skipButton_width, skipButton_height);
@@ -237,7 +244,6 @@ public class Game_DrawOverlay {
 		}
 		
 	}
-	
 	
 	//TODO CHAT HANDLER
 	

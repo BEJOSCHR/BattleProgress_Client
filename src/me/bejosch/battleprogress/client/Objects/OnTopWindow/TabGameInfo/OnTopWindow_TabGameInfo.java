@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 import me.bejosch.battleprogress.client.Data.MenuData;
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
+import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
@@ -67,7 +68,6 @@ public class OnTopWindow_TabGameInfo extends OnTopWindow {
 		g.setFont(new Font("Arial", Font.BOLD, 32));
 		g.drawString("VS", getX()+this.width/2-20, getY()+this.height/2-8);
 		
-		//TODO calculate ping on server and send results to client AND all other in the game to display
 		if(SpielModus.isGameModus1v1()) {
 			// 1V1
 			if(GameData.playingPlayer[0] != null) {
@@ -117,6 +117,16 @@ public class OnTopWindow_TabGameInfo extends OnTopWindow {
 			}
 			
 		}
+		
+		g.setColor(Color.WHITE);
+		g.setFont(new Font("Arial", Font.BOLD, 15));
+		
+		String mode = GameData.gameMode.toString()+" ("+GameData.gameID+")";
+		g.drawString(mode, getX()+OnTopWindowData.tabGameInfo_border, getY()+this.height-10);
+		
+		String thisPing = "Ping: "+ProfilData.thisClient.getPing()+"ms";
+		int ping_width = g.getFontMetrics().stringWidth(thisPing);
+		g.drawString(thisPing, getX()+this.width-ping_width-OnTopWindowData.tabGameInfo_border, getY()+this.height-10);
 		
 	}
 	

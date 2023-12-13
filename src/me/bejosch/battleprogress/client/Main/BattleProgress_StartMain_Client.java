@@ -95,6 +95,9 @@ public class BattleProgress_StartMain_Client {
 		try{ port = Integer.parseInt(FileHandler.readOutData(FileData.file_Settings, "Port")); }catch(NumberFormatException error) {}
 		MinaClient.connectToServer(serverAdresse, port);
 		
+		//LOADING IMAGES - MAIN
+		Images.loadImages();
+		
 		//INIT DISCORD API
 		try {
 			DiscordAPI.initAPI();
@@ -103,9 +106,6 @@ public class BattleProgress_StartMain_Client {
 			//error.printStackTrace();
 			ConsoleOutput.printMessageInConsole("Error while loading DiscordAPI! Proceed without it...", true);
 		}
-		
-		//LOADING IMAGES - MAIN
-		Images.loadImages();
 		
 		ConsoleOutput.printMessageInConsole("Type '/help' for console commands!", true);
 		
