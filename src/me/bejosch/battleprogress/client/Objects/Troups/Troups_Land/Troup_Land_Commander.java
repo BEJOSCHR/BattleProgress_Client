@@ -31,8 +31,7 @@ public class Troup_Land_Commander extends Troup_Land {
 		
 		textSize_nameField = 8;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"A commander does only enlarge the build-area", "He should be protected in some kind", "After he is placed at a location, he can't be moved!"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		//###

@@ -108,7 +108,7 @@ public class Task_Building_Produce extends Task_Building{
 						//NO SPACE
 						new FieldMessage("No space", targetField.X, targetField.Y, 3);
 						this.removeFromActiveTask();
-					}else if(checkFieldFor_PRODUCE_Use(targetField) == false || targetField.type == FieldType.Ressource || targetField.type == FieldType.RessourceVerbraucht) {
+					}else if(checkFieldFor_PRODUCE_Use(targetField) == false || targetField.type == FieldType.Ressource || targetField.type == FieldType.Consumed) {
 						//WRONG TERRAIN
 						new FieldMessage("Wrong terrain", targetField.X, targetField.Y, 3);
 						this.removeFromActiveTask();
@@ -205,12 +205,12 @@ public class Task_Building_Produce extends Task_Building{
 		FieldType type = check.type;
 		if(troupType == TroupType.LAND) {
 			//NO WATER
-			if(type == FieldType.Gras || type == FieldType.Path || type == FieldType.Ressource || type == FieldType.RessourceVerbraucht) {
+			if(type == FieldType.Flatland || type == FieldType.Path || type == FieldType.Ressource || type == FieldType.Consumed) {
 				return true;
 			}
 		}else if(troupType == TroupType.AIR) {
 			//WITH WATER
-			if(type == FieldType.Gras || type == FieldType.Path || type == FieldType.Ressource || type == FieldType.RessourceVerbraucht || type == FieldType.Water) {
+			if(type == FieldType.Flatland || type == FieldType.Path || type == FieldType.Ressource || type == FieldType.Consumed || type == FieldType.Ocean) {
 				return true;
 			}
 		}

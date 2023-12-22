@@ -3,6 +3,7 @@ package me.bejosch.battleprogress.client.Data;
 import java.awt.Color;
 import java.awt.Point;
 
+import me.bejosch.battleprogress.client.Enum.Language;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 
 public class StandardData {
@@ -28,6 +29,7 @@ public class StandardData {
 	public static boolean antiSpam = false;
 	
 	public static SpielStatus spielStatus = SpielStatus.LoadingScreen;
+	public static Language selectedLanguage = Language.EN;
 	
 	public static boolean cancleMovement = false;
 	public static boolean showGrid = false;

@@ -141,7 +141,7 @@ public class Display_3CreateMap {
 			
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("Arial", Font.BOLD, 12));
-			g.drawString("Replace with "+FieldType.getNameForFieldType(CreateMapData.currentFieldBuild)+" on "+CreateMapData.choosenField.X+":"+CreateMapData.choosenField.Y, x+CreateMapData.seperateBorderDistance+6, y+24);
+			g.drawString("Replace with "+"?MISSING?"+" on "+CreateMapData.choosenField.X+":"+CreateMapData.choosenField.Y, x+CreateMapData.seperateBorderDistance+6, y+24);
 			
 			draw_MiniMap(g);
 			

@@ -34,8 +34,7 @@ public class Building_Laboratory extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is a research building","It produces ResearchPoints per round"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		researchProduktion = container.research;

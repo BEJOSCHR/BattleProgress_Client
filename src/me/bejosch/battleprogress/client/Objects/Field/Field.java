@@ -15,7 +15,7 @@ import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 
 public class Field {
 
-	public FieldType type = FieldType.Gras;
+	public FieldType type = FieldType.Flatland;
 	public Image img = null;
 	public int X = 0;
 	public int Y = 0;

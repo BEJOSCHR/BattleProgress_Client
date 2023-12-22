@@ -38,6 +38,8 @@ import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
+import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
+import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.FriendRequest;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameChatNotification;
@@ -178,7 +180,7 @@ public class MinaClient {
 //========================================================================
 		//Unit container
 		case 110:
-			//Name, K�rzel, Kosten, Leben, EnergieVerbrauch, EnergieProduktion, MaterialProduktion, Schaden, ViewDistance, MoveDistance, ActionDistance, Heal, Repair, Research
+			//Name, K�rzel, Kosten, Leben, EnergieVerbrauch, EnergieProduktion, MaterialProduktion, Schaden, ViewDistance, MoveDistance, ActionDistance, Heal, Repair, Research  ; description_en[4] ; description_de[4]
 			
 			String unitName = content[0];
 			String unitKürzel = content[1];
@@ -195,21 +197,82 @@ public class MinaClient {
 			int unitRepair = Integer.parseInt(content[12]);
 			int unitResearch = Integer.parseInt(content[13]);
 			
-			UnitStatsContainer container = new UnitStatsContainer(unitName, unitKürzel, unitKosten, unitLeben, unitEnergieVerbrauch, unitEnergieProduktion, unitMaterialProduktion, unitSchaden, unitViewDistance, unitMoveDistance, unitActionDistance, unitHeal, unitRepair, unitResearch);
+			String[] unit_description_en = new String[4];
+			unit_description_en[0] = content[14];
+			unit_description_en[1] = content[15];
+			unit_description_en[2] = content[16];
+			unit_description_en[3] = content[17];
+			
+			String[] unit_description_de = new String[4];
+			unit_description_de[0] = content[18];
+			unit_description_de[1] = content[19];
+			unit_description_de[2] = content[20];
+			unit_description_de[3] = content[21];
+			
+			UnitStatsContainer container = new UnitStatsContainer(unitName, unitKürzel, unitKosten, unitLeben, unitEnergieVerbrauch, unitEnergieProduktion, unitMaterialProduktion, unitSchaden, unitViewDistance, unitMoveDistance, unitActionDistance, unitHeal, unitRepair, unitResearch, unit_description_en, unit_description_de);
 			UnitData.units.add(container);
 			
 			break;
 //========================================================================
 		//UpgradeDataContainer
 		case 111:
-			//UpgradeType, cost, effectValue
+			//UpgradeType, cost, effectValue, description_en[4] ; description_de[4]
 			
 			UpgradeType type = UpgradeType.valueOf(content[0]);
 			int cost = Integer.parseInt(content[1]);
 			int effectValue = Integer.parseInt(content[2]);
 			
-			UpgradeDataContainer dataContainer = new UpgradeDataContainer(type, cost, effectValue);
+			String[] upgrade_description_en = new String[4];
+			upgrade_description_en[0] = content[3];
+			upgrade_description_en[1] = content[4];
+			upgrade_description_en[2] = content[5];
+			upgrade_description_en[3] = content[6];
+			
+			String[] upgrade_description_de = new String[4];
+			upgrade_description_de[0] = content[7];
+			upgrade_description_de[1] = content[8];
+			upgrade_description_de[2] = content[9];
+			upgrade_description_de[3] = content[10];
+			
+			UpgradeDataContainer dataContainer = new UpgradeDataContainer(type, cost, effectValue, upgrade_description_en, upgrade_description_de);
 			ResearchData.upgradeDataContainer.add(dataContainer);
+			
+			break;
+//========================================================================
+		//DictionaryInfoDescription
+		case 112:
+			// titel ; description_en ; description_de]
+			
+			String did_titel = content[0];
+			
+			String did_description_en = content[1];
+			String did_description_de = content[2];
+			
+			DictonaryInfoDescription did = new DictonaryInfoDescription(did_titel, did_description_en, did_description_de);
+			GameData.dictonaryInfoDescriptions.add(did);
+			
+			break;
+//========================================================================
+		//FieldData
+		case 113:
+			// type ; description_en[4] ; description_de[4]
+			
+			String fd_titel = content[0];
+			
+			String[] fd_description_en = new String[4];
+			fd_description_en[0] = content[1];
+			fd_description_en[1] = content[2];
+			fd_description_en[2] = content[3];
+			fd_description_en[3] = content[4];
+			
+			String[] fd_description_de = new String[4];
+			fd_description_de[0] = content[5];
+			fd_description_de[1] = content[6];
+			fd_description_de[2] = content[7];
+			fd_description_de[3] = content[8];
+			
+			FieldData fd = new FieldData(fd_titel, fd_description_en, fd_description_de);
+			GameData.fieldData.add(fd);
 			
 			break;
 //========================================================================

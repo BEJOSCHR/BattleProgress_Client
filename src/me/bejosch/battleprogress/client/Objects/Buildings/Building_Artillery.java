@@ -33,8 +33,7 @@ public class Building_Artillery extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is an attack building","It can attack enemy troups on far range"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		damage = container.schaden;

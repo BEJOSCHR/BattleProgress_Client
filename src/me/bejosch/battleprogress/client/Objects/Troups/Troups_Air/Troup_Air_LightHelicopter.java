@@ -37,8 +37,7 @@ public class Troup_Air_LightHelicopter extends Troup_Air {
 		
 		textSize_nameField = 8;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"The main purpose is spotting and scouting for other troups", "Good view- and movedistances are the strengths", "But it is very vulnerable!"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		//###

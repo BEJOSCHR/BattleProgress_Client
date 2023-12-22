@@ -156,7 +156,7 @@ public class Building {
 			for(int y = this.connectedField.Y-viewDistance ; y <= this.connectedField.Y+viewDistance ; y++) {
 				try{
 					Field targetField = GameData.gameMap_FieldList[x][y];
-					if(targetField.type == FieldType.Stone) { continue; } //STONE IS NOT VISIBLE
+					if(targetField.type == FieldType.Mountain) { continue; } //STONE IS NOT VISIBLE
 					Path path = new PathFinding_Algorithmus(this.connectedField, targetField, false).getPath(this.viewDistance, true, true);
 					if(path.getUsedSteps() <= viewDistance && path.getUsedSteps() > 0) {
 						//WITH PATH STILL IN RANGE

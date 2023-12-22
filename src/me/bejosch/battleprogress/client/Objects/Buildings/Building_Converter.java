@@ -37,8 +37,7 @@ public class Building_Converter extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is an economical building","It exchanges energy into material,", "but only if enough energy is available at the end of the round!"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		energyCostPerAction = container.energieVerbrauch;

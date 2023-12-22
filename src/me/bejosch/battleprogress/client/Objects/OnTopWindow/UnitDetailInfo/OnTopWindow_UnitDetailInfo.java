@@ -9,9 +9,11 @@ import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.WindowData;
-import me.bejosch.battleprogress.client.Enum.FieldType;
+import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Game.Handler.Game_FieldDataHandler;
 import me.bejosch.battleprogress.client.Handler.MovementHandler;
 import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Mine;
@@ -33,7 +35,7 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 		UnitStatsContainer container = UnitsHandler.getUnitByName(troup.name);
 		
 		this.displayName = ""+troup.name;
-		this.shortDescription = troup.hoverDescription; //(Change it away from this Bad/Good descriptions to short summary over the use, details in this otw not by hover)
+		this.shortDescription = troup.hoverDescription;
 		this.displayImage = troup.img;
 		this.cost = container.kosten;
 		
@@ -92,8 +94,10 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 	public OnTopWindow_UnitDetailInfo(Field field) {
 		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
 		
-		this.displayName = ""+FieldType.getNameForFieldType(field.type);
-		this.shortDescription = FieldType.getDescriptionForFieldType(field.type); //(Change it away from this Bad/Good descriptions to short summary over the use, details in this otw not by hover)
+		FieldData fd = Game_FieldDataHandler.getFieldData(GameData.clickedField.type);
+		
+		this.displayName = fd.titel;
+		this.shortDescription = fd.getDescription(); //(Change it away from this Bad/Good descriptions to short summary over the use, details in this otw not by hover)
 		this.displayImage = field.img;
 		this.cost = -1;
 		

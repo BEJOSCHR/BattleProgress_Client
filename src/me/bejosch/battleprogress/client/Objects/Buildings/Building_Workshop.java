@@ -33,8 +33,7 @@ public class Building_Workshop extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is a repair building","It can repair allied buildings nearby"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		repair = container.repair;

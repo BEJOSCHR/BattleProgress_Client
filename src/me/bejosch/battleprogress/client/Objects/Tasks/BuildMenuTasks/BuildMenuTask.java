@@ -148,7 +148,7 @@ public class BuildMenuTask {
 			String[] hovermessage_12 = {"The "+"Laboratory"+" is used to produce research points"};
 			output.add(new BuildMenuTask(BuildMenuType.Economic, "Laboratory", hovermessage_12, null));
 			String[] hovermessage_13 = {"The "+"Converter"+" is used to exchange energy into material","It only convertes if enough energy is available!"};
-			output.add(new BuildMenuTask(BuildMenuType.Economic, "Converter", hovermessage_13, UpgradeType.Converter));
+			output.add(new BuildMenuTask(BuildMenuType.Economic, "Converter", hovermessage_13, UpgradeType.UnlockConverter));
 			break;
 		case Production:
 			String[] hovermessage_20 = {"The "+"Barracks"+" is used to produce LAND-Soldier troups"};

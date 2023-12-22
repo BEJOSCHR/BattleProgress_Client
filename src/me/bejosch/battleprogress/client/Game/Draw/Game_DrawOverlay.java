@@ -19,6 +19,7 @@ import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.TimeManager;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_FieldDataHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
@@ -355,7 +356,7 @@ public class Game_DrawOverlay {
 				//displayBox
 				img = GameData.clickedField.img;
 				imgMoveFactor = 0;
-				name = FieldType.getNameForFieldType(GameData.clickedField.type);
+				name = Game_FieldDataHandler.getFieldData(GameData.clickedField.type).titel;
 			}
 			//MAIN DISPLAY BOX (ActionBar)
 			//1. Title box

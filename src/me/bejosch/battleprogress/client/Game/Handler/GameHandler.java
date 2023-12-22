@@ -169,6 +169,12 @@ public class GameHandler {
 		//LOAD UPGRADE DATA CONTAINER
 		Game_ResearchHandler.loadUpgradeDataContainer();
 		
+		//LOAD DictionaryInfoDescriptions
+		Game_DictionaryHandler.loadDictionaryInfoDescriptions();
+		
+		//LOAD FIELD DATA
+		Game_FieldDataHandler.loadFieldData();
+		
 		//GAME DURATION TIMER START
 		TimeManager.startDurationTimer();
 		
@@ -179,14 +185,14 @@ public class GameHandler {
 		//START MOVEMENT HANDLER
 		MovementHandler.startMovementTimer();
 		
-		//Animation (which switchs the GameStatus to Game!)
+		//Animation (which switches the GameStatus to Game!)
 		new Animation_GameStartDisplay();
 		
 	}
 	
 //==========================================================================================================
 	/**
-	 * Called if the game starts after the animation, so it's finaly started (Atfer animation)
+	 * Called if the game starts after the animation, so it's finally started (After animation)
 	 */
 	public static void initialiseGame() {
 		
@@ -195,7 +201,7 @@ public class GameHandler {
 		MinaClient.sendData(621, "Headquarter"+";"+hqCords.x+";"+hqCords.y);
 		Funktions.moveScreenToFieldCoordinates(hqCords.x, hqCords.y); //MOVE SCREEN TO FOCUS HQ
 		
-		//Setup the research after loaded UpgradeDataContainer earlyer
+		//Setup the research after loaded UpgradeDataContainer earlier
 		Game_ResearchHandler.initUpgrades();
 		
 		//Preset BuildMenu (NEED SOME TIME AFTER UNITS LOAD SO IT IS LOADED THEN BUILDMENU TRIES TO INIT)
@@ -345,7 +351,7 @@ public class GameHandler {
 		//FILL DEFAULT
 		for(int x = 0 ; x < StandardData.mapWidth ; x++) {
 			for(int y = 0 ; y < StandardData.mapHight ; y++) {
-				GameData.gameMap_FieldList[x][y] = new Field(FieldType.Gras, x, y);
+				GameData.gameMap_FieldList[x][y] = new Field(FieldType.Flatland, x, y);
 			}
 		}
 		

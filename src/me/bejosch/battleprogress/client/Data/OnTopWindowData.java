@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.bejosch.battleprogress.client.Enum.ResearchCategory;
+import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
+import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Chat.ChatHistory;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.OnTopWindow;
 
@@ -87,6 +89,17 @@ public class OnTopWindowData {
 	public static int researchConfirm_buttonWidth = 140, researchConfirm_buttonHeight = 50;
 	public static int researchConfirm_textBorder = 20;
 	public static int researchConfirm_buttonBorderBetween = 15, researchConfirm_buttonBottomBorder = 20;
+	
+	//dictionary
+	public static List<UnitStatsContainer> dictonary_category_buildings = new ArrayList<>();
+	public static List<UnitStatsContainer> dictonary_category_troups_land = new ArrayList<>();
+	public static List<UnitStatsContainer> dictonary_category_troups_air = new ArrayList<>();
+	public static List<DictonaryInfoDescription> dictonary_category_general = new ArrayList<>();
+	public static int dictionary_titelSectionHeight = 50;
+	public static int dictionary_sectionCount = 10, dictionary_sectionHeight = 70;
+	public static int dictionary_width = (dictionary_sectionCount*dictionary_sectionHeight)+dictionary_titelSectionHeight, dictionary_height = 600;
+	public static int dictionary_border = 10, dictionary_borderSmall = 10;
+	public static int dictionary_textSize = 20, dictionary__textSizeSmall = 15;
 	
 	//UNITDETAILINFO
 	public static int unitDetailInfo_width = 700, unitDetailInfo_height = 600;

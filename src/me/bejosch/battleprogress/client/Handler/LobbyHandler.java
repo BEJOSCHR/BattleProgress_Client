@@ -73,7 +73,7 @@ public class LobbyHandler {
 		
 		for(int x = 0 ; x < StandardData.mapWidth ; x++) {
 			for(int y = 0 ; y < StandardData.mapHight ; y++) {
-				LobbyData.lobbyDisplay_FieldList[x][y] = new Field(FieldType.Gras, x, y);
+				LobbyData.lobbyDisplay_FieldList[x][y] = new Field(FieldType.Flatland, x, y);
 			}
 		}
 		

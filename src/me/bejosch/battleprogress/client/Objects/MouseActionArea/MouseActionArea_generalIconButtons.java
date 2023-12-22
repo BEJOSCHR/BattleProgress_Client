@@ -10,6 +10,7 @@ import me.bejosch.battleprogress.client.Enum.GenerelIconType;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.Dictionary.OnTopWindow_Dictionary;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.EnergyOverview.OnTopWindow_EnergyOverview;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameMenu.OnTopWindow_GameMenu;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.MaterialOverview.OnTopWindow_MaterialOverview;
@@ -53,7 +54,7 @@ public class MouseActionArea_generalIconButtons extends MouseActionArea {
 			OnTopWindowHandler.openOTW(new OnTopWindow_Settings_Gameplay());
 			break;
 		case Dictionary:
-			//TODO open dictonary
+			OnTopWindowHandler.openOTW(new OnTopWindow_Dictionary());
 			break;
 		case Material:
 			if(RoundData.currentRound > 1) {

@@ -254,7 +254,7 @@ public class Display_4GameLobby {
 		g.fillRect(X-rahmen, Y-rahmen, LobbyData.map_maßeWithBorder, LobbyData.map_maßeWithBorder);
 		g.setColor(Color.WHITE);
 		g.drawRect(X-1, Y-1, maße+1, maße+1);
-		g.setColor(FieldType.getMiniMapColorForFieldType(FieldType.Gras));
+		g.setColor(FieldType.getMiniMapColorForFieldType(FieldType.Flatland));
 		g.fillRect(X, Y, maße, maße);
 		//MINIMAP - FIELDS
 		if(LobbyData.choosenMapName != null) {
@@ -262,7 +262,7 @@ public class Display_4GameLobby {
 				for(int xCoords = 0 ; xCoords < StandardData.mapWidth ; xCoords++) {
 					for(int yCoords = 0 ; yCoords < StandardData.mapHight ; yCoords++) {
 						Field field = LobbyData.lobbyDisplay_FieldList[xCoords][yCoords];
-						if(field.type != FieldType.Gras) {
+						if(field.type != FieldType.Flatland) {
 							int mmX = field.X*normaliseFactorX; int mmY = field.Y*normaliseFactorY;
 							g.setColor(FieldType.getMiniMapColorForFieldType(field.type));
 							g.fillRect(X+mmX, Y+mmY, normaliseFactorX, normaliseFactorY);

@@ -19,7 +19,7 @@ public class CreateMapData {
 	
 	public static Field createMap_FieldList[][] = null;
 	
-	public static FieldType currentFieldBuild = FieldType.Water;
+	public static FieldType currentFieldBuild = FieldType.Ocean;
 	
 	public static List<Building> HQdisplayList = new ArrayList<>();
 	

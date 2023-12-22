@@ -6,7 +6,7 @@ import me.bejosch.battleprogress.client.Enum.ResearchCategory;
 import me.bejosch.battleprogress.client.Enum.UpgradeType;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Research.UpgradeDataContainer;
-import me.bejosch.battleprogress.client.Objects.Research.Upgrades.Converter;
+import me.bejosch.battleprogress.client.Objects.Research.Upgrades.UnlockConverter;
 import me.bejosch.battleprogress.client.Objects.Research.Upgrades.ConverterEfficiency1;
 import me.bejosch.battleprogress.client.Objects.Research.Upgrades.ConverterEfficiency2;
 import me.bejosch.battleprogress.client.Objects.Research.Upgrades.ConverterProduction1;
@@ -32,7 +32,7 @@ public class Game_ResearchHandler {
 		ResearchData.possibleUpgrades.add(new ReactorProduction2());
 		ResearchData.possibleUpgrades.add(new ReactorProduction3());
 		
-		ResearchData.possibleUpgrades.add(new Converter());
+		ResearchData.possibleUpgrades.add(new UnlockConverter());
 		ResearchData.possibleUpgrades.add(new ConverterEfficiency1());
 		ResearchData.possibleUpgrades.add(new ConverterEfficiency2());
 		ResearchData.possibleUpgrades.add(new ConverterProduction1());
@@ -57,8 +57,9 @@ public class Game_ResearchHandler {
 			}
 		}
 		
-		ConsoleOutput.printMessageInConsole("Could not find UpgradeDataContainer for type "+type+"! Is it loaded yet? - Continue with default Container!", true);
-		return new UpgradeDataContainer(type, 9999, 0);
+		ConsoleOutput.printMessageInConsole("Could not find UpgradeDataContainer for type "+type+"! Is it loaded yet?", true);
+		//return new UpgradeDataContainer(type, 9999, 0);
+		return null;
 	}
 	
 	//GETTER / SETTER
@@ -158,7 +159,7 @@ public class Game_ResearchHandler {
 	}
 	
 	public static boolean extra_hasConverterUnlocked() {
-		return hasResearched(UpgradeType.Converter);
+		return hasResearched(UpgradeType.UnlockConverter);
 	}
 	
 	public static int extra_Converter_Efficiency() {

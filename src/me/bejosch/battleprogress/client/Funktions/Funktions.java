@@ -511,17 +511,17 @@ public class Funktions {
 	public static Image getFieldImageFromFieldType(FieldType type) {
 		
 		switch(type) {
-		case Gras:
+		case Flatland:
 			return Images.field_Gras;
 		case Path:
 			return Images.field_Path;
-		case Stone:
+		case Mountain:
 			return Images.field_Stone;
-		case Water:
+		case Ocean:
 			return Images.field_Water;
 		case Ressource:
 			return Images.field_Ressource;
-		case RessourceVerbraucht:
+		case Consumed:
 			return Images.field_RessourceVerbraucht;
 		default:
 			break;
@@ -539,17 +539,17 @@ public class Funktions {
 	public static FieldType getNextFieldTypeFromPreviousFieldType(FieldType type) {
 		
 		switch(type) {
-		case Gras:
-			return FieldType.Water;
+		case Flatland:
+			return FieldType.Ocean;
 		case Path:
 			return FieldType.Ressource;
-		case Stone:
+		case Mountain:
 			return FieldType.Path;
-		case Water:
-			return FieldType.Stone;
+		case Ocean:
+			return FieldType.Mountain;
 		case Ressource:
-			return FieldType.Gras;
-		case RessourceVerbraucht:
+			return FieldType.Flatland;
+		case Consumed:
 			break;
 		default:
 			break;
@@ -566,17 +566,17 @@ public class Funktions {
 	public static FieldType getPreviousFieldTypeFromPreviousFieldType(FieldType type) {
 		
 		switch(type) {
-		case Gras:
+		case Flatland:
 			return FieldType.Ressource;
 		case Path:
-			return FieldType.Stone;
-		case Stone:
-			return FieldType.Water;
-		case Water:
-			return FieldType.Gras;
+			return FieldType.Mountain;
+		case Mountain:
+			return FieldType.Ocean;
+		case Ocean:
+			return FieldType.Flatland;
 		case Ressource:
 			return FieldType.Path;
-		case RessourceVerbraucht:
+		case Consumed:
 			break;
 		default:
 			break;

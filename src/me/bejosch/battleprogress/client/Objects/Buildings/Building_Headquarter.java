@@ -46,8 +46,7 @@ public class Building_Headquarter extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is the main building","It produces small units of Material, Energy and ResearchPoints","You can also produce Commanders to enlarge your build-area","If it gets destroyed you LOSE the game!"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		energyCostPerAction = container.energieVerbrauch;

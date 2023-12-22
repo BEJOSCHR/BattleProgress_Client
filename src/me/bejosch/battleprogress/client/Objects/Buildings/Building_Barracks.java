@@ -34,8 +34,7 @@ public class Building_Barracks extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is a producing building","In it you can create LAND-Soldier troups"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		actionRange = container.actionDistance;

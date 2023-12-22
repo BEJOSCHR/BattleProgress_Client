@@ -1,4 +1,4 @@
-package me.bejosch.battleprogress.client.Objects.Troups.Troups_Land;
+package me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle;
 
 import java.awt.Graphics;
 
@@ -8,6 +8,7 @@ import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Attack;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Move;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Remove;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class Troup_Land_HeavyTank extends Troup_Land {
@@ -36,8 +37,7 @@ public class Troup_Land_HeavyTank extends Troup_Land {
 		
 		textSize_nameField = 8;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"The main purpose is dealing damage to enemies", "It should be used as a frontline and can survive some hits", "To increase the attackdistance a spotting ally is needed"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		//###

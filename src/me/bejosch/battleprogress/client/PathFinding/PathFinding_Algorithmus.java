@@ -192,10 +192,10 @@ public class PathFinding_Algorithmus {
 	public boolean fieldIsMoveable(PathFinding_FieldObject field, boolean ignoreOtherBuildingOrTroup, boolean canGoOverWater) {
 		Field realField = new FieldCoordinates(field.x, field.y).getConnectedField();
 		
-		if(realField.type == FieldType.Stone) {
+		if(realField.type == FieldType.Mountain) {
 			//MOUNTAIN
 			return false;
-		}else if(canGoOverWater == false && realField.type == FieldType.Water) {
+		}else if(canGoOverWater == false && realField.type == FieldType.Ocean) {
 			//WATER
 			return false;
 		}else {

@@ -249,7 +249,7 @@ public class CreateMapHandler {
 		
 		for(int x = 0 ; x < StandardData.mapWidth ; x++) {
 			for(int y = 0 ; y < StandardData.mapHight ; y++) {
-				CreateMapData.createMap_FieldList[x][y] = new Field(FieldType.Gras, x, y);
+				CreateMapData.createMap_FieldList[x][y] = new Field(FieldType.Flatland, x, y);
 			}
 		}
 		return true;
@@ -405,7 +405,7 @@ public class CreateMapHandler {
 				
 				Field field = CreateMapData.createMap_FieldList[x][y];
 				
-				if(field.type != FieldType.Gras) {
+				if(field.type != FieldType.Flatland) {
 					if(output.length() > 2) { //NICHT DAS ERSTE FELD
 						output = output+"-"+FieldType.getShortcutForFieldType(field.type)+":"+field.X+":"+field.Y;
 					}else { //DAS ERSTE fELD OHNE -

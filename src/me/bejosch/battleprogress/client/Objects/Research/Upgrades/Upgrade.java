@@ -19,18 +19,18 @@ public class Upgrade {
 	private ResearchCategory category = null;
 	private int x = 0, y = 0; // POSITION IN THE CATEGORY - LIKE A MATRIX - x LEFT/RIGHT - y UP/DOWN
 	
-	public Upgrade(UpgradeType type, UpgradeType dependency, ResearchCategory category, int x, int y, String title, String generalDesc, String effectDesc) {
+	public Upgrade(UpgradeType type, UpgradeType dependency, ResearchCategory category, int x, int y) {
 		
 		this.type = type;
 		this.dependency = dependency;
 		this.category = category;
 		this.x = x;
 		this.y = y;
-		this.title = title;
-		this.generalDescription = generalDesc;
-		this.effectDescription = effectDesc;
 		
 		this.dataContainer = Game_ResearchHandler.getDataContainer(type);
+		this.title = this.dataContainer.getDescription()[0];
+		this.generalDescription = this.dataContainer.getDescription()[1];;
+		this.effectDescription = this.dataContainer.getDescription()[3];
 		
 	}
 	

@@ -34,8 +34,7 @@ public class Building_Airport extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is a producing building","In it you can create AIR troups"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		actionRange = container.actionDistance;

@@ -18,10 +18,10 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseAc
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.Objects.Troups.Troups_Air.Troup_Air_HeavyHelicopter;
 import me.bejosch.battleprogress.client.Objects.Troups.Troups_Air.Troup_Air_MediumHelicopter;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_HeavySoldier;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_HeavyTank;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_MediumSoldier;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_MediumTank;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Soldier.Troup_Land_HeavySoldier;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Soldier.Troup_Land_MediumSoldier;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle.Troup_Land_HeavyTank;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle.Troup_Land_MediumTank;
 
 public class ExecuteTask_Upgrade extends ExecuteTask{
 

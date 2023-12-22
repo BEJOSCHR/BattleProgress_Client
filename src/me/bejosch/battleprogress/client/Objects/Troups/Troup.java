@@ -153,7 +153,7 @@ public class Troup {
 			for(int y = this.connectedField.Y-viewDistance ; y <= this.connectedField.Y+viewDistance ; y++) {
 				try{
 					Field targetField = GameData.gameMap_FieldList[x][y];
-					if(targetField.type == FieldType.Stone) { continue; } //STONE IS NOT VISIBLE
+					if(targetField.type == FieldType.Mountain) { continue; } //STONE IS NOT VISIBLE
 					Path path = new PathFinding_Algorithmus(this.connectedField, targetField, false).getPath(this.viewDistance, true, true);
 					if(path.getUsedSteps() <= viewDistance && path.getUsedSteps() > 0) { // IS 1 BEI ERROR / BLOCK / 1 Step
 						//WITH PATH STILL IN RANGE
@@ -188,10 +188,10 @@ public class Troup {
 						//IS VISIBLE
 						if(targetField.building == null && targetField.troup == null) {
 							//NOCH NICHT BELEGT
-							if(targetField.type != FieldType.Stone) {
+							if(targetField.type != FieldType.Mountain) {
 								//STONE KANN NICHT BETRETTEN WERDEN
 								if(troupType == TroupType.LAND) {
-									if(targetField.type != FieldType.Water) {
+									if(targetField.type != FieldType.Ocean) {
 										//LAND MUSS WASSER AUSSCHLIE�EN
 										this.moveAbleFields.add(new FieldCoordinates(targetField));
 									}

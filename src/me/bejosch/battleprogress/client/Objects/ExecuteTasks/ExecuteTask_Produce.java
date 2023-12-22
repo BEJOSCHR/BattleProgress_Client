@@ -21,8 +21,8 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseAc
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.Objects.Troups.Troups_Air.Troup_Air_LightHelicopter;
 import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_Commander;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_LightSoldier;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_LightTank;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Soldier.Troup_Land_LightSoldier;
+import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle.Troup_Land_LightTank;
 
 public class ExecuteTask_Produce extends ExecuteTask{
 

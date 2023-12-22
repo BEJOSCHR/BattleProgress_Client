@@ -191,7 +191,7 @@ public class MouseActionArea_BuildMenu_BuildingField extends MouseActionArea {
 			}
 		}else {
 			//NON MINE
-			if(checkedField.type != FieldType.Gras && checkedField.type != FieldType.Path) {
+			if(checkedField.type != FieldType.Flatland && checkedField.type != FieldType.Path) {
 				//ONLY GRASS AND PATH BUILD ABLE
 				new FieldMessage("Wrong terrain", checkedField.X, checkedField.Y, 3);
 				return false;

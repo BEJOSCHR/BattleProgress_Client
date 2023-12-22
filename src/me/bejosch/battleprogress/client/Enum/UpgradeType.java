@@ -5,11 +5,11 @@ public enum UpgradeType {
 	//ECONOMIE
 	MineProduction1, MineProduction2, MineProduction3,
 	ReactorProduction1, ReactorProduction2, ReactorProduction3,
-	Converter,
+	UnlockConverter,
 	ConverterEfficiency1, ConverterEfficiency2,
 	ConverterProduction1, ConverterProduction2,
 	
-	//AUCH EXTRA LEBEN MÖGLICH - ABER DANN NUR FÜR TRUPPEN DIE DANN NEU AUSGEBILDET WERDEN
+	//AUCH EXTRA LEBEN Mï¿½GLICH - ABER DANN NUR Fï¿½R TRUPPEN DIE DANN NEU AUSGEBILDET WERDEN
 	
 	//LAND TROUPS
 //	LandDriveRange1, LandDriveRange2,

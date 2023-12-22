@@ -12,7 +12,9 @@ import me.bejosch.battleprogress.client.Data.LobbyData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Data.Game.ResearchData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
+import me.bejosch.battleprogress.client.Data.Game.UnitData;
 import me.bejosch.battleprogress.client.Debug.DebugHandler;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
@@ -93,6 +95,7 @@ public class ConsoleOutput {
 			printMessageInConsole("'/sent' - Shows all data witch has been sent", true);
 			printMessageInConsole("'/players' - Shows all cached player", true);
 			printMessageInConsole("'/game' - Shows all infos about the game", true);
+			printMessageInConsole("'/loaded' - Shows all infos about the loaded data", true);
 			printMessageInConsole("'/ping' - Send a test packet to the Server, checking the connection", true);
 			printMessageInConsole("'/stop' - Stops the program", true);
 			
@@ -108,7 +111,7 @@ public class ConsoleOutput {
 				printMessageInConsole("No data has been sent!", true);
 			}
 			
-		}else if(commands.get(0).equalsIgnoreCase("/players")) {		//PACKETS
+		}else if(commands.get(0).equalsIgnoreCase("/players")) {		//PLAYERS
 			
 			if(ProfilData.allCurrentClientPlayer.isEmpty()) {
 				printMessageInConsole("No players are cached!", true);
@@ -136,6 +139,14 @@ public class ConsoleOutput {
 			}else {
 				printMessageInConsole("Currently not in a game!", true);
 			}
+			
+		}else if(commands.get(0).equalsIgnoreCase("/loaded")) {		//LOADED
+			
+			printMessageInConsole("Units: "+UnitData.units.size(), true);
+			printMessageInConsole("Upgrades: "+ResearchData.upgradeDataContainer.size(), true);
+			printMessageInConsole("DictInfos: "+GameData.dictonaryInfoDescriptions.size(), true);
+			printMessageInConsole("FieldData: "+GameData.fieldData.size(), true);
+			printMessageInConsole("CachedPlayer: "+ProfilData.allCurrentClientPlayer.size(), true);
 			
 		}else if(commands.get(0).equalsIgnoreCase("/ping")) {		//PING
 			

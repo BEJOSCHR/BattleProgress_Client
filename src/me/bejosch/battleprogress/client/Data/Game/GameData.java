@@ -11,6 +11,8 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.BuildMenuType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
+import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
+import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -127,5 +129,11 @@ public class GameData {
 	//INGAME VALUES:
 	public static int roundDuration = 5*60; //IN SEC
 	public static int ressourceFieldProducingRoundNumber = 30; //How many round a ressourceField should be producing after a mine was build on it (stops if the mine gets destroyed, but don't reset)
+	
+	//DICTIONARY
+	public static List<DictonaryInfoDescription> dictonaryInfoDescriptions = new ArrayList<DictonaryInfoDescription>();
+	
+	//FIELDDATA
+	public static List<FieldData> fieldData = new ArrayList<FieldData>();
 	
 }

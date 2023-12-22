@@ -36,8 +36,7 @@ public class Building_Reactor extends Building {
 		
 		textSize_nameField = 12;
 		textSize_nameActionbar = 12;
-		String[] hoverDescription_ = {"This is an economical building","It is the best way to PRODUCE ENERGY"};
-		hoverDescription = hoverDescription_;
+		hoverDescription = container.getDescription();
 		
 		//EXTRA
 		
