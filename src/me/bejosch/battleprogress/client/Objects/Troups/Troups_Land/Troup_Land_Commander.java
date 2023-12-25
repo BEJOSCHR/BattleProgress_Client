@@ -24,6 +24,7 @@ public class Troup_Land_Commander extends Troup_Land {
 		//STANDARD
 		UnitStatsContainer container = UnitsHandler.getUnitByName("Commander");
 		viewDistance = container.viewDistance;
+		moveDistance = container.moveDistance;
 		actionRange = container.actionDistance;
 		maxHealth = container.leben;
 		totalHealth = container.leben;

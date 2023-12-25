@@ -24,6 +24,8 @@ public class TextFields {
 	public static JTextField textField_Chat;
 	public static JTextField textField_createMapName;
 	
+	public static JTextField textField_Dictionary;
+	
 //==========================================================================================================
 	/**
 	 * Loads all used textFields
@@ -122,6 +124,24 @@ public class TextFields {
 		});
 		
 		textField_createMapName = Funktions.createTextField();
+		
+		textField_Dictionary = Funktions.createTextField();
+		textField_Dictionary.addKeyListener(new KeyListener() {
+
+			@Override
+			public void keyTyped(KeyEvent e) { }
+
+			@Override
+			public void keyPressed(KeyEvent e) {}
+
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+					OnTopWindowHandler.closeOTW();
+				}
+			}
+			
+		});
 		
 	}
 	

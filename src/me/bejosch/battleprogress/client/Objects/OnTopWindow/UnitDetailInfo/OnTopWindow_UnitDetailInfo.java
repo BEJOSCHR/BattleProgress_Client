@@ -1,7 +1,9 @@
 package me.bejosch.battleprogress.client.Objects.OnTopWindow.UnitDetailInfo;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Game.Handler.Game_FieldDataHandler;
 import me.bejosch.battleprogress.client.Handler.MovementHandler;
 import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
 import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
@@ -20,17 +23,48 @@ import me.bejosch.battleprogress.client.Objects.Buildings.Building_Mine;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.Field_Ressource;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.OnTopWindow;
+import me.bejosch.battleprogress.client.Objects.Research.UpgradeDataContainer;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
+import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 
+	public boolean isResearch = false, isDictionaryCall = false;
+	
 	public String displayName;
 	public String[] shortDescription;
 	public Image displayImage;
 	public int cost;
 	public List<String> categories = new ArrayList<String>(); //EACH STRING IS ONE DISPLAYED CATEGORY LIKE: Health: xxx, Damage: yyy etc
 	
-	public OnTopWindow_UnitDetailInfo(Troup troup) {
+	public OnTopWindow_UnitDetailInfo(UnitStatsContainer container, boolean isTroup, boolean isDictionaryCall) {
+		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
+		
+		this.displayName = ""+container.name;
+		this.shortDescription = container.getDescription();
+		this.displayImage = Images.dictionary_general_placeholder;
+		this.cost = container.kosten;
+		
+		categories.add("Health: "+container.leben+"/"+container.leben);
+		
+		addCategory("ViewDistance: ", container.viewDistance);
+		addCategory("MoveDistance: ", container.moveDistance);
+		addCategory("ActionDistance: ", container.actionDistance);
+
+		addCategory("Damage: ", container.schaden);
+		addCategory("EnergyConsume: ", container.energieVerbrauch);
+		addCategory("Heal: ", container.heal);
+		addCategory("Repair: ", container.repair);
+		addCategory("EnergyProduction: ", container.energieProduktion);
+		addCategory("MaterialProduction: ", container.materialProduktion);
+		addCategory("ResearchProduction: ", container.research);
+		//...
+		
+		this.isDictionaryCall = isDictionaryCall;
+		
+	}
+	
+	public OnTopWindow_UnitDetailInfo(Troup troup, boolean isDictionaryCall) {
 		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
 		UnitStatsContainer container = UnitsHandler.getUnitByName(troup.name);
 		
@@ -49,61 +83,127 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 			categories.add("Type: LAND");
 		}
 		
-		categories.add("ViewDistance: "+troup.viewDistance);
-		categories.add("MoveDistance: "+troup.moveDistance);
-		categories.add("ActionDistance: "+troup.actionRange);
+		addCategory("ViewDistance: ", troup.viewDistance);
+		addCategory("MoveDistance: ", troup.moveDistance);
+		addCategory("ActionDistance: ", troup.actionRange);
 
-		categories.add("Damage: "+troup.damage);
-		categories.add("EnergyConsume: "+troup.energyCostPerAction);
-		categories.add("Heal: "+troup.heal);
-		categories.add("Repair: "+troup.repair);
+		addCategory("Damage: ", troup.damage);
+		addCategory("EnergyConsume: ", troup.energyCostPerAction);
+		addCategory("Heal: ", troup.heal);
+		addCategory("Repair: ", troup.repair);
 		//...
+		
+		this.isDictionaryCall = isDictionaryCall;
 		
 	}
 	
-	public OnTopWindow_UnitDetailInfo(Building building) {
+	public OnTopWindow_UnitDetailInfo(Building building, boolean isDictionaryCall) {
 		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
 		UnitStatsContainer container = UnitsHandler.getUnitByName(building.name);
 		
 		this.displayName = ""+building.name;
-		this.shortDescription = building.hoverDescription; //(Change it away from this Bad/Good descriptions to short summary over the use, details in this otw not by hover)
+		this.shortDescription = building.hoverDescription;
 		this.displayImage = building.img;
 		this.cost = container.kosten;
 		
 		categories.add("Health: "+building.totalHealth+"/"+building.maxHealth);
 		
-		categories.add("ViewDistance: "+building.viewDistance);
-		categories.add("ActionDistance: "+building.actionRange);
+		addCategory("ViewDistance: ", building.viewDistance);
+		addCategory("ActionDistance: ", building.actionRange);
 		
-		categories.add("Damage: "+building.damage);
-		categories.add("EnergyConsume: "+building.energyCostPerAction);
-		categories.add("Heal: "+building.heal);
-		categories.add("Repair: "+building.repair);
-		if(container.energieProduktion != -1) { categories.add("EnergyProduction: "+container.energieProduktion); }else { categories.add("EnergyProduction: 0"); }
-		if(container.materialProduktion != -1) { categories.add("MaterialProduction: "+container.materialProduktion); }else { categories.add("MaterialProduction: 0"); }
-		if(container.research != -1) { categories.add("ResearchProduction: "+container.research); }else { categories.add("ResearchProduction: 0"); }
+		addCategory("Damage: ", building.damage);
+		addCategory("EnergyConsume: ", building.energyCostPerAction);
+		addCategory("Heal: ", building.heal);
+		addCategory("Repair: ", building.repair);
+		addCategory("EnergyProduction: ", container.energieProduktion);
+		addCategory("MaterialProduction: ", container.materialProduktion);
+		addCategory("ResearchProduction: ", container.research);
 		//...
 		
 		if(building instanceof Building_Mine) {
 			Field_Ressource resField = (Field_Ressource) building.connectedField;
-			categories.add("ProducingRoundsLeft: "+resField.getProducingRounds());
+			addCategory("MiningRoundsRemaining: ", resField.getProducingRounds());
 		}
+		
+		this.isDictionaryCall = isDictionaryCall;
 		
 	}
 
-	public OnTopWindow_UnitDetailInfo(Field field) {
+	public OnTopWindow_UnitDetailInfo(Field field, boolean isDictionaryCall) {
 		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
 		
-		FieldData fd = Game_FieldDataHandler.getFieldData(GameData.clickedField.type);
+		FieldData fd = Game_FieldDataHandler.getFieldData(field.type);
 		
 		this.displayName = fd.titel;
-		this.shortDescription = fd.getDescription(); //(Change it away from this Bad/Good descriptions to short summary over the use, details in this otw not by hover)
+		this.shortDescription = fd.getDescription();
 		this.displayImage = field.img;
 		this.cost = -1;
 		
 		if(field instanceof Field_Ressource) {
 			Field_Ressource resField = (Field_Ressource) field;
-			categories.add("ProducingLeft: "+resField.getProducingRounds());
+			addCategory("MiningRoundsRemaining: ", resField.getProducingRounds());
+		}
+		
+		this.isDictionaryCall = isDictionaryCall;
+		
+	}
+	
+	public OnTopWindow_UnitDetailInfo(UpgradeDataContainer udc, boolean isDictionaryCall) {
+		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
+		
+		this.displayName = udc.upgradeType.toString();
+		this.shortDescription = udc.getDescription();
+		this.displayImage = Images.dictionary_general_placeholder;
+		this.cost = udc.researchCost;
+		
+		this.isResearch = true;
+		this.isDictionaryCall = isDictionaryCall;
+		
+	}
+	
+	public OnTopWindow_UnitDetailInfo(DictonaryInfoDescription did, boolean isDictionaryCall) {
+		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
+		
+		this.displayName = did.titel;
+		
+		String description = did.getDescription();
+		int maxLength = OnTopWindowData.unitDetailInfo_width-OnTopWindowData.unitDetailInfo_descriptionBorderLeft*2;
+		
+		int lines = (int) ( (description.length()*8)/maxLength ); //8 IS JUST A APPROXIMATION OF CHAR WIDTH
+		String[] finalDescription = new String[lines+1];
+		finalDescription[0] = ""; //INIT FIRST LINE
+		
+		int length = 0, i = 0;
+		FontMetrics fm = new Canvas().getFontMetrics(OnTopWindowData.unitDetailInfo_descriptionFont);
+		
+		for(String word : description.trim().split(" ")) {
+			
+			int wordLength = fm.stringWidth(word+" ");
+			if(length+wordLength >= maxLength) {
+				//TO LONG
+				i++;
+				length = wordLength;
+				finalDescription[i] = word+" ";
+			}else {
+				//FITS
+				length += wordLength;
+				finalDescription[i] = finalDescription[i]+word+" ";
+			}
+			
+		}
+		
+		this.shortDescription = finalDescription;
+		this.displayImage = Images.dictionary_general_placeholder;
+		this.cost = -1;
+		
+		this.isDictionaryCall = isDictionaryCall;
+		
+	}
+	
+	private void addCategory(String text, int amount) {
+		
+		if(amount > 0) {
+			categories.add(text+amount);
 		}
 		
 	}
@@ -139,14 +239,20 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 		g.drawRect(this.getX(), this.getY(), this.width, this.height);
 		
 		//IMAGE
-		g.drawImage(this.displayImage, this.getX()+OnTopWindowData.unitDetailInfo_imageBorderLeft, this.getY()+OnTopWindowData.unitDetailInfo_imageBorderTopDown, null);
+		if(this.displayImage != null) {
+			g.drawImage(this.displayImage, this.getX()+OnTopWindowData.unitDetailInfo_imageBorderLeft, this.getY()+OnTopWindowData.unitDetailInfo_imageBorderTopDown, null);
+		}
 		//TITEL
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("Arial", Font.CENTER_BASELINE, 34));
 		g.drawString(this.displayName, this.getX()+OnTopWindowData.unitDetailInfo_imageBorderLeft+OnTopWindowData.unitDetailInfo_imageWidthHeight+OnTopWindowData.unitDetailInfo_titelBorderToImage, this.getY()+OnTopWindowData.unitDetailInfo_titelSectionHeight-30);
 		//COST
 		if(this.cost != -1) {
-			g.setColor(Color.YELLOW);
+			if(this.isResearch) {
+				g.setColor(GameData.color_Research);
+			}else {
+				g.setColor(GameData.color_Material);
+			}
 			g.setFont(new Font("Arial", Font.BOLD, 36));
 			g.drawString(""+this.cost, this.getX()+this.width-OnTopWindowData.unitDetailInfo_costBorderRight-(16*(""+this.cost).length()), this.getY()+OnTopWindowData.unitDetailInfo_titelSectionHeight-30);
 		}
@@ -157,7 +263,7 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 		//DESCRIPTION
 		int linesDisplayed = 0;
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Arial", Font.CENTER_BASELINE, 18));
+		g.setFont(OnTopWindowData.unitDetailInfo_descriptionFont);
 		for(String line : this.shortDescription) {
 			linesDisplayed++;
 			int y = descriptionY+OnTopWindowData.unitDetailInfo_descriptionBorderTopDown+(linesDisplayed*OnTopWindowData.unitDetailInfo_descriptionLineHeight);

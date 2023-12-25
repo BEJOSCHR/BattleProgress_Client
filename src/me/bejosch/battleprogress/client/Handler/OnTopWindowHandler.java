@@ -18,6 +18,8 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.MultiSwitch.Mous
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.OnTopWindow;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.ConfirmSurrender.MAA_OTW_ConfSur_Cancel;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.ConfirmSurrender.MAA_OTW_ConfSur_Surrender;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.Dictionary.MAA_OTW_Dictionary_Close;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.Dictionary.MAA_OTW_Dictionary_Section;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.EnergyOverview.MAA_OTW_EnergyOverview_Close;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.MAA_OTW_FriendAdd_Add;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.MAA_OTW_FriendAdd_Cancel;
@@ -70,6 +72,7 @@ import me.bejosch.battleprogress.client.Objects.OnTopWindow.Settings.MAA_OTW_Set
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.TabGameInfo.MAA_OTW_TabGameInfo_BugReport;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.TabGameInfo.MAA_OTW_TabGameInfo_JumpToHQ;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.UnitDetailInfo.MAA_OTW_UnitDetailInfo_Confirm;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.UnitDetailInfo.MAA_OTW_UnitDetailInfo_Dictionary;
 import me.bejosch.battleprogress.client.Window.Animations.AnimationDisplay;
 
 public class OnTopWindowHandler {
@@ -100,6 +103,12 @@ public class OnTopWindowHandler {
 		new MAA_OTW_ConfSur_Surrender();
 		new MAA_OTW_ConfSur_Cancel();
 		
+		//DICTIONARY
+		new MAA_OTW_Dictionary_Close();
+		for(int pos = 0 ; pos < OnTopWindowData.dictionary_sectionCount ; pos++) {
+			new MAA_OTW_Dictionary_Section(pos);
+		}
+		
 		//TAB GAME INFO
 		new MAA_OTW_TabGameInfo_JumpToHQ(0);
 		new MAA_OTW_TabGameInfo_JumpToHQ(1);
@@ -126,16 +135,7 @@ public class OnTopWindowHandler {
 		new MAA_OTW_EnergyOverview_Close();
 		
 		//SETTINGS
-		new MAA_OTW_Settings_Cancel();
-		new MAA_OTW_Settings_Save();
-		
-		List<String> possibleStates = new ArrayList<String>();
-		possibleStates.add(" Slow "); possibleStates.add("Medium"); possibleStates.add(" Fast ");
-		String[] hovermessage = {"Change the speed of moving over the map", "You can move faster with SHIFT as well!"};
-		new MouseActionArea_MultiSwitch_Str(WindowData.FrameWidth/2+150, WindowData.FrameHeight/2-OnTopWindowData.settings_height/2+50
-				, WindowData.FrameWidth/2+300, WindowData.FrameHeight/2-OnTopWindowData.settings_height/2+80
-				, "Settings_Gameplay_MoveSpeed", hovermessage, Color.WHITE, Color.ORANGE, "Settings_Gameplay", possibleStates, 1
-				, 22, 8, 8, true);
+		initSettings();
 		
 		//RESEARCH
 		new MAA_OTW_Research_Category_1Economic();
@@ -155,6 +155,7 @@ public class OnTopWindowHandler {
 		
 		//UnitDetailInfo
 		new MAA_OTW_UnitDetailInfo_Confirm();
+		new MAA_OTW_UnitDetailInfo_Dictionary();
 		
 		//PlayerChat
 		new MAA_OTW_PlayerChat_Close();
@@ -187,6 +188,21 @@ public class OnTopWindowHandler {
 		new MAA_OTW_MenuMenu_2Settings();
 		new MAA_OTW_MenuMenu_3Credits();
 		new MAA_OTW_MenuMenu_4Exit();
+		
+	}
+	
+	private static void initSettings() { 
+		
+		new MAA_OTW_Settings_Cancel();
+		new MAA_OTW_Settings_Save();
+		
+		List<String> possibleStates = new ArrayList<String>();
+		possibleStates.add(" Slow "); possibleStates.add("Medium"); possibleStates.add(" Fast ");
+		String[] hovermessage = {"Change the speed of moving over the map", "You can move faster with SHIFT as well!"};
+		new MouseActionArea_MultiSwitch_Str(WindowData.FrameWidth/2+150, WindowData.FrameHeight/2-OnTopWindowData.settings_height/2+50
+				, WindowData.FrameWidth/2+300, WindowData.FrameHeight/2-OnTopWindowData.settings_height/2+80
+				, "Settings_Gameplay_MoveSpeed", hovermessage, Color.WHITE, Color.ORANGE, "Settings_Gameplay", possibleStates, 1
+				, 22, 8, 8, true);
 		
 	}
 	

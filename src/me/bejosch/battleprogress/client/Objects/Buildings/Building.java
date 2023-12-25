@@ -69,6 +69,11 @@ public class Building {
 	public Building(int playerID_, Field connectedField_) {
 		
 		//if playerReference is null, it is the CreateMap part, so just non player
+		if(connectedField_ == null) {
+			//JUST A DUMMY BUILDING FOR LOADING STATS
+			load_TypeSettings();
+			return;
+		}
 		
 		if(connectedField_.building != null) {
 			/*SCHON BESETZT*/ ConsoleOutput.printMessageInConsole("A Building was placed on a Field with another Building on it!", true);

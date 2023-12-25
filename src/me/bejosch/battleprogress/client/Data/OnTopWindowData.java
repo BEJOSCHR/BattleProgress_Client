@@ -1,14 +1,18 @@
 package me.bejosch.battleprogress.client.Data;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.bejosch.battleprogress.client.Enum.ResearchCategory;
 import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
+import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Chat.ChatHistory;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.OnTopWindow;
+import me.bejosch.battleprogress.client.Objects.Research.UpgradeDataContainer;
 
 public class OnTopWindowData {
 
@@ -90,16 +94,20 @@ public class OnTopWindowData {
 	public static int researchConfirm_textBorder = 20;
 	public static int researchConfirm_buttonBorderBetween = 15, researchConfirm_buttonBottomBorder = 20;
 	
-	//dictionary
-	public static List<UnitStatsContainer> dictonary_category_buildings = new ArrayList<>();
-	public static List<UnitStatsContainer> dictonary_category_troups_land = new ArrayList<>();
-	public static List<UnitStatsContainer> dictonary_category_troups_air = new ArrayList<>();
-	public static List<DictonaryInfoDescription> dictonary_category_general = new ArrayList<>();
+	//DICTIONARY
+	public static int dictionary_scrollPos = 0;
+	public static LinkedList<UnitStatsContainer> dictionary_usc_buildings = new LinkedList<UnitStatsContainer>();
+	public static LinkedList<UnitStatsContainer> dictionary_usc_troups = new LinkedList<UnitStatsContainer>();
+	public static LinkedList<UpgradeDataContainer> dictionary_udc_upgrades = new LinkedList<UpgradeDataContainer>();
+	public static LinkedList<FieldData> dictionary_fd_fields = new LinkedList<FieldData>();
+	public static LinkedList<DictonaryInfoDescription> dictionary_did_infos = new LinkedList<DictonaryInfoDescription>();
 	public static int dictionary_titelSectionHeight = 50;
 	public static int dictionary_sectionCount = 10, dictionary_sectionHeight = 70;
-	public static int dictionary_width = (dictionary_sectionCount*dictionary_sectionHeight)+dictionary_titelSectionHeight, dictionary_height = 600;
+	public static int dictionary_width = 700, dictionary_height = (dictionary_sectionCount*dictionary_sectionHeight)+dictionary_titelSectionHeight;
 	public static int dictionary_border = 10, dictionary_borderSmall = 10;
 	public static int dictionary_textSize = 20, dictionary__textSizeSmall = 15;
+	public static Color dictionary_titelColor = Color.ORANGE;
+	public static Color dictionary_sectionTitelColor = Color.WHITE;
 	
 	//UNITDETAILINFO
 	public static int unitDetailInfo_width = 700, unitDetailInfo_height = 600;
@@ -107,7 +115,8 @@ public class OnTopWindowData {
 	public static int unitDetailInfo_imageWidthHeight = StandardData.fieldSize;
 	public static int unitDetailInfo_titelSectionHeight = unitDetailInfo_imageBorderTopDown*2+unitDetailInfo_imageWidthHeight;
 	public static int unitDetailInfo_titelBorderToImage = 50, unitDetailInfo_costBorderRight = 40;
-	public static int unitDetailInfo_descriptionBorderLeft = 20, unitDetailInfo_descriptionBorderTopDown = 20, unitDetailInfo_descriptionLineHeight = 19;
+	public static Font unitDetailInfo_descriptionFont = new Font("Arial", Font.CENTER_BASELINE, 18);
+	public static int unitDetailInfo_descriptionBorderLeft = 20, unitDetailInfo_descriptionBorderTopDown = 20, unitDetailInfo_descriptionLineHeight = 20;
 	public static int unitDetailInfo_categoriesBorderLeft = 20, unitDetailInfo_categoriesBorderTopDown = 20;
 	public static int unitDetailInfo_categoriesHeight = 40, unitDetailInfo_categoriesWidth = (unitDetailInfo_width-unitDetailInfo_categoriesBorderLeft*2)/2;
 	

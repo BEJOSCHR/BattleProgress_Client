@@ -49,6 +49,9 @@ public class Images {
 	public static Image ranking_Unranked;
 	//TODO ...
 	
+	//Dictionary Placeholder image
+	public static Image dictionary_general_placeholder;
+	
 	//FIELDS
 	public static Image field_Gras;
 	public static Image field_Water;
@@ -233,6 +236,7 @@ public class Images {
 		generalIcon_PowerButton = Funktions.loadImageFromName("generalIcon_PowerButton.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
 		generalIcon_ResearchGlas = Funktions.loadImageFromName("generalIcon_Glas.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
 		generalIcon_Dictonary = Funktions.loadImageFromName("generalIcon_Dictonary.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
+		/*For dictionary with fieldSize*/ dictionary_general_placeholder = Funktions.loadImageFromName("generalIcon_Dictonary.png").getScaledInstance(StandardData.fieldSize+addFaktor, StandardData.fieldSize+addFaktor, Image.SCALE_DEFAULT);
 		generalIcon_RoundSummary = Funktions.loadImageFromName("generalIcon_RoundSummary.png").getScaledInstance(maße, maße, Image.SCALE_DEFAULT);
 		
 	}

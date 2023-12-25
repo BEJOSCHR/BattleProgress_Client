@@ -78,6 +78,11 @@ public class Troup {
 	public Troup(int playerID_, Field connectedField_, TroupType troupType_) {
 		
 		//if playerReference is null, it is the CreateMap part, so just non player
+		if(connectedField_ == null) {
+			//JUST A DUMMY TROUP FOR LOADING STATS
+			load_TypeSettings();
+			return;
+		}
 		
 		if(connectedField_.troup != null) {
 			/*SCHON BESETZT*/ ConsoleOutput.printMessageInConsole("A Troup was created on a Field with another Troup on it!", true);

@@ -284,14 +284,14 @@ public class Game_RoundHandler {
 		numberOfEcoAnimations = rpcs_material.size()+rpcs_energy.size()+rpcs_research.size();
 		int interval = 300, offset = 100;
 		//RESEARCH
-				new Timer().schedule(new TimerTask() {
-					@Override
-					public void run() {
-						for(ResourceProductionContainer rpc : rpcs_research) {
-							new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
-						}
-					}
-				}, interval*3-offset);
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				for(ResourceProductionContainer rpc : rpcs_research) {
+					new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+				}
+			}
+		}, interval*3-offset);
 		//ENERGY
 		new Timer().schedule(new TimerTask() {
 			@Override
@@ -312,6 +312,14 @@ public class Game_RoundHandler {
 		}, interval*1-offset);
 		
 		//THIS STARTS ALL THE ANIMATIONS CALLING THE NEXT FUNCTION TO PROCEED THE ROUND CHANGE CYCLE
+		
+		//FAIL SAVE - Change to new round after delay if animation didnt finish
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				startNewRound();
+			}
+		}, interval*5-offset);
 		
 	}
 	
@@ -344,6 +352,7 @@ public class Game_RoundHandler {
 		
 		if(RoundData.roundIsChanging = true) {
 			//ONLY IF ROUND IS IN CHANGING MODE
+			RoundData.roundIsChanging = false;
 			
 			//CALL BUILDINGS AND TROUPS
 			//	1 - DELETE
@@ -368,7 +377,6 @@ public class Game_RoundHandler {
 			RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
 			
 			RoundData.roundStatusInfo = "Round has finished";
-			RoundData.roundIsChanging = false;
 			RoundData.currentlyPerformingTasks = false;
 			
 			RoundData.readyPlayerCount = 0;

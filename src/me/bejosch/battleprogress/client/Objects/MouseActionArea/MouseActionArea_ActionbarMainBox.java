@@ -52,13 +52,13 @@ public class MouseActionArea_ActionbarMainBox extends MouseActionArea{
 		
 		switch(sourceType) {
 		case FromBuilding:
-			OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(GameData.clickedField.building));
+			OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(GameData.clickedField.building, false));
 			break;
 		case FromTroup:
-			OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(GameData.clickedField.troup));
+			OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(GameData.clickedField.troup, false));
 			break;
 		case FromField:
-			OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(GameData.clickedField));
+			OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(GameData.clickedField, false));
 			break;
 		}
 		

@@ -4,10 +4,8 @@ import me.bejosch.battleprogress.client.Data.StandardData;
 
 public class UnitStatsContainer {
 
-	//LOADS UNITS STATS FROM SSERVER INTO THESE CONTAINERS
-	//THEN IN THE UNITS LOAD VIA NAME THE CONTAINER AND FRIN IT THE STATS
-	
-	//TODO DIESE STATD WERDEN VOR JEDEM SPIEL START AKTUALISIERT, SO DASS W�REND DEM SPIEL IMMER DIE GLEICHEN STATS GELTEN AUCH WENN DANACH �NDERUNGEN STATTFINDEN
+	//LOADS UNITS STATS FROM SERVER INTO THESE CONTAINERS
+	//THEN IN THE UNITS LOAD VIA NAME
 	
 	public String name;
 	public String kürzel;
@@ -18,7 +16,7 @@ public class UnitStatsContainer {
 	public int materialProduktion;
 	public int schaden;
 	public int viewDistance;
-	public int moveDistance; //FOR BUILDINGS 0
+	public int moveDistance; //FOR BUILDINGS -1
 	public int actionDistance;
 	public int heal;
 	public int repair;

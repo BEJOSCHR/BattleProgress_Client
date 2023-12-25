@@ -23,6 +23,16 @@ public class UpgradeDataContainer {
 		this.description_en = description_en;
 		this.description_de = description_de;
 		
+		for(int i = 0 ; i < 4 ; i++) {
+			if(this.effectValue == 0) {
+				this.description_en[i] = this.description_en[i].replace("%%", "?");
+				this.description_de[i] = this.description_de[i].replace("%%", "?");
+			}else {
+				this.description_en[i] = this.description_en[i].replace("%%", ""+this.effectValue);
+				this.description_de[i] = this.description_de[i].replace("%%", ""+this.effectValue);
+			}
+		}
+		
 	}
 	
 	public String[] getDescription() {

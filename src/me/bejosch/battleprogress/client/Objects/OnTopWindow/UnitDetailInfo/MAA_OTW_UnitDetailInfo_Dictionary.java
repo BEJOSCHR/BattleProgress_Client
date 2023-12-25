@@ -10,13 +10,14 @@ import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.Dictionary.OnTopWindow_Dictionary;
 
-public class MAA_OTW_UnitDetailInfo_Confirm extends MouseActionArea {
+public class MAA_OTW_UnitDetailInfo_Dictionary extends MouseActionArea {
 
-	public MAA_OTW_UnitDetailInfo_Confirm() {
-		super(WindowData.FrameWidth/2+20, WindowData.FrameHeight/2+OnTopWindowData.unitDetailInfo_height/2-OnTopWindowData.generallConfirm_MAA_height-20
-				, WindowData.FrameWidth/2+20+OnTopWindowData.generalConfirm_MAA_width, WindowData.FrameHeight/2+OnTopWindowData.unitDetailInfo_height/2-20
-				, "OTW_UnitDetailInfo_Confirm", null, ShowBorderType.ShowAlways, Color.WHITE, Color.ORANGE);
+	public MAA_OTW_UnitDetailInfo_Dictionary() {
+		super(WindowData.FrameWidth/2-20-OnTopWindowData.generalConfirm_MAA_width, WindowData.FrameHeight/2+OnTopWindowData.unitDetailInfo_height/2-OnTopWindowData.generallConfirm_MAA_height-20
+				, WindowData.FrameWidth/2-20, WindowData.FrameHeight/2+OnTopWindowData.unitDetailInfo_height/2-20
+				, "OTW_UnitDetailInfo_Dictionary", null, ShowBorderType.ShowAlways, Color.WHITE, Color.ORANGE);
 		this.OTWMMA = true;
 	}
 	
@@ -35,7 +36,7 @@ public class MAA_OTW_UnitDetailInfo_Confirm extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		OnTopWindowHandler.closeOTW();
+		OnTopWindowHandler.openOTW(new OnTopWindow_Dictionary(), true);
 		
 	}
 	
@@ -47,12 +48,12 @@ public class MAA_OTW_UnitDetailInfo_Confirm extends MouseActionArea {
 				//HOVER
 				g.setColor(hoverColor);
 				g.setFont(new Font("Arial", Font.PLAIN, 21));
-				g.drawString("Confirm", this.xTL+44, this.yBR-16);
+				g.drawString("Dictionary", this.xTL+33, this.yBR-16);
 			}else {
 				//NO HOVER
 				g.setColor(standardColor);
 				g.setFont(new Font("Arial", Font.PLAIN, 20));
-				g.drawString("Confirm", this.xTL+45, this.yBR-15);
+				g.drawString("Dictionary", this.xTL+34, this.yBR-15);
 			}
 		}
 		
