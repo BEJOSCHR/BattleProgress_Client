@@ -57,7 +57,7 @@ public class Building {
 	public int heal = 0; //The count how many heal this building could deal per action
 	public int repair = 0; //The count how many repair this building could deal per action
 	
-	public boolean shouldBeDestroyedAtRoundEnd = false; //If true this building will be destroyed at the next round end (by damage taken or destroy dask)
+	public boolean shouldBeDestroyedAtRoundEnd = false; //If true this building will be destroyed at the next round end (by damage taken or destroy task)
 	
 	
 //==========================================================================================================
@@ -144,17 +144,12 @@ public class Building {
 
 //==========================================================================================================
 	/**
-	 * Calculates the list with all visible fields for this troup
+	 * Calculates the list with all visible fields for this building
 	 */
 	public void calculate_ViewRange() {
 		
 		//BUILDINGS CAN NOT MOVE SO ONE TIME CALCULATE SHOULD BE ENOUGHT
 		if(this.viewAbleFields.isEmpty() == false) { return; }
-		
-//		if(this instanceof Building_Headquarter) {
-//			((Building_Headquarter) this).calculate_ViewRange_HQ();
-//			return;
-//		}
 		
 		this.viewAbleFields.clear();
 		for(int x = this.connectedField.X-viewDistance ; x <= this.connectedField.X+viewDistance ; x++) {
@@ -167,7 +162,8 @@ public class Building {
 						//WITH PATH STILL IN RANGE
 						this.viewAbleFields.add(new FieldCoordinates(targetField));
 					}
-				}catch(NullPointerException | IndexOutOfBoundsException error) { error.printStackTrace(); }
+				}catch(IndexOutOfBoundsException error) { //error.printStackTrace();
+				}catch(NullPointerException error) { error.printStackTrace(); }
 			}
 		}
 		

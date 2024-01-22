@@ -113,6 +113,8 @@ public class Game_ResearchHandler {
 		ResearchData.researchPoints -= upgrade.getDataContainer().researchCost;
 		//STATS
 		RoundData.currentStatsContainer.addResearchEntry(upgrade);
+		//SYNC TO SERVER
+		MinaClient.sendData(610, upgrade.getTitle());
 		
 	}
 	

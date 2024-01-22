@@ -38,7 +38,7 @@ private static int menuPosition = 3;
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		OnTopWindowHandler.openOTW(new OnTopWindow_ConfirmSurrender());
+		OnTopWindowHandler.openOTW(new OnTopWindow_ConfirmSurrender(false));
 		
 	}
 	

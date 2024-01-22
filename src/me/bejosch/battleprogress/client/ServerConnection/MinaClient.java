@@ -54,6 +54,7 @@ import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Produce
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Remove;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Upgrade;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.ConfirmSurrender.OnTopWindow_ConfirmSurrender;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.OnTopWindow_FriendAdd;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameAccept.OnTopWindow_GameAccept;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GroupInvitation.OnTopWindow_GroupInvitation;
@@ -600,6 +601,14 @@ public class MinaClient {
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
+		//RESEARCH UNLOCK SYNC
+		case 610:
+			// playerID ; researchName
+			int playerID_10 = Integer.parseInt(content[0]);
+			String researchName = content[1];
+			//TODO no use yet - can be used for something i guess
+			break;
+//========================================================================
 		//Game Start
 		case 620:
 			// GameID ; GameModus ; PID1 ; PID2 ; PID3 ; PID4 ; MapName ; MapData
@@ -623,6 +632,7 @@ public class MinaClient {
 			int Y1 = Integer.parseInt(content[3]);
 			GameHandler.createBuilding(playerID, buildingName_HQ, X1, Y1);
 			break;
+			
 //========================================================================
 		//Client is ready for this round
 		case 650:
@@ -692,6 +702,32 @@ public class MinaClient {
 				//IS AN ALLIED PING
 				new Animation_GamePing(GameData.gameMap_FieldList[x][y]);
 			}
+			break;
+//========================================================================
+		//GAME FINISH
+		case 690:
+			// ...
+			//TODO register but only change to finish screen after round sim/task executions has finished!!!
+			break;
+//========================================================================
+		//GAME SURRENDER REQUEST
+		case 691:
+			// -
+			OnTopWindowHandler.openOTW(new OnTopWindow_ConfirmSurrender(true));
+			break;
+//========================================================================
+		//GAME DISCONNECT INFO
+		case 695:
+			// playerID
+			int playerDisconnectID = Integer.parseInt(data);
+			//TODO
+			break;
+//========================================================================
+		//GAME RECONNECT INFO
+		case 696:
+			// playerID
+			int playerReconnectID = Integer.parseInt(data);
+			//TODO
 			break;
 //========================================================================
 		//Client Game Ping

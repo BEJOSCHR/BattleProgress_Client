@@ -3,16 +3,24 @@ package me.bejosch.battleprogress.client.Objects.OnTopWindow.ConfirmSurrender;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
+import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
+import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
 public class MAA_OTW_ConfSur_Surrender extends MouseActionArea {
 
 	private static int partWidth = OnTopWindowData.confSur_width/3;
+	
+	private static boolean surrenderCooldownActive = false;
+	private static final int SURRENDER_COOLDOWN_MIN = 5;
 	
 	public MAA_OTW_ConfSur_Surrender() {
 		super(WindowData.FrameWidth/2-partWidth-partWidth/4, WindowData.FrameHeight/2+OnTopWindowData.confSur_MAA_yOffSet
@@ -36,8 +44,27 @@ public class MAA_OTW_ConfSur_Surrender extends MouseActionArea {
 	@Override
 	public void performAction_LEFT_RELEASE() {
 		
-		//SURRENDER BZW LEAVE THE GAME
-		System.exit(0);
+		if(SpielModus.isGameModus1v1()) {
+			//JUST SURRENDER
+			MinaClient.sendData(690, "Surrender");
+		}else {
+			boolean surrenderRequest = ( (OnTopWindow_ConfirmSurrender) OnTopWindowData.onTopWindow).surrenderRequest;
+			if(surrenderRequest == true) {
+				//SURRENDER AFTER REQUEST
+				MinaClient.sendData(690, "Surrender");
+			}else if(surrenderCooldownActive == false) {
+				//ONLY SEND REQUEST IF NOT ON COOLDOWN
+				MinaClient.sendData(691, "Surrender request");
+				surrenderCooldownActive = true;
+				new Timer().schedule(new TimerTask() {
+					@Override
+					public void run() {
+						surrenderCooldownActive = false;
+					}
+				}, 1000*60*SURRENDER_COOLDOWN_MIN);
+			}
+		}
+		OnTopWindowHandler.closeOTW();
 		
 	}
 	

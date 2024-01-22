@@ -311,7 +311,7 @@ public class Game_RoundHandler {
 			}
 		}, interval*1-offset);
 		
-		//THIS STARTS ALL THE ANIMATIONS CALLING THE NEXT FUNCTION TO PROCEED THE ROUND CHANGE CYCLE
+		//THIS STARTED ALL THE ANIMATIONS CALLING THE NEXT FUNCTION TO PROCEED THE ROUND CHANGE CYCLE
 		
 		//FAIL SAVE - Change to new round after delay if animation didnt finish
 		new Timer().schedule(new TimerTask() {
@@ -319,7 +319,7 @@ public class Game_RoundHandler {
 			public void run() {
 				startNewRound();
 			}
-		}, interval*5-offset);
+		}, 1000*8);
 		
 	}
 	
@@ -350,7 +350,7 @@ public class Game_RoundHandler {
 	 */
 	public static void startNewRound() {
 		
-		if(RoundData.roundIsChanging = true) {
+		if(RoundData.roundIsChanging == true) {
 			//ONLY IF ROUND IS IN CHANGING MODE
 			RoundData.roundIsChanging = false;
 			
@@ -403,7 +403,7 @@ public class Game_RoundHandler {
 			Funktions.moveScreenToFieldCoordinates(RoundData.lastRoundMidField.X, RoundData.lastRoundMidField.Y-1);
 			
 			//CLOSE CHAT
-			GameHandler.getMouseActionAreaByName("Chat_Hide").performAction_LEFT_RELEASE();
+			//WHY? GameHandler.getMouseActionAreaByName("Chat_Hide").performAction_LEFT_RELEASE();
 			
 			OnTopWindowHandler.openOTW(new OnTopWindow_RoundSummary());
 			
