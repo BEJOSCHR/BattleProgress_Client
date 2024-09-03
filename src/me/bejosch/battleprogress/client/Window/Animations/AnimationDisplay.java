@@ -83,7 +83,7 @@ public class AnimationDisplay {
 					}
 				}
 				if(removedOne == false) { break;}
-			}catch(ConcurrentModificationException error) {}
+			}catch(ConcurrentModificationException | NullPointerException error) {}
 		}
 		
 	}
