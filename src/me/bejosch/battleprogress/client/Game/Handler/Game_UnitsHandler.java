@@ -1,10 +1,10 @@
-package me.bejosch.battleprogress.client.Handler;
+package me.bejosch.battleprogress.client.Game.Handler;
 
 import me.bejosch.battleprogress.client.Data.Game.UnitData;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
-public class UnitsHandler {
+public class Game_UnitsHandler {
 
 	public static void requestUnitsUpdate() {
 		

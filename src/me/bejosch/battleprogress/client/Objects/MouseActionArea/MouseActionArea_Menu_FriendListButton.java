@@ -60,7 +60,20 @@ public class MouseActionArea_Menu_FriendListButton extends MouseActionArea {
 			//DISPLAYS A PLAYER (offline or online) AND IS HOVERED
 			if(connectedFriendListSection.getRepresentedClientPlayer().getOnlineMin() != -1) {
 				//ONLINE
-				return true; //SHOW ALL
+				switch(this.xPos) {
+				case 0:
+					//INVITE OR SPECTATE
+					return !connectedFriendListSection.getRepresentedClientPlayer().isInRankedGame();
+				case 1:
+					//CHAT
+					return true;
+				case 2:
+					//PROFILE
+					return true;
+				case 3:
+					//REMOVE
+					return true;
+				}
 			}else {
 				//OFFLINE
 				switch(this.xPos) {

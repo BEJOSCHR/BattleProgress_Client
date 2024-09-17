@@ -26,7 +26,6 @@ import me.bejosch.battleprogress.client.Game.TimeManager;
 import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
 import me.bejosch.battleprogress.client.Handler.MovementHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.RoundStatsContainer;
@@ -124,8 +123,9 @@ public class GameHandler {
 //==========================================================================================================
 	/**
 	 * Called if the game starts from the server (Before Animation)
+	 * FirstInit - Normaly true but on reconnect false
 	 */
-	public static void startGame(int gameID, SpielModus modus, int playerID_1, int playerID_2, int playerID_3, int playerID_4, String mapName, String mapData) {
+	public static void startGame(boolean firstInit, int gameID, SpielModus modus, int playerID_1, int playerID_2, int playerID_3, int playerID_4, String mapName, String mapData) {
 		
 		//CLOSE ALL OTW
 		OnTopWindowHandler.closeOTW();
@@ -164,7 +164,7 @@ public class GameHandler {
 		DiscordAPI.setNewPresence("In Game", displayModus, "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		
 		//LOAD UNITS
-		UnitsHandler.requestUnitsUpdate();
+		Game_UnitsHandler.requestUnitsUpdate();
 		
 		//LOAD UPGRADE DATA CONTAINER
 		Game_ResearchHandler.loadUpgradeDataContainer();
@@ -186,7 +186,7 @@ public class GameHandler {
 		MovementHandler.startMovementTimer();
 		
 		//Animation (which switches the GameStatus to Game!)
-		new Animation_GameStartDisplay();
+		if(firstInit) { new Animation_GameStartDisplay(); }
 		
 	}
 	
@@ -194,11 +194,11 @@ public class GameHandler {
 	/**
 	 * Called if the game starts after the animation, so it's finally started (After animation)
 	 */
-	public static void initialiseGame() {
+	public static void initialiseGame(boolean firstInit, int currentRound) { //firstinit normaly true but on reconnect/resync its false
 		
 		//CreateOwnHQ
 		Point hqCords = getHQCoordinates();
-		MinaClient.sendData(621, "Headquarter"+";"+hqCords.x+";"+hqCords.y);
+		if(firstInit) { MinaClient.sendData(621, "Headquarter"+";"+hqCords.x+";"+hqCords.y); }
 		Funktions.moveScreenToFieldCoordinates(hqCords.x, hqCords.y); //MOVE SCREEN TO FOCUS HQ
 		
 		//Setup the research after loaded UpgradeDataContainer earlier
@@ -214,11 +214,11 @@ public class GameHandler {
 		//IS CALLED BY THE CREATE HQ PART ON THE SERVER RECEIVER DOWN BELOW
 		
 		//STATS CONTAINER
-		RoundData.currentRound = 1;
-		RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
+		RoundData.currentRound = currentRound;
+		if(firstInit) { RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound); }
 		
 		//START ROUND TIMER
-		Game_RoundHandler.startRoundTimer();
+		if(firstInit) { Game_RoundHandler.startRoundTimer(); }
 		
 	}
 	

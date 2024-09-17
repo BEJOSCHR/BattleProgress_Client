@@ -9,7 +9,7 @@ import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -25,8 +25,8 @@ public class ExecuteTask_Remove extends ExecuteTask{
 	 * @param playerReference_ - {@link PlayerReference} - The player who has ordered this task
 	 * @param executeCoordinate_ - {@link FieldCoordinates} - The start coordinates (where)
 	 */
-	public ExecuteTask_Remove(int playerID_, FieldCoordinates executeCoordinate_) {
-		super(ExecuteTaskType.Remove);
+	public ExecuteTask_Remove(int playerID_, FieldCoordinates executeCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.Remove, execSimulation);
 		
 		this.playerID = playerID_;
 		this.executeCoordinate = executeCoordinate_;
@@ -76,11 +76,11 @@ public class ExecuteTask_Remove extends ExecuteTask{
 		
 		if(foundTargetBuilding != null) {
 			//BUILDING
-			cost = UnitsHandler.getUnitByName(foundTargetBuilding.name).kosten;
+			cost = Game_UnitsHandler.getUnitByName(foundTargetBuilding.name).kosten;
 			foundTargetBuilding.destroy();
 		}else if(foundTargetTroup != null) {
 			//TROUP
-			cost = UnitsHandler.getUnitByName(foundTargetTroup.name).kosten;
+			cost = Game_UnitsHandler.getUnitByName(foundTargetTroup.name).kosten;
 			foundTargetTroup.delete(false);
 		}else {
 			ConsoleOutput.printMessageInConsole("A REMOVE executeTask found no building or troup at the target to remove [X: "+executeCoordinate.X+"-Y: "+executeCoordinate.Y+"]", true);

@@ -13,8 +13,8 @@ import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Game.Handler.Game_FieldDataHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Handler.MovementHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
 import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
@@ -66,7 +66,7 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 	
 	public OnTopWindow_UnitDetailInfo(Troup troup, boolean isDictionaryCall) {
 		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
-		UnitStatsContainer container = UnitsHandler.getUnitByName(troup.name);
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName(troup.name);
 		
 		this.displayName = ""+troup.name;
 		this.shortDescription = troup.hoverDescription;
@@ -99,7 +99,7 @@ public class OnTopWindow_UnitDetailInfo extends OnTopWindow {
 	
 	public OnTopWindow_UnitDetailInfo(Building building, boolean isDictionaryCall) {
 		super("OTW_UnitDetailInfo", OnTopWindowData.unitDetailInfo_width, OnTopWindowData.unitDetailInfo_height);
-		UnitStatsContainer container = UnitsHandler.getUnitByName(building.name);
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName(building.name);
 		
 		this.displayName = ""+building.name;
 		this.shortDescription = building.hoverDescription;

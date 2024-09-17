@@ -120,10 +120,16 @@ public class OnTopWindowData {
 	public static int unitDetailInfo_categoriesBorderLeft = 20, unitDetailInfo_categoriesBorderTopDown = 20;
 	public static int unitDetailInfo_categoriesHeight = 40, unitDetailInfo_categoriesWidth = (unitDetailInfo_width-unitDetailInfo_categoriesBorderLeft*2)/2;
 	
-	//GROUPINVITATION
+	//GROUP INVITATION
 	public static int groupInvitation_width = 850, groupInvitation_height = 150;
 	public static int groupInvitation_buttonWidth = 140, groupInvitation_buttonHeight = 50;
 	public static int groupInvitation_buttonBorderBetween = 50, groupInvitation_buttonBottomBorder = 20;
+	
+	//PLAYER DISCONNECT
+	public static int playerDisconnect_width = 850, playerDisconnect_height = 150;
+	
+	//GAME SYNC STATUS
+	public static int gameSyncStatus_width = 850, gameSyncStatus_height = 150;
 	
 	//CHAT
 	public static List<ChatHistory> cachedChats = new ArrayList<>();

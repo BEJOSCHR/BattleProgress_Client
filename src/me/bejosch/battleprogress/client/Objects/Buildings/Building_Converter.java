@@ -3,7 +3,7 @@ package me.bejosch.battleprogress.client.Objects.Buildings;
 import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Game.Handler.Game_ResearchHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Tasks.Building.Task_Building_Destroy;
@@ -29,7 +29,7 @@ public class Building_Converter extends Building {
 		}catch(Exception error) {}
 		
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Converter");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Converter");
 		viewDistance = container.viewDistance;
 		maxHealth = container.leben;
 		totalHealth = container.leben;

@@ -2,7 +2,7 @@ package me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle;
 
 import java.awt.Graphics;
 
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Attack;
@@ -26,7 +26,7 @@ public class Troup_Land_LightTank extends Troup_Land {
 		}catch(Exception error) {}
 		
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Light Tank");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Light Tank");
 		viewDistance = container.viewDistance;
 		moveDistance = container.moveDistance;
 		actionRange = container.actionDistance;
@@ -52,7 +52,7 @@ public class Troup_Land_LightTank extends Troup_Land {
 		
 		this.actionTasks.add(new Task_Troup_Attack(this));
 		this.actionTasks.add(new Task_Troup_Move(this));
-		UnitStatsContainer mediumTank = UnitsHandler.getUnitByName("Medium Tank");
+		UnitStatsContainer mediumTank = Game_UnitsHandler.getUnitByName("Medium Tank");
 		this.actionTasks.add(new Task_Troup_Upgrade(this, mediumTank.name, mediumTank.kosten, null));
 		this.actionTasks.add(new Task_Troup_Remove(this));
 		

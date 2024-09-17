@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -36,8 +38,8 @@ public class ExecuteTask_Upgrade extends ExecuteTask{
 	 * @param executeCoordinate_ - {@link FieldCoordinates} - The start coordinates (From where)
 	 * @param targetCoordinate_ - {@link FieldCoordinates} - The goal coordinates (Where it goes)
 	 */
-	public ExecuteTask_Upgrade(int playerID_, String upgradeTroupName, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_) {
-		super(ExecuteTaskType.Upgrade);
+	public ExecuteTask_Upgrade(int playerID_, String upgradeTroupName, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.Upgrade, execSimulation);
 		
 		this.playerID = playerID_;
 		this.upgradeTroupName = upgradeTroupName;
@@ -122,6 +124,12 @@ public class ExecuteTask_Upgrade extends ExecuteTask{
 			break;
 		}
 		if(troup != null) { troup.totalHealth = (int) Math.round(troup.totalHealth*percentageLeft); } //SET DAMAGED HP
+		
+		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)
+		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			int cost = Game_UnitsHandler.getUnitByName(this.upgradeTroupName).kosten;
+			EconomicData.materialAmount -= cost; //No valid check requiered, we are just following the records (replay) so it was already approved
+		}
 		
 		//STATS
 		if(troup != null && troup.playerID == ProfilData.thisClient.getID()) {

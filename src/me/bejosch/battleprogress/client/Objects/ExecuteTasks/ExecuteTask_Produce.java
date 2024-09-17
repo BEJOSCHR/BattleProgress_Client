@@ -6,12 +6,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -37,8 +39,8 @@ public class ExecuteTask_Produce extends ExecuteTask{
 	 * @param executeCoordinate_ - {@link FieldCoordinates} - The start coordinates (From where)
 	 * @param targetCoordinate_ - {@link FieldCoordinates} - The goal coordinates (Where it goes)
 	 */
-	public ExecuteTask_Produce(String troupName_, int playerID_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_) {
-		super(ExecuteTaskType.Produce);
+	public ExecuteTask_Produce(String troupName_, int playerID_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.Produce, execSimulation);
 		
 		this.troupName = troupName_;
 		this.playerID = playerID_;
@@ -119,6 +121,12 @@ public class ExecuteTask_Produce extends ExecuteTask{
 		default:
 			ConsoleOutput.printMessageInConsole("A PRODUCE executeTask found no troup for the given troupName [TroupName: "+troupName+"]", true);
 			break;
+		}
+		
+		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)
+		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			int cost = Game_UnitsHandler.getUnitByName(this.troupName).kosten;
+			EconomicData.materialAmount -= cost; //No valid check requiered, we are just following the records (replay) so it was already approved
 		}
 		
 		//STATS

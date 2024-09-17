@@ -1,7 +1,7 @@
 package me.bejosch.battleprogress.client.Objects.Buildings;
 
 import me.bejosch.battleprogress.client.Game.Handler.Game_ResearchHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.Field_Ressource;
@@ -28,7 +28,7 @@ public class Building_Reactor extends Building {
 		}catch(Exception error) {}
 		
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Reactor");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Reactor");
 		viewDistance = container.viewDistance;
 		maxHealth = container.leben;
 		totalHealth = container.leben;

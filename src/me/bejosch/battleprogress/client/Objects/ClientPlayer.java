@@ -169,7 +169,10 @@ public class ClientPlayer {
 	}
 	
 	public boolean isInGame() {
-		return this.getCurrentActivity().contains("Game"); //TODO Works? Right implemented?
+		return this.getCurrentActivity().contains("Ingame"); //Works? Right implemented?
+	}
+	public boolean isInRankedGame() {
+		return this.getCurrentActivity().contains("Ingame") && this.getCurrentActivity().contains("Ranked"); //Works? Right implemented?
 	}
 	
 	public void setOnlineMin(int onlineMin) {

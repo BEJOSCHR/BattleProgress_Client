@@ -6,12 +6,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
@@ -43,8 +45,8 @@ public class ExecuteTask_Build extends ExecuteTask{
 	 * @param playerReference_ - {@link PlayerReference} - The reference of the player who produces this troup
 	 * @param targetCoordinate_ - {@link FieldCoordinates} - The goal coordinates (Where it goes)
 	 */
-	public ExecuteTask_Build(String buildingName_, int playerID_, FieldCoordinates targetCoordinate_) {
-		super(ExecuteTaskType.Build);
+	public ExecuteTask_Build(String buildingName_, int playerID_, FieldCoordinates targetCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.Build, execSimulation);
 		
 		this.buildingName = buildingName_;
 		this.playerID = playerID_;
@@ -147,6 +149,12 @@ public class ExecuteTask_Build extends ExecuteTask{
 		default:
 			ConsoleOutput.printMessageInConsole("A BUILD executeTask found no building for the given buildingName [BuildingName: "+buildingName+"]", true);
 			break;
+		}
+		
+		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)
+		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			int cost = Game_UnitsHandler.getUnitByName(this.buildingName).kosten;
+			EconomicData.materialAmount -= cost; //No valid check requiered, we are just following the records (replay) so it was already approved
 		}
 		
 		//STATS

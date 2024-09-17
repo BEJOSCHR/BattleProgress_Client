@@ -2,7 +2,7 @@ package me.bejosch.battleprogress.client.Objects.Buildings;
 
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Game.Handler.Game_ResearchHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
@@ -35,7 +35,7 @@ public class Building_Mine extends Building {
 		}catch(Exception error) {}
 		
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Mine");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Mine");
 		viewDistance = container.viewDistance;
 		maxHealth = container.leben;
 		totalHealth = container.leben;

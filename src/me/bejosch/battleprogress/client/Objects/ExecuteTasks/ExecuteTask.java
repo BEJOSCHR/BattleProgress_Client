@@ -16,17 +16,23 @@ public class ExecuteTask {
 	public boolean animationIsRunning = false;
 	public boolean performedAction = false;
 	
-	public boolean blockedTarget = false;
+	public boolean blockedTarget = false; //ONLY IS CHECKED AND SET FOR THE TASKS THAT NEED A FREE FIELD (BUILD, PRODUCE, MOVE)
+	
+	public boolean execSimulation = false;
 	
 //==========================================================================================================
 	/**
 	 * Creates a new ExecuteTask, which is used for executing the given task for every client in the game
 	 * @param type - {@link ExecuteTaskType} - The type of the executeTask
+	 * @param execSimulation - boolean - True means that this is not a real task but a task created and used udring game reconnection to simulate the execution
 	 */
-	public ExecuteTask(ExecuteTaskType type_) {
+	public ExecuteTask(ExecuteTaskType type_, boolean execSimulation) {
 		
 		this.type = type_;
-		addToTaskList();
+		this.execSimulation = execSimulation;
+		if(!this.execSimulation) {
+			addToTaskList();
+		}
 		
 	}
 	
@@ -68,9 +74,11 @@ public class ExecuteTask {
 	 * Called when this task had done his animation action
 	 */
 	public void actionFinished() {
-		removeFromTaskList();
-		//NEXT TASK - CIRCLE CLOSED
-		Game_RoundHandler.performNextExecuteTask(true);
+		if(!this.execSimulation) {
+			removeFromTaskList();
+			//NEXT TASK - CIRCLE CLOSED
+			Game_RoundHandler.performNextExecuteTask(true);
+		}
 	}
 	
 //==========================================================================================================

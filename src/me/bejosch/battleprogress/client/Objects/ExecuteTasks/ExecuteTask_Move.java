@@ -31,8 +31,8 @@ public class ExecuteTask_Move extends ExecuteTask{
 	 * @param executeCoordinate_ - {@link FieldCoordinates} - The start coordinates (From where)
 	 * @param targetCoordinate_ - {@link FieldCoordinates} - The goal coordinates (Where it goes)
 	 */
-	public ExecuteTask_Move(int playerID_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_) {
-		super(ExecuteTaskType.Move);
+	public ExecuteTask_Move(int playerID_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.Move, execSimulation);
 		
 		this.playerID = playerID_;
 		this.executeCoordinate = executeCoordinate_;

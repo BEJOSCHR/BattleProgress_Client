@@ -32,6 +32,7 @@ import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Enum.UpgradeType;
 import me.bejosch.battleprogress.client.Game.TimeManager;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_ReconnectHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
 import me.bejosch.battleprogress.client.Handler.ChatHandler;
 import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
@@ -59,6 +60,7 @@ import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendAdd.OnTopWindo
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameAccept.OnTopWindow_GameAccept;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GroupInvitation.OnTopWindow_GroupInvitation;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.InfoMessage.OnTopWindow_InfoMessage;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.PlayerDisconnect.OnTopWindow_PlayerDisconnect;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.QueueWaiting.OnTopWindow_QueueWaiting;
 import me.bejosch.battleprogress.client.Objects.Research.UpgradeDataContainer;
 import me.bejosch.battleprogress.client.Window.Label;
@@ -160,7 +162,7 @@ public class MinaClient {
 	
 	public static void handlePackage(int signal, int id, String data) {
 		
-		int[] signalBlackList = {997, 699}; 
+		int[] signalBlackList = {997, 801}; 
 		List<Integer> noConsoleOutput = new ArrayList<>();
 		for(int i : signalBlackList) {noConsoleOutput.add(i);}
 		if(noConsoleOutput.contains(signal) == false) {
@@ -462,7 +464,9 @@ public class MinaClient {
 			ProfilData.otherGroupClient = otherGroupPlayer;
 			ProfilData.sendGroupInvite.remove(otherGroupPlayer);
 			MenuData.friendListOpened = false;
+			MenuData.rfl_OpenCloseFactor = 0;
 			MenuData.gameHistoryOpened = false;
+			MenuData.lgh_OpenCloseFactor = 0;
 			break;
 //========================================================================
 		//Group Invite Decline
@@ -525,7 +529,7 @@ public class MinaClient {
 			int goalX_1 = Integer.parseInt(content[3]);
 			int goalY_1 = Integer.parseInt(content[4]);
 			int count_1 = Integer.parseInt(content[5]);
-			new ExecuteTask_Attack(playerID_1, count_1, new FieldCoordinates(startX_1, startY_1), new FieldCoordinates(goalX_1, goalY_1));
+			new ExecuteTask_Attack(playerID_1, count_1, new FieldCoordinates(startX_1, startY_1), new FieldCoordinates(goalX_1, goalY_1), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
@@ -538,7 +542,7 @@ public class MinaClient {
 			int goalX_2 = Integer.parseInt(content[3]);
 			int goalY_2 = Integer.parseInt(content[4]);
 			int count_2 = Integer.parseInt(content[5]);
-			new ExecuteTask_HealAndRepair(playerID_2, count_2, new FieldCoordinates(startX_2, startY_2), new FieldCoordinates(goalX_2, goalY_2));
+			new ExecuteTask_HealAndRepair(playerID_2, count_2, new FieldCoordinates(startX_2, startY_2), new FieldCoordinates(goalX_2, goalY_2), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
@@ -549,7 +553,7 @@ public class MinaClient {
 			String buildingName = content[1];
 			int goalX_3 = Integer.parseInt(content[2]);
 			int goalY_3 = Integer.parseInt(content[3]);
-			new ExecuteTask_Build(buildingName, playerID_3, new FieldCoordinates(goalX_3, goalY_3));
+			new ExecuteTask_Build(buildingName, playerID_3, new FieldCoordinates(goalX_3, goalY_3), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
@@ -562,7 +566,7 @@ public class MinaClient {
 			int startY_4 = Integer.parseInt(content[3]);
 			int goalX_4 = Integer.parseInt(content[4]);
 			int goalY_4 = Integer.parseInt(content[5]);
-			new ExecuteTask_Produce(troupName, playerID_4, new FieldCoordinates(startX_4, startY_4), new FieldCoordinates(goalX_4, goalY_4));
+			new ExecuteTask_Produce(troupName, playerID_4, new FieldCoordinates(startX_4, startY_4), new FieldCoordinates(goalX_4, goalY_4), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
@@ -574,7 +578,7 @@ public class MinaClient {
 			int startY_5 = Integer.parseInt(content[2]);
 			int goalX_5 = Integer.parseInt(content[3]);
 			int goalY_5 = Integer.parseInt(content[4]);
-			new ExecuteTask_Move(playerID_5, new FieldCoordinates(startX_5, startY_5), new FieldCoordinates(goalX_5, goalY_5));
+			new ExecuteTask_Move(playerID_5, new FieldCoordinates(startX_5, startY_5), new FieldCoordinates(goalX_5, goalY_5), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
@@ -584,7 +588,7 @@ public class MinaClient {
 			int playerID_6 = Integer.parseInt(content[0]);
 			int goalX_6 = Integer.parseInt(content[1]);
 			int goalY_6 = Integer.parseInt(content[2]);
-			new ExecuteTask_Remove(playerID_6, new FieldCoordinates(goalX_6, goalY_6));
+			new ExecuteTask_Remove(playerID_6, new FieldCoordinates(goalX_6, goalY_6), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
@@ -597,15 +601,15 @@ public class MinaClient {
 			int startY_7 = Integer.parseInt(content[3]);
 			int goalX_7 = Integer.parseInt(content[4]);
 			int goalY_7 = Integer.parseInt(content[5]);
-			new ExecuteTask_Upgrade(playerID_7, troupName_7, new FieldCoordinates(startX_7, startY_7), new FieldCoordinates(goalX_7, goalY_7));
+			new ExecuteTask_Upgrade(playerID_7, troupName_7, new FieldCoordinates(startX_7, startY_7), new FieldCoordinates(goalX_7, goalY_7), false);
 			Game_RoundHandler.receivedATask();
 			break;
 //========================================================================
 		//RESEARCH UNLOCK SYNC
 		case 610:
 			// playerID ; researchName
-			int playerID_10 = Integer.parseInt(content[0]);
-			String researchName = content[1];
+			@SuppressWarnings("unused") int playerID_10 = Integer.parseInt(content[0]);
+			@SuppressWarnings("unused") String researchName = content[1];
 			//TODO no use yet - can be used for something i guess
 			break;
 //========================================================================
@@ -620,7 +624,7 @@ public class MinaClient {
 			int startPlayerID_4 = Integer.parseInt(content[5]);
 			String startMapName = content[6];
 			String startMapData = content[7];
-			GameHandler.startGame(startGameID, startGameMode, startPlayerID_1, startPlayerID_2, startPlayerID_3, startPlayerID_4, startMapName, startMapData);
+			GameHandler.startGame(true, startGameID, startGameMode, startPlayerID_1, startPlayerID_2, startPlayerID_3, startPlayerID_4, startMapName, startMapData);
 			break;
 //========================================================================
 		//Create HeadQuarter
@@ -658,7 +662,7 @@ public class MinaClient {
 //========================================================================
 		//All task executed
 		case 654:
-			Game_RoundHandler.startRoundEconomicsUpdate(); //AFTER TASK... SHOW ENERGY AND MATERIAL PRODUCTION... THEN NEXT ROUND
+			Game_RoundHandler.startRoundEconomicsUpdate(false); //AFTER TASK... SHOW ENERGY AND MATERIAL PRODUCTION... THEN NEXT ROUND
 			break;
 //========================================================================
 		//Chat Message
@@ -718,20 +722,47 @@ public class MinaClient {
 //========================================================================
 		//GAME DISCONNECT INFO
 		case 695:
-			// playerID
-			int playerDisconnectID = Integer.parseInt(data);
-			//TODO
+			// playerID;reconnectTimeGiven
+			int playerDisconnectID = Integer.parseInt(content[0]);
+			int reconnectTime = Integer.parseInt(content[1]);
+			OnTopWindowHandler.openOTW(new OnTopWindow_PlayerDisconnect(ClientPlayerHandler.getNewClientPlayer(playerDisconnectID), reconnectTime));
+			ConsoleOutput.printMessageInConsole("Player ("+playerDisconnectID+") disconnected [Reconnect time: "+reconnectTime+"]", true);
 			break;
 //========================================================================
 		//GAME RECONNECT INFO
 		case 696:
 			// playerID
 			int playerReconnectID = Integer.parseInt(data);
-			//TODO
+			if(StandardData.spielStatus == SpielStatus.Game) {
+				OnTopWindowHandler.closeOTW(); //JUST CLOSE WINDOW, PLAYER IS RECONNECTED
+				ConsoleOutput.printMessageInConsole("Player ("+playerReconnectID+") has reconnected", true);
+			}else {
+				//YOU ARE JUST RELOGEDIN AFTER DISCONNECT SO YOU WILL NO RECEIVE GAME SYNC AND RECONNECT PROCESS
+				//OPEN OTW TO INFORM YOU, AWAITING SYNC TO FINISH
+				Game_ReconnectHandler.startReconnection();
+			}
+			break;
+//========================================================================
+		//GAME SYNC FINISHED
+		case 697:
+			Game_ReconnectHandler.reconnectFinished();
+			break;
+//========================================================================
+		//GAME SYNC DATA - General Game Data
+		case 698:
+			Game_ReconnectHandler.setGeneralGameData(content);
+			break;
+		//GAME SYNC DATA - RoundNumber
+		case 699:
+			Game_ReconnectHandler.setRoundAndExecuteID(content);
+			break;
+		//GAME SYNC DATA - RoundNumber
+		case 700:
+			Game_ReconnectHandler.addGameAction(content);
 			break;
 //========================================================================
 		//Client Game Ping
-		case 699:
+		case 801:
 			// playerID;ping OR sendTimeStamp
 			
 			if(data.contains(";")) {
@@ -742,7 +773,7 @@ public class MinaClient {
 				pingUpdatePlayer.updatePing(playerPing);
 			}else {
 				//PING ANSWER REQUEST
-				sendData(699, data);
+				sendData(801, data);
 			}
 			
 			break;
@@ -786,7 +817,10 @@ public class MinaClient {
 		
 		TimeManager.tickList.clear(); //ALL TICKS REMOVED
 		
-		StandardData.spielStatus = SpielStatus.Menu;
+		if(StandardData.spielStatus != SpielStatus.LoadingScreen) {
+			// IF IN LOADINGSCREEN JUST STAY THERE
+			StandardData.spielStatus = SpielStatus.Menu;
+		}
 		
 		OnTopWindowHandler.openOTW(new OnTopWindow_InfoMessage("Lost connection", "The connection to the server timed out!", "For more information check out our discord...", "Please try again later", true));
 		

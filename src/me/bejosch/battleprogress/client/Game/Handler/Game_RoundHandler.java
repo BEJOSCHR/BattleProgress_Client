@@ -209,16 +209,20 @@ public class Game_RoundHandler {
 	 * Manages the economic round ending
 	 */
 	private static int numberOfEcoAnimations = 0;
-	public static void startRoundEconomicsUpdate() {
+	public static void startRoundEconomicsUpdate(boolean execSimulation) {
 		
 		numberOfEcoAnimations = 0;
 		
 		//MOVE SCREEN
-		FieldCoordinates hqPosition = Funktions.getHQfieldCoordinatesByPlayerID(ProfilData.thisClient.getID());
-		Funktions.moveScreenToFieldCoordinates(hqPosition.X, hqPosition.Y);
+		if(!execSimulation) {
+			FieldCoordinates hqPosition = Funktions.getHQfieldCoordinatesByPlayerID(ProfilData.thisClient.getID());
+			Funktions.moveScreenToFieldCoordinates(hqPosition.X, hqPosition.Y);
+		}
 		
 		//CHANGE INFO
-		RoundData.roundStatusInfo = "Producing Resources";
+		if(!execSimulation) {
+			RoundData.roundStatusInfo = "Producing Resources";
+		}
 		
 		//CLEAR ENERGY
 		EconomicData.energyAmount = 0;
@@ -281,45 +285,59 @@ public class Game_RoundHandler {
 		}
 		
 		//START ANIMATIONS
-		numberOfEcoAnimations = rpcs_material.size()+rpcs_energy.size()+rpcs_research.size();
-		int interval = 300, offset = 100;
-		//RESEARCH
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				for(ResourceProductionContainer rpc : rpcs_research) {
-					new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+		if(!execSimulation) {
+			numberOfEcoAnimations = rpcs_material.size()+rpcs_energy.size()+rpcs_research.size();
+			int interval = 300, offset = 100;
+			//RESEARCH
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					for(ResourceProductionContainer rpc : rpcs_research) {
+						new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+					}
 				}
-			}
-		}, interval*3-offset);
-		//ENERGY
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				for(ResourceProductionContainer rpc : rpcs_energy) {
-					new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+			}, interval*3-offset);
+			//ENERGY
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					for(ResourceProductionContainer rpc : rpcs_energy) {
+						new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+					}
 				}
-			}
-		}, interval*2-offset);
-		//MATERIAL
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				for(ResourceProductionContainer rpc : rpcs_material) {
-					new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+			}, interval*2-offset);
+			//MATERIAL
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					for(ResourceProductionContainer rpc : rpcs_material) {
+						new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
+					}
 				}
+			}, interval*1-offset);
+			
+			//THIS STARTED ALL THE ANIMATIONS CALLING THE NEXT FUNCTION TO PROCEED THE ROUND CHANGE CYCLE
+			
+			//FAIL SAVE - Change to new round after delay if animation didnt finish
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					startNewRound();
+				}
+			}, 1000*8);
+		}else {
+			//SIMULATION SO NOW ANIMATION/DELAY AND NO NEXT CALL [instant cancel/execute]
+			RoundData.currentExecuteTask = null;
+			for(ResourceProductionContainer rpc : rpcs_research) {
+				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false).cancle();
 			}
-		}, interval*1-offset);
-		
-		//THIS STARTED ALL THE ANIMATIONS CALLING THE NEXT FUNCTION TO PROCEED THE ROUND CHANGE CYCLE
-		
-		//FAIL SAVE - Change to new round after delay if animation didnt finish
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				startNewRound();
+			for(ResourceProductionContainer rpc : rpcs_energy) {
+				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false).cancle();
 			}
-		}, 1000*8);
+			for(ResourceProductionContainer rpc : rpcs_material) {
+				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false).cancle();
+			}
+		}
 		
 	}
 	
@@ -432,13 +450,27 @@ public class Game_RoundHandler {
 						stopRoundTimer();
 					}else {
 						//GO ON
-						RoundData.roundTime_Left--;
+						if(RoundData.roundChangingStopped == false) {
+							//ONLY IF NOT BLOCKED (by waiting for reconnect for example)
+							RoundData.roundTime_Left--;
+						}
 					}
 					
 				}
 			}, 0, 1000); //EVERY SEC
 			
 		}
+		
+	}
+	
+	public static void deactivateRoundChanging() {
+		
+		RoundData.roundChangingStopped = true;
+		
+	}
+	public static void activateRoundChanging() {
+		
+		RoundData.roundChangingStopped = false;
 		
 	}
 	

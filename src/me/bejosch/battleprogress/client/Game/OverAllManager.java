@@ -112,7 +112,7 @@ public class OverAllManager {
 	/**
 	 * Switch to the Game part
 	 */
-	public static void switchTo_Game() {
+	public static void switchTo_Game(boolean firstInit) {
 		
 		//Animation running
 		Buttons.hideAllButtons();
@@ -120,14 +120,14 @@ public class OverAllManager {
 		TextAreas.hideAlltextAreas();
 		ScrollPanes.hideAllScrollPanes();
 		
-		OnTopWindowHandler.closeOTW();
+		if(firstInit) { OnTopWindowHandler.closeOTW(); }
 		
 		StandardData.spielStatus = SpielStatus.Game;
 		StandardData.showGrid = false;
 		
 		WindowData.Frame.requestFocus();
 		
-		GameHandler.initialiseGame();
+		if(firstInit) { GameHandler.initialiseGame(true, 1); }
 		
 	}
 	

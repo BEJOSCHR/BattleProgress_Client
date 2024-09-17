@@ -32,8 +32,8 @@ public class ExecuteTask_HealAndRepair extends ExecuteTask{
 	 * @param executeCoordinate_ - {@link FieldCoordinates} - The start coordinates (From where)
 	 * @param targetCoordinate_ - {@link FieldCoordinates} - The goal coordinates (Where it goes)
 	 */
-	public ExecuteTask_HealAndRepair(int playerID_, int healORrepairCount_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_) {
-		super(ExecuteTaskType.HealAndRepair);
+	public ExecuteTask_HealAndRepair(int playerID_, int healORrepairCount_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.HealAndRepair, execSimulation);
 		
 		this.playerID = playerID_;
 		this.healORrepairCount = healORrepairCount_;

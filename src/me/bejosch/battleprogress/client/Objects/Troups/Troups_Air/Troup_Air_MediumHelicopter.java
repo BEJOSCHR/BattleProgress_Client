@@ -2,7 +2,7 @@ package me.bejosch.battleprogress.client.Objects.Troups.Troups_Air;
 
 import java.awt.Graphics;
 
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Attack;
@@ -25,7 +25,7 @@ public class Troup_Air_MediumHelicopter extends Troup_Air {
 		}catch(Exception error) {}
 		
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Medium Heli");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Medium Heli");
 		viewDistance = container.viewDistance;
 		moveDistance = container.moveDistance;
 		actionRange = container.actionDistance;
@@ -50,7 +50,7 @@ public class Troup_Air_MediumHelicopter extends Troup_Air {
 		
 		this.actionTasks.add(new Task_Troup_Attack(this));
 		this.actionTasks.add(new Task_Troup_Move(this));
-		UnitStatsContainer heavyHeli = UnitsHandler.getUnitByName("Heavy Heli");
+		UnitStatsContainer heavyHeli = Game_UnitsHandler.getUnitByName("Heavy Heli");
 		this.actionTasks.add(new Task_Troup_Upgrade(this, heavyHeli.name, heavyHeli.kosten, null));
 		this.actionTasks.add(new Task_Troup_Remove(this));
 		

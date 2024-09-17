@@ -33,8 +33,8 @@ public class ExecuteTask_Attack extends ExecuteTask{
 	 * @param executeCoordinate_ - {@link FieldCoordinates} - The start coordinates (From where)
 	 * @param targetCoordinate_ - {@link FieldCoordinates} - The goal coordinates (Where it goes)
 	 */
-	public ExecuteTask_Attack(int playerID_, int attackCount_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_) {
-		super(ExecuteTaskType.Attack);
+	public ExecuteTask_Attack(int playerID_, int attackCount_, FieldCoordinates executeCoordinate_, FieldCoordinates targetCoordinate_, boolean execSimulation) {
+		super(ExecuteTaskType.Attack, execSimulation);
 		
 		this.playerID = playerID_;
 		this.attackCount = attackCount_;

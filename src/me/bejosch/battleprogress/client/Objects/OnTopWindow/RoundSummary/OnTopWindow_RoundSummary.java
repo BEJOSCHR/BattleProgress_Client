@@ -49,7 +49,7 @@ public class OnTopWindow_RoundSummary extends OnTopWindow {
 	public void performClose() {
 		
 		MovementHandler.allowMovement();
-		if(this.noAnimation == false) { 
+		if(this.noAnimation == false && this.animation != null) { 
 			animation.cancle();
 			animation = null;
 		}

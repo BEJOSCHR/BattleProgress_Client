@@ -48,6 +48,7 @@ import me.bejosch.battleprogress.client.Objects.OnTopWindow.MenuMenu.MAA_OTW_Men
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.MenuMenu.MAA_OTW_MenuMenu_4Exit;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.PlayerChat.MAA_OTW_PlayerChat_Close;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.PlayerChat.MAA_OTW_PlayerChat_Send;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.PlayerDisconnect.OnTopWindow_PlayerDisconnect;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.QueueWaiting.MAA_OTW_QueueWaiting_LeaveQueue;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Research.MAA_OTW_Research_Category_1Economic;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.Research.MAA_OTW_Research_Category_2LandTroups;
@@ -209,13 +210,17 @@ public class OnTopWindowHandler {
 	public static void openOTW(OnTopWindow otw) { openOTW(otw, false); }
 	public static void openOTW(OnTopWindow otw, boolean withoutAnimation) {
 		
-		if(RoundData.roundIsChanging == true) {
-			//NO OTW DURING ROUND CHANGES
+		if(RoundData.roundIsChanging == true && !(otw instanceof OnTopWindow_PlayerDisconnect) ) {
+			//NO OTW DURING ROUND CHANGES besides DisconnectPlayer
 			return;
 		}
 		
 		if(OnTopWindowData.onTopWindow != null) {
-			OnTopWindowData.onTopWindow.performClose();
+			if(OnTopWindowData.onTopWindow instanceof OnTopWindow_PlayerDisconnect) {
+				return; //While disconnectPlayer open - no other open!
+			}else {
+				OnTopWindowData.onTopWindow.performClose();
+			}
 		}
 		AnimationDisplay.stopAnimationType(AnimationType.OTW_Close);
 		OnTopWindowData.onTopWindow = otw;

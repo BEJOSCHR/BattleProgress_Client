@@ -36,7 +36,7 @@ public class Animation_GameStartDisplay extends Animation {
 			faktor += 8;
 		}else if(called == 21) {
 			//Switch behind the animation
-			OverAllManager.switchTo_Game();
+			OverAllManager.switchTo_Game(true);
 			faktor = 255;
 		}else if(called <= 25) {
 			faktor = 255;

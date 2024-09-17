@@ -1,7 +1,7 @@
 package me.bejosch.battleprogress.client.Objects.Buildings;
 
 import me.bejosch.battleprogress.client.Enum.TroupType;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Tasks.Building.Task_Building_Destroy;
@@ -26,7 +26,7 @@ public class Building_Garage extends Building {
 		}catch(Exception error) {}
 		
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Garage");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Garage");
 		viewDistance = container.viewDistance;
 		maxHealth = container.leben;
 		totalHealth = container.leben;
@@ -46,7 +46,7 @@ public class Building_Garage extends Building {
 	public void load_ActionTasks() {
 		
 		//TROUPS - Only light ones
-		UnitStatsContainer lightTank = UnitsHandler.getUnitByName("Light Tank");
+		UnitStatsContainer lightTank = Game_UnitsHandler.getUnitByName("Light Tank");
 		this.actionTasks.add(new Task_Building_Produce(this, TroupType.LAND, lightTank.name, lightTank.kosten, null));
 		
 		this.actionTasks.add(new Task_Building_Destroy(this));

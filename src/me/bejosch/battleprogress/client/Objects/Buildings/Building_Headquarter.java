@@ -4,7 +4,7 @@ import java.awt.Graphics;
 
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.TroupType;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -36,7 +36,7 @@ public class Building_Headquarter extends Building {
 		}catch(Exception error) {}
 
 		//STANDARD
-		UnitStatsContainer container = UnitsHandler.getUnitByName("Headquarter");
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName("Headquarter");
 		if(container == null) { return; } //IN THE MAP EDITOR THE CONTAINERS ARE NOT LOADED SO DEFAULT SETTINGS ARE USED (HQ)
 		
 		viewDistance = container.viewDistance;
@@ -63,7 +63,7 @@ public class Building_Headquarter extends Building {
 	@Override
 	public void load_ActionTasks() {
 		
-		UnitStatsContainer commander = UnitsHandler.getUnitByName("Commander");
+		UnitStatsContainer commander = Game_UnitsHandler.getUnitByName("Commander");
 		if(commander == null) { return; } //IN THE MAP EDITOR THE CONTAINERS ARE NOT LOADED SO DEFAULT SETTINGS ARE USED (HQ)
 		this.actionTasks.add(new Task_Building_Produce(this, TroupType.LAND, commander.name, commander.kosten, null));
 		//NOT DESTROY ABLE

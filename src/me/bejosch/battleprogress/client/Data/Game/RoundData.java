@@ -24,6 +24,7 @@ import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup;
 public class RoundData {
 
 	public static int currentRound = 1;
+	public static boolean roundChangingStopped = false;
 	
 	public static boolean roundIsChanging = false;
 	public static boolean clientIsReadyForThisRound = false;

@@ -13,7 +13,7 @@ import me.bejosch.battleprogress.client.Enum.UpgradeType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_ResearchHandler;
-import me.bejosch.battleprogress.client.Handler.UnitsHandler;
+import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -58,7 +58,7 @@ public class BuildMenuTask {
 	 */
 	public void loadBuildingSettings() {
 		
-		UnitStatsContainer container = UnitsHandler.getUnitByName(this.name);
+		UnitStatsContainer container = Game_UnitsHandler.getUnitByName(this.name);
 		
 		if(container == null) {
 			ConsoleOutput.printMessageInConsole("Could not load UnitDataContainer for Building "+this.name+" by a BuildMenuTask", true);
