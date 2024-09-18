@@ -279,7 +279,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 	public void cancle() {
 		
 		if(cancled == false) {
-		
+			
 			super.cancle();
 			
 			//FINISH EXECUTE TASK

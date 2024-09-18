@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -13,6 +14,7 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
+import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
 import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
@@ -96,6 +98,13 @@ public class ExecuteTask_Move extends ExecuteTask{
 		this.executeCoordinate.getConnectedField().troup = null;
 		movingTroup.connectedField = targetCoordinate.getConnectedField();
 		this.targetCoordinate.getConnectedField().troup = movingTroup;
+		
+		//SIMULATION ENERGY COST (is normaly done by creating the task, sim doesnt have that) and exclude HQ
+		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			if(this.movingTroup != null && this.movingTroup.energyCostPerAction > 0) {
+				RoundData.currentStatsContainer.addEnergyEntry(this.movingTroup, -this.movingTroup.energyCostPerAction);
+			}
+		}
 		
 		//FINISHED
 		actionFinished();

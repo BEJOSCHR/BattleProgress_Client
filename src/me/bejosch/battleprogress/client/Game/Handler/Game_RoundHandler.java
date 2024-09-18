@@ -385,7 +385,7 @@ public class Game_RoundHandler {
 			//CALCULATE BUILD AREA
 			calculateBuildArea();
 			
-			// 2 - OTHER RANGES OF THE TROUP/BUILDING
+			// 3 - OTHER RANGES OF THE TROUP/BUILDING
 			for(Building building : Funktions.getAllBuildingList()) { building.roundEnd_3(); }
 			for(Troup troup : Funktions.getAllTroupList()) { troup.roundEnd_3(); }
 			

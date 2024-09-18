@@ -18,12 +18,12 @@ public class StandardData {
 	public static final int fieldsPerScreenHeight = 22;
 	public static int fieldSize = 0; //SET ON WINDOW CREATE - DEPENDS ON RESOLUTION
 	public static final int fieldDraw_sicherheitsFaktor = 3, fielDraw_fieldCountX = 40, fielDraw_fieldCountY = 21;
-	private static final int HQwallDistance = 14;
+	private static final int HQwallDistance = 13;
 	
-	public static final Point HQ_1_1vs1 = new Point(HQwallDistance, HQwallDistance), HQ_2_1vs1 = new Point(mapWidth-HQwallDistance+1, mapHight-HQwallDistance+1);
+	public static final Point HQ_1_1vs1 = new Point(HQwallDistance, HQwallDistance), HQ_2_1vs1 = new Point(mapWidth-HQwallDistance-1, mapHight-HQwallDistance-1);
 							  //TEAM 1 - Links														//TEAM 2 - Rechts
-	public static final Point HQ_1_2vs2 = new Point(HQwallDistance, HQwallDistance), 			HQ_3_2vs2 = new Point(mapWidth-HQwallDistance+1, mapHight-HQwallDistance+1), 
-							  HQ_2_2vs2 = new Point(HQwallDistance, mapHight-HQwallDistance+1) , 	HQ_4_2vs2 = new Point(mapWidth-HQwallDistance+1, HQwallDistance);
+	public static final Point HQ_1_2vs2 = new Point(HQwallDistance, HQwallDistance), 			HQ_3_2vs2 = new Point(mapWidth-HQwallDistance-1, mapHight-HQwallDistance-1), 
+							  HQ_2_2vs2 = new Point(HQwallDistance, mapHight-HQwallDistance-1) , 	HQ_4_2vs2 = new Point(mapWidth-HQwallDistance-1, HQwallDistance);
 	
 	public static final String messagePrefix = "[BP] ";
 	public static boolean antiSpam = false;

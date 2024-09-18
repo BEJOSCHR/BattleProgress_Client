@@ -128,7 +128,7 @@ public class GameHandler {
 	public static void startGame(boolean firstInit, int gameID, SpielModus modus, int playerID_1, int playerID_2, int playerID_3, int playerID_4, String mapName, String mapData) {
 		
 		//CLOSE ALL OTW
-		OnTopWindowHandler.closeOTW();
+		if(firstInit) { OnTopWindowHandler.closeOTW(); }
 		
 		//CLOSE FRIEND LIST
 		if(MenuData.friendListOpened == true) {

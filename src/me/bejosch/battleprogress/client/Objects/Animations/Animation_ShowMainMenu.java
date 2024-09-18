@@ -8,7 +8,6 @@ import java.awt.Image;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Game.OverAllManager;
-import me.bejosch.battleprogress.client.Game.Handler.Game_ReconnectHandler;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 import me.bejosch.battleprogress.client.Window.LabelParts.Display_2Menu;
 
@@ -38,13 +37,9 @@ public class Animation_ShowMainMenu extends Animation {
 			//LOAD IMAGES DOWN BELOW
 		}else if(called == 80) {
 			faktor = 255;
+			
 			OverAllManager.switchTo_Menu_HauptMenu(false);
 			Display_2Menu.playerLoadingDelay = false;
-			
-			//CHECK FOR RECONNECT CASE
-			if(Game_ReconnectHandler.awaitingReconnect) {
-				Game_ReconnectHandler.openStatusOTW();
-			}
 			
 		}else if(called <= 81+50) {
 			faktor = 255;

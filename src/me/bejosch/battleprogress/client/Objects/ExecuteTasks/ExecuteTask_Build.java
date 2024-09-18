@@ -15,6 +15,7 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
+import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Airport;
@@ -22,6 +23,7 @@ import me.bejosch.battleprogress.client.Objects.Buildings.Building_Artillery;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Barracks;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Converter;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Garage;
+import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Hospital;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Laboratory;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Mine;
@@ -113,6 +115,9 @@ public class ExecuteTask_Build extends ExecuteTask{
 		
 		//CREATE NEW BUILDING
 		switch (buildingName) {
+		case "Headquarter":
+			newBuilding = new Building_Headquarter(playerID, targetCoordinate.getConnectedField());
+			break;
 		case "Mine":
 			newBuilding = new Building_Mine(playerID, targetCoordinate.getConnectedField());
 			break;
@@ -151,14 +156,15 @@ public class ExecuteTask_Build extends ExecuteTask{
 			break;
 		}
 		
-		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)
-		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
-			int cost = Game_UnitsHandler.getUnitByName(this.buildingName).kosten;
-			EconomicData.materialAmount -= cost; //No valid check requiered, we are just following the records (replay) so it was already approved
+		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that) and exclude HQ
+		if(newBuilding != null && this.execSimulation && this.playerID == ProfilData.thisClient.getID() && !this.buildingName.equalsIgnoreCase("Headquarter")) {
+			UnitStatsContainer c = Game_UnitsHandler.getUnitByName(this.buildingName);
+			EconomicData.materialAmount -= c.kosten; //No valid check requiered, we are just following the records (replay) so it was already approved
+			RoundData.currentStatsContainer.addMassEntry(newBuilding, -c.kosten);
 		}
 		
 		//STATS
-		if(newBuilding != null && newBuilding.playerID == ProfilData.thisClient.getID()) {
+		if(newBuilding != null && RoundData.currentStatsContainer != null && newBuilding.playerID == ProfilData.thisClient.getID()) {
 			RoundData.currentStatsContainer.registerBuild(newBuilding);
 		}
 		

@@ -9,4 +9,6 @@ public class UnitData {
 
 	public static List<UnitStatsContainer> units = new ArrayList<UnitStatsContainer>();
 	
+	public static long lastDataContainerReceived = 0; //Used by reconnect to mark receive finish
+	
 }

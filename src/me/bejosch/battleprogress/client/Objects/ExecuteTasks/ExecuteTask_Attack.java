@@ -130,6 +130,15 @@ public class ExecuteTask_Attack extends ExecuteTask{
 			ConsoleOutput.printMessageInConsole("An ATTACK executeTask found no building or troup as damage source [X: "+executeCoordinate.X+"-Y: "+executeCoordinate.Y+"]", true);
 		}
 		
+		//SIMULATION ENERGY COST (is normaly done by creating the task, sim doesnt have that) and exclude HQ
+		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			if(damageExecuteBuilding != null && damageExecuteBuilding.energyCostPerAction > 0) {
+				RoundData.currentStatsContainer.addEnergyEntry(damageExecuteBuilding, -damageExecuteBuilding.energyCostPerAction);
+			}else if(damageExecuteTroup != null && damageExecuteTroup.energyCostPerAction > 0) {
+				RoundData.currentStatsContainer.addEnergyEntry(damageExecuteTroup, -damageExecuteTroup.energyCostPerAction);
+			}
+		}
+		
 		//FINISHED
 		actionFinished();
 		

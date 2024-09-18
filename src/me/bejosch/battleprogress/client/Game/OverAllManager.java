@@ -34,9 +34,8 @@ public class OverAllManager {
 		DiscordAPI.setNewPresence("Mainmenu", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		MovementHandler.stopMovementTimer();
 		
-		AnimationDisplay.stopAllAnimations();
-		
 		if(closeOTW == true) {
+			AnimationDisplay.stopAllAnimations();
 			OnTopWindowHandler.closeOTW();
 		}
 		

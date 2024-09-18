@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -116,6 +117,17 @@ public class ExecuteTask_HealAndRepair extends ExecuteTask{
 			foundTargetTroup.heal(healORrepairCount);
 		}else {
 			ConsoleOutput.printMessageInConsole("An HEAL/REPAIR executeTask found no building or troup at the target to heal/repair [X: "+targetCoordinate.X+"-Y: "+targetCoordinate.Y+"]", true);
+		}
+		
+		//SIMULATION ENERGY COST (is normaly done by creating the task, sim doesnt have that) and exclude HQ
+		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			Building foundExecuteBuilding = GameHandler.getBuildingByCoordinates(executeCoordinate.X, executeCoordinate.Y);
+			Troup foundExecuteTroup = GameHandler.getTroupByCoordinates(executeCoordinate.X, executeCoordinate.Y);
+			if(foundExecuteBuilding != null && foundExecuteBuilding.energyCostPerAction > 0) {
+				RoundData.currentStatsContainer.addEnergyEntry(foundExecuteBuilding, -foundExecuteBuilding.energyCostPerAction);
+			}else if(foundExecuteTroup != null && foundExecuteTroup.energyCostPerAction > 0) {
+				RoundData.currentStatsContainer.addEnergyEntry(foundExecuteTroup, -foundExecuteTroup.energyCostPerAction);
+			}
 		}
 		
 		//FINISHED

@@ -215,6 +215,8 @@ public class MinaClient {
 			UnitStatsContainer container = new UnitStatsContainer(unitName, unitKürzel, unitKosten, unitLeben, unitEnergieVerbrauch, unitEnergieProduktion, unitMaterialProduktion, unitSchaden, unitViewDistance, unitMoveDistance, unitActionDistance, unitHeal, unitRepair, unitResearch, unit_description_en, unit_description_de);
 			UnitData.units.add(container);
 			
+			UnitData.lastDataContainerReceived = System.currentTimeMillis();
+			
 			break;
 //========================================================================
 		//UpgradeDataContainer
@@ -240,6 +242,8 @@ public class MinaClient {
 			UpgradeDataContainer dataContainer = new UpgradeDataContainer(type, cost, effectValue, upgrade_description_en, upgrade_description_de);
 			ResearchData.upgradeDataContainer.add(dataContainer);
 			
+			UnitData.lastDataContainerReceived = System.currentTimeMillis();
+			
 			break;
 //========================================================================
 		//DictionaryInfoDescription
@@ -253,6 +257,8 @@ public class MinaClient {
 			
 			DictonaryInfoDescription did = new DictonaryInfoDescription(did_titel, did_description_en, did_description_de);
 			GameData.dictonaryInfoDescriptions.add(did);
+			
+			UnitData.lastDataContainerReceived = System.currentTimeMillis();
 			
 			break;
 //========================================================================
@@ -276,6 +282,8 @@ public class MinaClient {
 			
 			FieldData fd = new FieldData(fd_titel, fd_description_en, fd_description_de);
 			GameData.fieldData.add(fd);
+			
+			UnitData.lastDataContainerReceived = System.currentTimeMillis();
 			
 			break;
 //========================================================================
@@ -822,6 +830,7 @@ public class MinaClient {
 			StandardData.spielStatus = SpielStatus.Menu;
 		}
 		
+		OnTopWindowHandler.closeOTW(true);
 		OnTopWindowHandler.openOTW(new OnTopWindow_InfoMessage("Lost connection", "The connection to the server timed out!", "For more information check out our discord...", "Please try again later", true));
 		
 	}

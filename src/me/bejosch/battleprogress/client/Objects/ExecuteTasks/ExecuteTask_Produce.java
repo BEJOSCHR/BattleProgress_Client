@@ -15,6 +15,7 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
+import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
@@ -124,9 +125,10 @@ public class ExecuteTask_Produce extends ExecuteTask{
 		}
 		
 		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)
-		if(this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
-			int cost = Game_UnitsHandler.getUnitByName(this.troupName).kosten;
-			EconomicData.materialAmount -= cost; //No valid check requiered, we are just following the records (replay) so it was already approved
+		if(newTroup != null && this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
+			UnitStatsContainer c = Game_UnitsHandler.getUnitByName(this.troupName);
+			EconomicData.materialAmount -= c.kosten; //No valid check requiered, we are just following the records (replay) so it was already approved
+			RoundData.currentStatsContainer.addMassEntry(newTroup, -c.kosten);
 		}
 		
 		//STATS

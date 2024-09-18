@@ -2,12 +2,18 @@ package me.bejosch.battleprogress.client.Game.Handler;
 
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
+import me.bejosch.battleprogress.client.Data.Game.UnitData;
+import me.bejosch.battleprogress.client.Enum.GameActionType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.UpgradeType;
+import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.OverAllManager;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
@@ -24,23 +30,26 @@ import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Remove;
 import me.bejosch.battleprogress.client.Objects.ExecuteTasks.ExecuteTask_Upgrade;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameSyncStatus.OnTopWindow_GameSyncStatus;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.RoundSummary.OnTopWindow_RoundSummary;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
+import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
+import me.bejosch.battleprogress.client.Window.Animations.AnimationDisplay;
 
 public class Game_ReconnectHandler {
 
-	public static boolean awaitingReconnect = false;
 	public static int targetExecuteID = -99;
 	public static LinkedList<GameAction> actions = new LinkedList<>();
 	
 	public static void openStatusOTW() {
 		
-		OnTopWindowHandler.openOTW(new OnTopWindow_GameSyncStatus("Reconnecting!"));
+		OnTopWindowHandler.openOTW(new OnTopWindow_GameSyncStatus("Reconnecting!"), false);
 		
 	}
 	
 	public static void startReconnection() {
 		
-		awaitingReconnect = true;
+		AnimationDisplay.stopAllAnimations(); //Cancel loading/switch to menu animation
+		openStatusOTW();
 		ConsoleOutput.printMessageInConsole("Reconnecting to a game...", true);
 		
 	}
@@ -60,6 +69,22 @@ public class Game_ReconnectHandler {
 		String startMapData = content[7];
 		GameHandler.startGame(false, startGameID, startGameMode, startPlayerID_1, startPlayerID_2, startPlayerID_3, startPlayerID_4, startMapName, startMapData);
 		
+		UnitData.lastDataContainerReceived = System.currentTimeMillis();
+		
+		new Timer().scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				
+				long millis = System.currentTimeMillis();
+				if(millis-UnitData.lastDataContainerReceived >= 1000*2) { //Last receive longer ago than 2 sec
+					ConsoleOutput.printMessageInConsole("Reconnect - General done", true);
+					this.cancel();
+					MinaClient.sendData(698, GameData.gameID+""); //Inform server to continue to next step
+				}
+				
+			}
+		}, 0, 500);
+		
 	}
 	
 	public static void setRoundAndExecuteID(String[] content) {
@@ -75,6 +100,14 @@ public class Game_ReconnectHandler {
 		GameHandler.initialiseGame(false, round);
 		
 		actions.clear(); //Reset for next loading step
+		
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				ConsoleOutput.printMessageInConsole("Reconnect - Meta done", true);
+				MinaClient.sendData(699, GameData.gameID+""); //Inform server to continue to next step
+			}
+		}, 500);
 		
 	}
 	
@@ -106,6 +139,14 @@ public class Game_ReconnectHandler {
 			//EXECUTE
 			simulateActions();
 			
+			new Timer().schedule(new TimerTask() {
+				@Override
+				public void run() {
+					ConsoleOutput.printMessageInConsole("Reconnect - Actions done", true);
+					MinaClient.sendData(700, GameData.gameID+""); //Inform server to continue to next step
+				}
+			}, 500);
+			
 		}
 		
 		
@@ -121,15 +162,18 @@ public class Game_ReconnectHandler {
 			
 			GameAction action = actions.get(i);
 			
-			//CHECK, CREATE AND UPDATE STATSCONTAINER FOR CURRENT ROUND
-			int lastRound = ( i == 0 ? 0 : actions.get(i-1).round );
-			if(lastRound < action.round) {
-				//NEW ROUND ( round 0 aka HQ build gets no stats container, first is 1 to be saved)
-				simulateRessourceProduction();
-				if(RoundData.currentStatsContainer != null) {
-					RoundData.statsContainer.put(lastRound, RoundData.currentStatsContainer);
+			//HANDLE UPGRADE (can happen in the middle of a round), CHAT AND FIELDPING SEPERATLY FROM ROUNDSIM
+			if(action.type != GameActionType.FIELDPING && action.type != GameActionType.CHATMESSAGE && action.type != GameActionType.UPGRADE) {
+				//CHECK, CREATE AND UPDATE STATSCONTAINER FOR CURRENT ROUND
+				int lastRound = ( i == 0 ? 0 : actions.get(i-1).round );
+				if(lastRound < action.round) {
+					//NEW ROUND ( round 0 aka HQ build gets no stats container, first is 1 to be saved)
+					if(lastRound != 0) { simulateRessourceProduction(); } //First round dont produce mass (hq build round only)
+					if(RoundData.currentStatsContainer != null) {
+						RoundData.statsContainer.put(lastRound, RoundData.currentStatsContainer);
+					}
+					RoundData.currentStatsContainer = new RoundStatsContainer(action.round);
 				}
-				RoundData.currentStatsContainer = new RoundStatsContainer(action.round);
 			}
 			
 			//TRANSFORM INTO EXECUTE TASKS
@@ -139,8 +183,11 @@ public class Game_ReconnectHandler {
 			if(et != null) {
 				et.performAction();
 			}else {
-				//FieldPing, ChatMessage, Research, Death
+				//RoundEnd, FieldPing, ChatMessage, Research, Death
 				switch(action.type) {
+				case ROUND_END: //Do nothing realy (just needed to have min 1 action per round to sim round endings)
+					ConsoleOutput.printMessageInConsole(" > Round "+action.round+" done", true);
+					break;
 				case CHATMESSAGE: //NOT SYNCED (YET)
 					break;
 				case FIELDPING: //NOT SYNCED
@@ -174,21 +221,39 @@ public class Game_ReconnectHandler {
 	
 	public static void reconnectFinished() {
 		
+		// > Calulate ranges/areas like vision, attack, heal, build, ...
+		// 2 - VIEW RANGE OF THE TROUP/BUILDING
+		for(Building building : Funktions.getAllBuildingList()) { building.roundEnd_2(); }
+		for(Troup troup : Funktions.getAllTroupList()) { troup.roundEnd_2(); }
+		//CALCULATE VIEW RANGE
+		Game_RoundHandler.calculateViewRange();
+		//CALCULATE BUILD AREA
+		Game_RoundHandler.calculateBuildArea();
+		// 3 - OTHER RANGES OF THE TROUP/BUILDING
+		for(Building building : Funktions.getAllBuildingList()) { building.roundEnd_3(); }
+		for(Troup troup : Funktions.getAllTroupList()) { troup.roundEnd_3(); }
+		
+		//Do final eco sim
+		simulateRessourceProduction();
 		//Save last stats container from last simulation round
 		RoundData.statsContainer.put(RoundData.currentRound-1, RoundData.currentStatsContainer);
 		RoundData.currentStatsContainer = new RoundStatsContainer(RoundData.currentRound);
 		//Start timer (Always the full round timer, not synced to others, they will have to wait - seems fair enough ^^)
 		Game_RoundHandler.startRoundTimer();
 		
-		awaitingReconnect = false;
 		OnTopWindowHandler.closeOTW(); //JUST CLOSE WINDOW, GAME IS LOADED/SYNCED
 		ConsoleOutput.printMessageInConsole("Game sync finished", true);
+		
+		//Open last round info panel
+		OnTopWindowHandler.openOTW(new OnTopWindow_RoundSummary());
 		
 	}
 	
 	private static ExecuteTask createExecuteTaskFromGameAction(GameAction action) {
 		
 		switch(action.type) {
+		case ROUND_END: //Handled directly
+			break;
 		case ATTACK:
 			return new ExecuteTask_Attack(action.playerId, action.amount, new FieldCoordinates(action.x, action.y), new FieldCoordinates(action.newX, action.newY), true);
 		case BUILD:
