@@ -1,18 +1,15 @@
 package me.bejosch.battleprogress.client.Game;
 
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TimeManager {
 
 	//TICK TIMER
 	public static int tickDelayInMSec = 3; //STANDARD 3
 	public static Timer tickTimer = null;
-	public static List<Tick> tickList = new ArrayList<Tick>();
+	public static CopyOnWriteArrayList<Tick> tickList = new CopyOnWriteArrayList<Tick>();
 	
 	//GAME DURATION TIMER
 	public static Timer durationTimer = null;
@@ -32,11 +29,11 @@ public class TimeManager {
 			@Override
 			public void run() {
 				
-				try{
+//				try{
 					for(Tick tick : tickList) {
 						tick.timeTick();
 					}
-				}catch(ConcurrentModificationException | NoSuchElementException | NullPointerException error) {}
+//				}catch(ConcurrentModificationException | NoSuchElementException | NullPointerException error) {}
 				
 			}
 		}, 0, tickDelayInMSec);

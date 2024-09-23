@@ -14,7 +14,6 @@ import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
 import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;

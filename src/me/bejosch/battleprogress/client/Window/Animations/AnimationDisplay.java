@@ -2,16 +2,15 @@ package me.bejosch.battleprogress.client.Window.Animations;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation;
 
 public class AnimationDisplay {
 
-	public static List<Animation> RunningAnimations = new ArrayList<Animation>();
+	public static CopyOnWriteArrayList<Animation> RunningAnimations = new CopyOnWriteArrayList<Animation>();
 	
 	public static String ConnectionAnimation = ""; 
 
@@ -34,19 +33,18 @@ public class AnimationDisplay {
 	
 //==========================================================================================================
 	/**
-	 * Checks if an animation of the given type is running and returns the first found animation
-	 * NOTE: If multiple animations of the same type are running only the first found animation of this type is returned!
-	 * @param animationType - Animation (object) - The animationType which should be checked if running
+	 * Returns all animations of this typ that are currently running
 	 * @return {@link Animation} - An animation of the given type or null if no animation of this type is running
 	 */
-	public static Animation getRunningAnimationOfType(AnimationType animationType) {
+	public static List<Animation> getRunningAnimationOfType(AnimationType animationType) {
 		
+		List<Animation> animations = new ArrayList<>();
 		for(Animation animation : RunningAnimations) {
 			if(animation.type == animationType) {
-				return animation;
+				animations.add(animation);
 			}
 		}
-		return null;
+		return animations;
 		
 	}
 	
@@ -56,13 +54,10 @@ public class AnimationDisplay {
 	 */
 	public static void stopAllAnimations() {
 		
-		while(RunningAnimations.isEmpty() == false) {
-			try{
-				for(Animation animation : RunningAnimations) {
-					animation.cancle();
-				}
-			}catch(ConcurrentModificationException | NoSuchElementException error) {}
+		for(Animation animation : RunningAnimations) {
+			animation.cancle(false);
 		}
+		RunningAnimations.clear();
 		
 	}
 	
@@ -73,17 +68,17 @@ public class AnimationDisplay {
 	 */
 	public static void stopAnimationType(AnimationType animationType) {
 		
-		while(true) {
-			boolean removedOne = false;
-			try{
-				for(Animation animation : RunningAnimations) {
-					if(animation.type == animationType) {
-						animation.cancle();
-						removedOne = true;
-					}
-				}
-				if(removedOne == false) { break;}
-			}catch(ConcurrentModificationException | NullPointerException error) {}
+		List<Animation> toRemove = new ArrayList<>();
+		
+		for(Animation animation : RunningAnimations) {
+			if(animation.type == animationType) {
+				animation.cancle(false);
+				toRemove.add(animation);
+			}
+		}
+		
+		if(!toRemove.isEmpty()) {
+			RunningAnimations.removeAll(toRemove);
 		}
 		
 	}
@@ -94,11 +89,11 @@ public class AnimationDisplay {
 	 */
 	public static void drawAnimations(Graphics g) {
 		
-		try{
+//		try{
 			for(Animation animation : RunningAnimations) {
 				animation.drawPart(g);
 			}
-		}catch(ConcurrentModificationException | NoSuchElementException | NullPointerException error) {}
+//		}catch(ConcurrentModificationException | NoSuchElementException | NullPointerException error) {}
 		
 	}
 	

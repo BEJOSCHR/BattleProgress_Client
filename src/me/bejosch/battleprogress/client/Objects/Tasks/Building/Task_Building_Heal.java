@@ -81,8 +81,11 @@ public class Task_Building_Heal extends Task_Building{
 	public void action_Right_Release() {
 		
 		if(this.isActiveTask == true) {
-			//RE ADD COST
-			EconomicData.energyAmount += this.building.energyCostPerAction;
+			if(GameData.dragAndDropTaskInputActive == false) {
+				//NO DRAG AND DROP
+				//RE ADD COST
+				EconomicData.energyAmount += this.building.energyCostPerAction;
+			}
 		}
 		
 		super.action_Right_Release();

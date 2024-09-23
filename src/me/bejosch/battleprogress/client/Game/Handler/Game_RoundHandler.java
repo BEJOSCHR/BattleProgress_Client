@@ -12,6 +12,7 @@ import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Data.Game.ResearchData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.ExecuteTaskType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -293,6 +294,7 @@ public class Game_RoundHandler {
 				@Override
 				public void run() {
 					for(ResourceProductionContainer rpc : rpcs_research) {
+						ResearchData.researchPoints += rpc.getAmount();
 						new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
 					}
 				}
@@ -302,6 +304,7 @@ public class Game_RoundHandler {
 				@Override
 				public void run() {
 					for(ResourceProductionContainer rpc : rpcs_energy) {
+						EconomicData.energyAmount += rpc.getAmount();
 						new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
 					}
 				}
@@ -311,6 +314,7 @@ public class Game_RoundHandler {
 				@Override
 				public void run() {
 					for(ResourceProductionContainer rpc : rpcs_material) {
+						EconomicData.materialAmount += rpc.getAmount();
 						new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false);
 					}
 				}
@@ -329,13 +333,13 @@ public class Game_RoundHandler {
 			//SIMULATION SO NOW ANIMATION/DELAY AND NO NEXT CALL [instant cancel/execute]
 			RoundData.currentExecuteTask = null;
 			for(ResourceProductionContainer rpc : rpcs_research) {
-				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false).cancle();
+				ResearchData.researchPoints += rpc.getAmount();
 			}
 			for(ResourceProductionContainer rpc : rpcs_energy) {
-				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false).cancle();
+				EconomicData.energyAmount += rpc.getAmount();
 			}
 			for(ResourceProductionContainer rpc : rpcs_material) {
-				new Animation_MovingCircleDisplay(rpc.getType(), rpc.getAmount(), rpc.getCords(), rpc.getCords(), false).cancle();
+				EconomicData.materialAmount += rpc.getAmount();
 			}
 		}
 		

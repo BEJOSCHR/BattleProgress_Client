@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import me.bejosch.battleprogress.client.Game.Draw.Game_DrawMap;
 import me.bejosch.battleprogress.client.Game.Draw.Game_DrawOverlay;
 
-public class Display_5Game {
+public class Display_7Game {
 
 //==========================================================================================================
 	/**

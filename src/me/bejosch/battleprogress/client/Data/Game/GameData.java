@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
@@ -90,7 +91,7 @@ public class GameData {
 	public static final Color activeTask_textColor = Color.RED;
 	
 	//MouseActionAreas
-	public static List<MouseActionArea> mouseActionAreas = new ArrayList<MouseActionArea>();
+	public static CopyOnWriteArrayList<MouseActionArea> mouseActionAreas = new CopyOnWriteArrayList<MouseActionArea>();
 	//DisplayMessages
 	public static int startX = WindowData.FrameWidth-20, startY = 40, space_MAArea = 7, maxDisplayedInfoMessages = 10;
 	public static boolean coordsUpdatedNeeded = true;

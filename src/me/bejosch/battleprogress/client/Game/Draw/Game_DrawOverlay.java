@@ -13,6 +13,7 @@ import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.ResearchData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
+import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Enum.BuildMenuType;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
@@ -21,6 +22,8 @@ import me.bejosch.battleprogress.client.Game.TimeManager;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_FieldDataHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
+import me.bejosch.battleprogress.client.Objects.Animations.Animation;
+import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
@@ -31,6 +34,7 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseAc
 import me.bejosch.battleprogress.client.Objects.Tasks.BuildMenuTasks.BuildMenuTask;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.Window.Label;
+import me.bejosch.battleprogress.client.Window.Animations.AnimationDisplay;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class Game_DrawOverlay {
@@ -93,31 +97,53 @@ public class Game_DrawOverlay {
 		}
 		y = WindowData.FrameHeight-GameData.ecoDisp_totalDownBorder;
 		
+		//This makes the display value only go up then the animation finished - the real amount got already added to value on eco round end end (close to the animation start as well)
+		int holdbackMaterial = 0, holdbackEnergy = 0, holdbackRP = 0;
+		for(Animation a : AnimationDisplay.getRunningAnimationOfType(AnimationType.MovingCircleDisplay)) {
+			Animation_MovingCircleDisplay amcd = (Animation_MovingCircleDisplay) a;
+			switch(amcd.displayType) {
+			case Material:
+				holdbackMaterial += amcd.value;
+				continue;
+			case Energy:
+				holdbackEnergy += amcd.value;
+				continue;
+			case Research:
+				holdbackRP += amcd.value;
+				continue;
+			default:
+				continue;
+			}
+		}
+		
 		//MATERIAL
+		int displayMaterials = EconomicData.materialAmount - holdbackMaterial;
 		g.setColor(Color.DARK_GRAY);
 		g.fillRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setColor(GameData.color_Material);
 		g.drawRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
-		g.drawString(""+EconomicData.materialAmount, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
+		g.drawString(""+displayMaterials, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
 		y += GameData.ecoDisp_distanceTotalSegment;
 		
 		//ENERGY
+		int displayEnergy = EconomicData.energyAmount - holdbackEnergy;
 		g.setColor(Color.DARK_GRAY);
 		g.fillRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setColor(GameData.color_Energy);
 		g.drawRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
-		g.drawString(""+EconomicData.energyAmount, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
+		g.drawString(""+displayEnergy, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
 		y += GameData.ecoDisp_distanceTotalSegment;
 		
 		//RESEARCH
+		int displayRP = ResearchData.researchPoints - holdbackRP;
 		g.setColor(Color.DARK_GRAY);
 		g.fillRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setColor(GameData.color_Research);
 		g.drawRoundRect(x, y, GameData.ecoDisp_width, GameData.ecoDisp_height, GameData.ecoDisp_cornerRound, GameData.ecoDisp_cornerRound);
 		g.setFont(new Font("Arial", Font.BOLD, 30));
-		g.drawString(""+ResearchData.researchPoints, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
+		g.drawString(""+displayRP, x+GameData.ecoDisp_insideLeftBorder, y+GameData.ecoDisp_height-GameData.ecoDisp_insideDownBorder);
 		y += GameData.ecoDisp_distanceTotalSegment;
 		
 	}

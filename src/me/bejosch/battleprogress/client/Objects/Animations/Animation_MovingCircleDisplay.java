@@ -7,9 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.StandardData;
-import me.bejosch.battleprogress.client.Data.Game.EconomicData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
-import me.bejosch.battleprogress.client.Data.Game.ResearchData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
@@ -221,13 +219,13 @@ public class Animation_MovingCircleDisplay extends Animation {
 		
 		if(cancled == true) { return; }
 		
-		int rßckung = (int) StandardData.fieldSize/2;
+		int rand = (int) StandardData.fieldSize/2;
 		int radius = 30;
 		
-		int goPixleX = Funktions.getPixlesByCoordinate(goField.X, true, false)+rßckung;
-		int goPixleY = Funktions.getPixlesByCoordinate(goField.Y, false, false)+rßckung;
-		int toPixleX = Funktions.getPixlesByCoordinate(toField.X, true, false)+rßckung;
-		int toPixleY = Funktions.getPixlesByCoordinate(toField.Y, false, false)+rßckung;
+		int goPixleX = Funktions.getPixlesByCoordinate(goField.X, true, false)+rand;
+		int goPixleY = Funktions.getPixlesByCoordinate(goField.Y, false, false)+rand;
+		int toPixleX = Funktions.getPixlesByCoordinate(toField.X, true, false)+rand;
+		int toPixleY = Funktions.getPixlesByCoordinate(toField.Y, false, false)+rand;
 		
 		//SO RßCKEN DAS ES IN DER MITTE DER FELDER STARTET UND ENDET
 		int pixleX = 0;
@@ -283,14 +281,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 			super.cancle();
 			
 			//FINISH EXECUTE TASK
-			if(this.displayType == MovingCircleDisplayTypes.Energy) {
-				EconomicData.energyAmount += this.value; //UPDATE ENERGY VALUE
-				Game_RoundHandler.endRoundEconomicsUpdate();
-			}else if(this.displayType == MovingCircleDisplayTypes.Material) {
-				EconomicData.materialAmount += this.value; //UPDATE MATERIAL VALUE
-				Game_RoundHandler.endRoundEconomicsUpdate();
-			}else if(this.displayType == MovingCircleDisplayTypes.Research) {
-				ResearchData.researchPoints += this.value; //UPDATE RESEARCH VALUE
+			if(this.displayType == MovingCircleDisplayTypes.Energy || this.displayType == MovingCircleDisplayTypes.Material || this.displayType == MovingCircleDisplayTypes.Research) {
 				Game_RoundHandler.endRoundEconomicsUpdate();
 			}else if(RoundData.currentExecuteTask != null) {
 				RoundData.currentExecuteTask.performAction(); //PERFORM TASK

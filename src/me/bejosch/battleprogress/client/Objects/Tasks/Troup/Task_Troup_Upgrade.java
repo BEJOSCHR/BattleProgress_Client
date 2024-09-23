@@ -144,10 +144,9 @@ public class Task_Troup_Upgrade extends Task_Troup {
 				//REMOVE UPGRADE BLOCK ON OTHER TROUP
 				this.targetCoordinates.getConnectedField().troup.targetUpgradePosition = null;
 			}
-			//REMOVE
-			this.removeFromActiveTask();
-			GameData.dragAndDropTaskInputActive = false;
 		}
+		
+		super.action_Right_Release();
 		
 	}
 	

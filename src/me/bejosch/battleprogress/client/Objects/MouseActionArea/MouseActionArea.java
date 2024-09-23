@@ -2,7 +2,6 @@ package me.bejosch.battleprogress.client.Objects.MouseActionArea;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ConcurrentModificationException;
 
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
@@ -46,11 +45,11 @@ public class MouseActionArea {
 		this.standardColor = standardColor_;
 		this.hoverColor = hoverColor_;
 		
-		while(!GameData.mouseActionAreas.contains(this)) {
-			try{
+//		while(!GameData.mouseActionAreas.contains(this)) {
+//			try{
 				GameData.mouseActionAreas.add(this);
-			}catch(ConcurrentModificationException error) {}
-		}
+//			}catch(ConcurrentModificationException error) {}
+//		}
 		
 	}
 	
@@ -175,11 +174,11 @@ public class MouseActionArea {
 	 **/
 	public void remove() {
 		
-		while(GameData.mouseActionAreas.contains(this)) {
-			try{
+//		while(GameData.mouseActionAreas.contains(this)) {
+//			try{
 				GameData.mouseActionAreas.remove(this);
-			}catch(ConcurrentModificationException error) {}
-		}
+//			}catch(ConcurrentModificationException error) {}
+//		}
 		
 	}
 	

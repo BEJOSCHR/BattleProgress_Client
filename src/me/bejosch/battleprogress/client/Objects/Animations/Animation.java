@@ -2,7 +2,6 @@
 
 import java.awt.Graphics;
 import java.awt.Image;
-import java.util.ConcurrentModificationException;
 
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Game.Tick;
@@ -29,17 +28,17 @@ public class Animation extends Tick {
 	 */
 	public Animation(AnimationType type) {
 		
-		while(thisGet().inTickList() == false) {
-			try{
+//		while(thisGet().inTickList() == false) {
+//			try{
 				thisGet().addToTickList();
-			}catch(ConcurrentModificationException error) {}
-		}
+//			}catch(ConcurrentModificationException error) {}
+//		}
 		
-		while(!AnimationDisplay.RunningAnimations.contains(thisGet())) {
-			try{
+//		while(!AnimationDisplay.RunningAnimations.contains(thisGet())) {
+//			try{
 				AnimationDisplay.RunningAnimations.add(thisGet());
-			}catch(ConcurrentModificationException | ArrayIndexOutOfBoundsException error) {}
-		}
+//			}catch(ConcurrentModificationException | ArrayIndexOutOfBoundsException error) {}
+//		}
 		
 		this.type = type;
 		
@@ -105,17 +104,14 @@ public class Animation extends Tick {
 	/**
 	 * Cancle this animation and removes it from all lists
 	 */
-	public void cancle() {
+	public void cancle() { this.cancle(true); }
+	public void cancle(boolean withListRemove) {
 		
 		cancled = true;
 		
 		thisGet().removeFromTickList();
 		
-		while(AnimationDisplay.RunningAnimations.contains(thisGet())) {
-			try{
-				AnimationDisplay.RunningAnimations.remove(thisGet());
-			}catch(ConcurrentModificationException | ArrayIndexOutOfBoundsException error) {}
-		}
+		AnimationDisplay.RunningAnimations.remove(thisGet());
 		
 	}
 

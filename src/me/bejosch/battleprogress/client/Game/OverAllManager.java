@@ -36,6 +36,10 @@ public class OverAllManager {
 		
 		if(closeOTW == true) {
 			AnimationDisplay.stopAllAnimations();
+			Buttons.hideAllButtons();
+			TextFields.hideAlltextFields();
+			TextAreas.hideAlltextAreas();
+			ScrollPanes.hideAllScrollPanes();
 			OnTopWindowHandler.closeOTW();
 		}
 		
@@ -50,6 +54,12 @@ public class OverAllManager {
 	 * Switch to the Menu part
 	 */
 	public static void switchTo_Menu_CreateMap() {
+		
+		AnimationDisplay.stopAllAnimations();
+		Buttons.hideAllButtons();
+		TextFields.hideAlltextFields();
+		TextAreas.hideAlltextAreas();
+		ScrollPanes.hideAllScrollPanes();
 		
 		WindowData.Frame.requestFocus();
 		CreateMapHandler.startCreateMapHandler();
@@ -104,6 +114,46 @@ public class OverAllManager {
 		WindowData.Frame.requestFocus();
 		
 		LobbyHandler.updateLobbyData();
+		
+	}
+	
+//==========================================================================================================
+	/**
+	 * Switch to the Spectate part
+	 */
+	public static void switchTo_Spectate() {
+		
+		AnimationDisplay.stopAllAnimations();
+		Buttons.hideAllButtons();
+		TextFields.hideAlltextFields();
+		TextAreas.hideAlltextAreas();
+		ScrollPanes.hideAllScrollPanes();
+		
+		OnTopWindowHandler.closeOTW();
+		
+		//
+		
+		StandardData.spielStatus = SpielStatus.Spectate;
+		
+	}
+	
+//==========================================================================================================
+	/**
+	 * Switch to the Replay part
+	 */
+	public static void switchTo_Replay() {
+		
+		AnimationDisplay.stopAllAnimations();
+		Buttons.hideAllButtons();
+		TextFields.hideAlltextFields();
+		TextAreas.hideAlltextAreas();
+		ScrollPanes.hideAllScrollPanes();
+		
+		OnTopWindowHandler.closeOTW();
+		
+		//
+		
+		StandardData.spielStatus = SpielStatus.Replay;
 		
 	}
 	

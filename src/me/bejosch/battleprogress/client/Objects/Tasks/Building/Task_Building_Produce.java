@@ -186,9 +186,12 @@ public class Task_Building_Produce extends Task_Building{
 	@Override
 	public void action_Right_Release() {
 		
-		if(this.isActiveTask == true) {
-			//RE ADD COST
-			EconomicData.materialAmount += this.troupProduceCost;
+		if(this.isActiveTask == true && this.targetCoordinates != null) {
+			if(GameData.dragAndDropTaskInputActive == false) {
+				//NO DRAG AND DROP
+				//RE ADD COST
+				EconomicData.materialAmount += this.troupProduceCost;
+			}
 		}
 		
 		super.action_Right_Release();

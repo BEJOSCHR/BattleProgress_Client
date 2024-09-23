@@ -90,8 +90,11 @@ public class Task_Troup_Heal extends Task_Troup{
 	public void action_Right_Release() {
 		
 		if(this.isActiveTask == true) {
-			//RE ADD COST
-			EconomicData.energyAmount += this.troup.energyCostPerAction;
+			if(GameData.dragAndDropTaskInputActive == false) {
+				//NO DRAG AND DROP
+				//RE ADD COST
+				EconomicData.energyAmount += this.troup.energyCostPerAction;
+			}
 		}
 		
 		super.action_Right_Release();

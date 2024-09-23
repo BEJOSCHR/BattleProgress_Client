@@ -43,6 +43,7 @@ import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
 import me.bejosch.battleprogress.client.Objects.FieldData;
 import me.bejosch.battleprogress.client.Objects.FriendRequest;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
+import me.bejosch.battleprogress.client.Objects.Animations.Animation;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameChatNotification;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GamePing;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_ShowMainMenu;
@@ -693,11 +694,13 @@ public class MinaClient {
 			
 			//START NOTIFY ANIMATION
 			if(GameData.gameIsRunning == true && GameData.chatIsShown == false) {
-				Animation_GameChatNotification chatAnimation = (Animation_GameChatNotification) AnimationDisplay.getRunningAnimationOfType(AnimationType.Game_ChatNotification);
-				if(chatAnimation == null) {
+				List<Animation> chatAnimations = AnimationDisplay.getRunningAnimationOfType(AnimationType.Game_ChatNotification);
+				if(chatAnimations.isEmpty()) {
 					new Animation_GameChatNotification();
 				}else {
-					chatAnimation.newMessagesCount++;
+					for(Animation a : chatAnimations) { //Should only be one active with this start setup
+						((Animation_GameChatNotification) a).newMessagesCount++;
+					}
 				}
 				//TODO NOTIFICATION SOUND
 			}

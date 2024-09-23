@@ -6,6 +6,8 @@ public enum SpielStatus {
 	Menu,
 	CreateMap,
 	GameLobby,
+	Spectate,
+	Replay,
 	Game,
 	GameFinish;
 	

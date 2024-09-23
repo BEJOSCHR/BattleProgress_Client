@@ -1,7 +1,5 @@
 package me.bejosch.battleprogress.client.Game;
 
-import java.util.ConcurrentModificationException;
-
 public abstract class Tick {
 
 //==========================================================================================================
@@ -10,11 +8,11 @@ public abstract class Tick {
 	 */
 	public void addToTickList() {
 		
-		while(inTickList() == false) {
-			try{
+//		while(inTickList() == false) {
+//			try{
 				TimeManager.tickList.add(this);
-			}catch(ConcurrentModificationException | IndexOutOfBoundsException error) { }
-		}
+//			}catch(ConcurrentModificationException | IndexOutOfBoundsException error) { }
+//		}
 		
 	}
 	
@@ -24,11 +22,11 @@ public abstract class Tick {
 	 */
 	public void removeFromTickList() {
 		
-		while(inTickList() == true) {
-			try{
+//		while(inTickList() == true) {
+//			try{
 				TimeManager.tickList.remove(this);
-			}catch(ConcurrentModificationException | IndexOutOfBoundsException error) {}
-		}
+//			}catch(ConcurrentModificationException | IndexOutOfBoundsException error) {}
+//		}
 		
 	}
 	

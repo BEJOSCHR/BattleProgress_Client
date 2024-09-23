@@ -22,8 +22,10 @@ import me.bejosch.battleprogress.client.Window.LabelParts.Display_1LoadingScreen
 import me.bejosch.battleprogress.client.Window.LabelParts.Display_2Menu;
 import me.bejosch.battleprogress.client.Window.LabelParts.Display_3CreateMap;
 import me.bejosch.battleprogress.client.Window.LabelParts.Display_4GameLobby;
-import me.bejosch.battleprogress.client.Window.LabelParts.Display_5Game;
-import me.bejosch.battleprogress.client.Window.LabelParts.Display_6GameFinish;
+import me.bejosch.battleprogress.client.Window.LabelParts.Display_5Spectate;
+import me.bejosch.battleprogress.client.Window.LabelParts.Display_6Replay;
+import me.bejosch.battleprogress.client.Window.LabelParts.Display_7Game;
+import me.bejosch.battleprogress.client.Window.LabelParts.Display_8GameFinish;
 import me.bejosch.battleprogress.client.Window.OnTopWindow.OnTopWindowDisplay;
 
 @SuppressWarnings("serial")
@@ -112,12 +114,20 @@ public class Label extends JLabel {
 				Display_4GameLobby.draw(g);
 				break;
 //==============================================================
+			case Spectate:
+				Display_5Spectate.draw(g);
+				break;
+//==============================================================
+			case Replay:
+				Display_6Replay.draw(g);
+				break;
+//==============================================================
 			case Game:
-				Display_5Game.draw(g);
+				Display_7Game.draw(g);
 				break;
 //==============================================================
 			case GameFinish:
-				Display_6GameFinish.draw(g);
+				Display_8GameFinish.draw(g);
 				break;
 			}
 			
