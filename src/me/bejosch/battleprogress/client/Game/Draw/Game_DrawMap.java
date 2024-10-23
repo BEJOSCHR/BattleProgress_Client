@@ -2,6 +2,7 @@ package me.bejosch.battleprogress.client.Game.Draw;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
@@ -11,6 +12,7 @@ import me.bejosch.battleprogress.client.Handler.MovementHandler;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
+import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea_BuildMenu_BuildingField;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 
 public class Game_DrawMap {
@@ -22,9 +24,11 @@ public class Game_DrawMap {
 	 */
 	public static void drawMap_MAP(Graphics g) {
 		
-		draw_Fields(g);
-		draw_Buildings(g);
-		draw_Troups(g);
+		Field midField = GameHandler.get_MID_Field(false);
+		
+		draw_Fields(g, GameData.gameMap_FieldList, midField, GameData.clickedField, GameData.hoveredField, GameData.currentActive_MAA_BuildingTask);
+		draw_Buildings(g, Funktions.getAllBuildingList(), midField);
+		draw_Troups(g, Funktions.getAllTroupList(), midField);
 		
 		draw_BuildArea(g);
 		
@@ -34,9 +38,7 @@ public class Game_DrawMap {
 	/**
 	 * Draws the fields of the map
 	 */
-	public static void draw_Fields(Graphics g) {
-		
-		Field midField = GameHandler.get_MID_Field(false);
+	public static void draw_Fields(Graphics g, Field[][] map, Field midField, Field clicked, Field hover, MouseActionArea_BuildMenu_BuildingField buildMenuTask) {
 		
 		if(MovementHandler.press_a) {
 			//VON RECHTS NACH LINKS MALEN
@@ -45,7 +47,7 @@ public class Game_DrawMap {
 				for(int x = midField.X+(StandardData.fielDraw_fieldCountX/2)+StandardData.fieldDraw_sicherheitsFaktor ; x > midField.X-(StandardData.fielDraw_fieldCountX/2)-StandardData.fieldDraw_sicherheitsFaktor ; x--) {
 					for(int y = midField.Y+(StandardData.fielDraw_fieldCountY/2)+StandardData.fieldDraw_sicherheitsFaktor ; y > midField.Y-(StandardData.fielDraw_fieldCountY/2)-StandardData.fieldDraw_sicherheitsFaktor ; y--) {
 						try{
-							GameData.gameMap_FieldList[x][y].draw(g);
+							map[x][y].draw(g);
 						}catch(ArrayIndexOutOfBoundsException error) { }
 					}
 				}
@@ -54,7 +56,7 @@ public class Game_DrawMap {
 				for(int x = midField.X+(StandardData.fielDraw_fieldCountX/2)+StandardData.fieldDraw_sicherheitsFaktor ; x > midField.X-(StandardData.fielDraw_fieldCountX/2)-StandardData.fieldDraw_sicherheitsFaktor ; x--) {
 					for(int y = midField.Y-(StandardData.fielDraw_fieldCountY/2)-StandardData.fieldDraw_sicherheitsFaktor ; y < midField.Y+(StandardData.fielDraw_fieldCountY/2)+StandardData.fieldDraw_sicherheitsFaktor ; y++) {
 						try{
-							GameData.gameMap_FieldList[x][y].draw(g);
+							map[x][y].draw(g);
 						}catch(ArrayIndexOutOfBoundsException error) { }
 					}
 				}
@@ -66,7 +68,7 @@ public class Game_DrawMap {
 				for(int x = midField.X-(StandardData.fielDraw_fieldCountX/2)-StandardData.fieldDraw_sicherheitsFaktor ; x < midField.X+(StandardData.fielDraw_fieldCountX/2)+StandardData.fieldDraw_sicherheitsFaktor ; x++) {
 					for(int y = midField.Y+(StandardData.fielDraw_fieldCountY/2)+StandardData.fieldDraw_sicherheitsFaktor ; y > midField.Y-(StandardData.fielDraw_fieldCountY/2)-StandardData.fieldDraw_sicherheitsFaktor ; y--) {
 						try{
-							GameData.gameMap_FieldList[x][y].draw(g);
+							map[x][y].draw(g);
 						}catch(ArrayIndexOutOfBoundsException error) { }
 					}
 				}
@@ -75,23 +77,23 @@ public class Game_DrawMap {
 				for(int x = midField.X-(StandardData.fielDraw_fieldCountX/2)-StandardData.fieldDraw_sicherheitsFaktor ; x < midField.X+(StandardData.fielDraw_fieldCountX/2)+StandardData.fieldDraw_sicherheitsFaktor ; x++) {
 					for(int y = midField.Y-(StandardData.fielDraw_fieldCountY/2)-StandardData.fieldDraw_sicherheitsFaktor ; y < midField.Y+(StandardData.fielDraw_fieldCountY/2)+StandardData.fieldDraw_sicherheitsFaktor ; y++) {
 						try{
-							GameData.gameMap_FieldList[x][y].draw(g);
+							map[x][y].draw(g);
 						}catch(ArrayIndexOutOfBoundsException error) { }
 					}
 				}
 			}
 		}
 		
-		if(GameData.hoveredField != null) {
-			GameData.hoveredField.drawHighlight(g, Color.BLACK);
+		if(hover != null) {
+			hover.drawHighlight(g, Color.BLACK);
 		}
-		if(GameData.clickedField != null) {
-			GameData.clickedField.drawHighlight(g, Color.ORANGE);
+		if(clicked != null) {
+			clicked.drawHighlight(g, Color.ORANGE);
 		}
 		
 		//ActiveBuildingTask
-		if(GameData.currentActive_MAA_BuildingTask != null) {
-			GameData.currentActive_MAA_BuildingTask.getConnectedBuildingTask().draw_targetField(g);
+		if(buildMenuTask != null) {
+			buildMenuTask.getConnectedBuildingTask().draw_targetField(g);
 		}
 		
 	}
@@ -100,14 +102,12 @@ public class Game_DrawMap {
 	/**
 	 * Draws the buildings of the map
 	 */
-	public static void draw_Buildings(Graphics g) {
-		
-		Field midField = GameHandler.get_MID_Field(false);
+	public static void draw_Buildings(Graphics g, List<Building> buildings, Field midField) {
 		
 		int minX = midField.X-(StandardData.fielDraw_fieldCountX/2)-StandardData.fieldDraw_sicherheitsFaktor, maxX = midField.X+(StandardData.fielDraw_fieldCountX/2)+StandardData.fieldDraw_sicherheitsFaktor;
 		int minY = midField.Y-(StandardData.fielDraw_fieldCountY/2)-StandardData.fieldDraw_sicherheitsFaktor, maxY = midField.Y+(StandardData.fielDraw_fieldCountY/2)+StandardData.fieldDraw_sicherheitsFaktor;
 		
-		for(Building building : Funktions.getAllBuildingList()) {
+		for(Building building : buildings) {
 			try{
 				if(building.connectedField.X >= minX && building.connectedField.X <= maxX && building.connectedField.Y >= minY && building.connectedField.Y <= maxY) {
 					//IN RANGE ON THE SCREEN
@@ -125,14 +125,12 @@ public class Game_DrawMap {
 	/**
 	 * Draws the troups of the map
 	 */
-	public static void draw_Troups(Graphics g) {
-		
-		Field midField = GameHandler.get_MID_Field(false);
+	public static void draw_Troups(Graphics g, List<Troup> troups, Field midField) {
 		
 		int minX = midField.X-(StandardData.fielDraw_fieldCountX/2)-StandardData.fieldDraw_sicherheitsFaktor, maxX = midField.X+(StandardData.fielDraw_fieldCountX/2)+StandardData.fieldDraw_sicherheitsFaktor;
 		int minY = midField.Y-(StandardData.fielDraw_fieldCountY/2)-StandardData.fieldDraw_sicherheitsFaktor, maxY = midField.Y+(StandardData.fielDraw_fieldCountY/2)+StandardData.fieldDraw_sicherheitsFaktor;
 		
-		for(Troup troup : Funktions.getAllTroupList()) {
+		for(Troup troup : troups) {
 			try{
 				if(troup.connectedField.X >= minX && troup.connectedField.X <= maxX && troup.connectedField.Y >= minY && troup.connectedField.Y <= maxY) {
 					//IN RANGE ON THE SCREEN

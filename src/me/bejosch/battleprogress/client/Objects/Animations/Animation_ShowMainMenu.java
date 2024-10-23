@@ -38,7 +38,7 @@ public class Animation_ShowMainMenu extends Animation {
 		}else if(called == 80) {
 			faktor = 255;
 			
-			OverAllManager.switchTo_Menu_HauptMenu(false);
+			OverAllManager.switchTo_Menu(false);
 			Display_2Menu.playerLoadingDelay = false;
 			
 		}else if(called <= 81+50) {

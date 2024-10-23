@@ -13,6 +13,7 @@ import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
+import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
@@ -84,6 +85,8 @@ public class Building {
 		this.playerID = playerID_;
 		this.connectedField = connectedField_;
 		connectedField.building = this;
+		
+		if(StandardData.spielStatus == SpielStatus.Spectate) { return; }
 		
 		if(GameData.gameMode != null) {
 			if(SpielModus.isGameModus1v1()) {

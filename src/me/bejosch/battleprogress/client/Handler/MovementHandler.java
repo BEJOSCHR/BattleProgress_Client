@@ -5,6 +5,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.CreateMapData;
+import me.bejosch.battleprogress.client.Data.SpectateData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
@@ -72,6 +73,23 @@ public class MovementHandler {
 							moved = true;
 						}else if(press_d == true && GameHandler.right_SpaceFree()) {
 							GameData.scroll_LR_count -= moveSpeed;
+							moved = true;
+						}
+						
+					}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+						
+						if(press_w == true && SpectateHandler.top_SpaceFree()) {
+							SpectateData.scroll_UD_count += moveSpeed;
+							moved = true;
+						}else if(press_s == true && SpectateHandler.bottom_SpaceFree()) {
+							SpectateData.scroll_UD_count -= moveSpeed;
+							moved = true;
+						}
+						if(press_a == true && SpectateHandler.left_SpaceFree()) {
+							SpectateData.scroll_LR_count += moveSpeed;
+							moved = true;
+						}else if(press_d == true && SpectateHandler.right_SpaceFree()) {
+							SpectateData.scroll_LR_count -= moveSpeed;
 							moved = true;
 						}
 						

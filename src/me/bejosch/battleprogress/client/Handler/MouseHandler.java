@@ -8,6 +8,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
 import me.bejosch.battleprogress.client.Data.OnTopWindowData;
+import me.bejosch.battleprogress.client.Data.SpectateData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
@@ -135,7 +136,33 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 			
 		}else if(StandardData.spielStatus == SpielStatus.Game) {
 			
+			//MAA are updated later deep in the game click handle sequence to allow better leveling
+			
 			GameHandler.mouseClickedEvent(mX, mY, clickType);
+			
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			
+			for(MouseActionArea actionArea : GameHandler.getMouseActionAreasFromScreenCoordinates(mX, mY)) {
+				if(clickType == MouseEvent.BUTTON1) {
+					actionArea.performAction_LEFT_RELEASE();
+				}else if(clickType == MouseEvent.BUTTON3) {
+					actionArea.performAction_RIGHT_RELEASE();
+				}
+			}
+			
+			SpectateData.clickedField = SpectateHandler.getFieldByScreenCoordinates(mX, mY);
+			
+		}else if(StandardData.spielStatus == SpielStatus.Replay) {
+			
+			for(MouseActionArea actionArea : GameHandler.getMouseActionAreasFromScreenCoordinates(mX, mY)) {
+				if(clickType == MouseEvent.BUTTON1) {
+					actionArea.performAction_LEFT_RELEASE();
+				}else if(clickType == MouseEvent.BUTTON3) {
+					actionArea.performAction_RIGHT_RELEASE();
+				}
+			}
+			
+			//TODO
 			
 		}
 		
@@ -233,6 +260,22 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 			
 			GameHandler.mouseMovedEvent(mX, mY);
 			
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			
+			for(MouseActionArea actionArea : GameHandler.getMouseActionAreasFromScreenCoordinates(mX, mY)) {
+				actionArea.performAction_HOVER();
+			}
+			
+			SpectateData.hoveredField = SpectateHandler.getFieldByScreenCoordinates(mX, mY);
+			
+		}else if(StandardData.spielStatus == SpielStatus.Replay) {
+			
+			for(MouseActionArea actionArea : GameHandler.getMouseActionAreasFromScreenCoordinates(mX, mY)) {
+				actionArea.performAction_HOVER();
+			}
+			
+			//TODO
+			
 		}
 		
 	}
@@ -252,6 +295,14 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 			MenuHandler.mouseWheelTurnEvent(scrollUp);
 			
 		}else if(StandardData.spielStatus == SpielStatus.Game) {
+			
+			
+			
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			
+			
+			
+		}else if(StandardData.spielStatus == SpielStatus.Replay) {
 			
 			
 			

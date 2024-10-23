@@ -121,31 +121,36 @@ public class Game_ReconnectHandler {
 		
 		//CHECK IF LAST EXECID RECEIVED aka COMPLETE
 		if(action.executeID == targetExecuteID-1) {
-			//DONE
-			ConsoleOutput.printMessageInConsole("Game sync completely received!", true);
-			//SORT BY EXECUTE ID
-			actions.sort(new Comparator<GameAction>() {
-				@Override
-				public int compare(GameAction o1, GameAction o2) {
-					if(o1.executeID < o2.executeID) {
-						return -1;
-					}else if(o1.executeID > o2.executeID) {
-						return +1;
-					}else {
-						return 0;
-					}
-				}
-			});
-			//EXECUTE
-			simulateActions();
-			
+			//DONE - continue with delay so possible send of the last X packets are still registered
 			new Timer().schedule(new TimerTask() {
 				@Override
 				public void run() {
-					ConsoleOutput.printMessageInConsole("Reconnect - Actions done", true);
-					MinaClient.sendData(700, GameData.gameID+""); //Inform server to continue to next step
+					ConsoleOutput.printMessageInConsole("Game sync completely received!", true);
+					//SORT BY EXECUTE ID
+					actions.sort(new Comparator<GameAction>() {
+						@Override
+						public int compare(GameAction o1, GameAction o2) {
+							if(o1.executeID < o2.executeID) {
+								return -1;
+							}else if(o1.executeID > o2.executeID) {
+								return +1;
+							}else {
+								return 0;
+							}
+						}
+					});
+					//EXECUTE
+					simulateActions();
+					
+					new Timer().schedule(new TimerTask() {
+						@Override
+						public void run() {
+							ConsoleOutput.printMessageInConsole("Reconnect - Actions done", true);
+							MinaClient.sendData(700, GameData.gameID+""); //Inform server to continue to next step
+						}
+					}, 500);
 				}
-			}, 500);
+			}, 1000);
 			
 		}
 		
@@ -162,8 +167,8 @@ public class Game_ReconnectHandler {
 			
 			GameAction action = actions.get(i);
 			
-			//HANDLE UPGRADE (can happen in the middle of a round), CHAT AND FIELDPING SEPERATLY FROM ROUNDSIM
-			if(action.type != GameActionType.FIELDPING && action.type != GameActionType.CHATMESSAGE && action.type != GameActionType.UPGRADE) {
+			//HANDLE RESEARCH (can happen in the middle of a round), CHAT AND FIELDPING SEPERATLY FROM ROUNDSIM
+			if(action.type != GameActionType.FIELDPING && action.type != GameActionType.CHATMESSAGE && action.type != GameActionType.RESEARCH) {
 				//CHECK, CREATE AND UPDATE STATSCONTAINER FOR CURRENT ROUND
 				int lastRound = ( i == 0 ? 0 : actions.get(i-1).round );
 				if(lastRound < action.round) {
@@ -296,7 +301,7 @@ public class Game_ReconnectHandler {
 			OnTopWindow_GameSyncStatus gss = (OnTopWindow_GameSyncStatus) OnTopWindowData.onTopWindow;
 			gss.updateStatus(status);
 		}else {
-			ConsoleOutput.printMessageInConsole("WARNING! Wrong or none otw open during game sync! ["+status+"]", true);
+			ConsoleOutput.printMessageInConsole("WARNING! Wrong or none otw open during game sync! [REC] ["+status+"]", true);
 		}
 		
 		

@@ -43,7 +43,7 @@ public class ButtonHandler implements ActionListener {
 		}else if(clicked.getSource() == Buttons.button_QuitEditor) {
 			
 			CreateMapHandler.hideHUD();
-			OverAllManager.switchTo_Menu_HauptMenu(true);
+			OverAllManager.switchTo_Menu(true);
 			
 //==================================================================================================================
 		}else if(clicked.getSource() == Buttons.button_NextField) {
@@ -194,7 +194,7 @@ public class ButtonHandler implements ActionListener {
 							@Override
 							public void run() {
 								CreateMapData.overlayedInput = false;
-								OverAllManager.switchTo_Menu_CreateMap();
+								OverAllManager.switchTo_CreateMap();
 							}
 						}, 1000*1+500);
 					}else if(NameInput.contains(" ")) {
@@ -225,7 +225,7 @@ public class ButtonHandler implements ActionListener {
 				@Override
 				public void run() {
 					CreateMapData.overlayedInput = false;
-					OverAllManager.switchTo_Menu_CreateMap();
+					OverAllManager.switchTo_CreateMap();
 				}
 			}, 1000*1+500);
 			
@@ -259,7 +259,7 @@ public class ButtonHandler implements ActionListener {
 							@Override
 							public void run() {
 								CreateMapData.overlayedInput = false;
-								OverAllManager.switchTo_Menu_CreateMap();
+								OverAllManager.switchTo_CreateMap();
 							}
 						}, 1000*1+500);
 					}else if(NameInput.contains(" ")) {
@@ -304,7 +304,7 @@ public class ButtonHandler implements ActionListener {
 							@Override
 							public void run() {
 								CreateMapData.overlayedInput = false;
-								OverAllManager.switchTo_Menu_CreateMap();
+								OverAllManager.switchTo_CreateMap();
 							}
 						}, 1000*1+500);
 					}else if(NameInput.contains(" ")) {

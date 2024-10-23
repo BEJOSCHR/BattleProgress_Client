@@ -5,8 +5,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import me.bejosch.battleprogress.client.Data.MenuData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
@@ -18,6 +16,7 @@ import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.DiscordAPI.DiscordAPI;
 import me.bejosch.battleprogress.client.Enum.BuildMenuType;
 import me.bejosch.battleprogress.client.Enum.FieldType;
+import me.bejosch.battleprogress.client.Enum.GameFinishCause;
 import me.bejosch.battleprogress.client.Enum.GenerelIconType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
@@ -31,7 +30,6 @@ import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.RoundStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameStartDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.Field_Ressource;
@@ -161,7 +159,7 @@ public class GameHandler {
 		
 		//UPDATE DC API
 		String displayModus = modus.toString().replace("_", " ");
-		DiscordAPI.setNewPresence("In Game", displayModus, "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
+		DiscordAPI.setNewPresence("Ingame", displayModus, "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		
 		//LOAD UNITS
 		Game_UnitsHandler.requestUnitsUpdate();
@@ -180,7 +178,7 @@ public class GameHandler {
 		
 		//MAP TRANSFER
 		GameData.mapName = mapName;
-		readOutFieldDataToLoadedMap(mapData);
+		GameData.gameMap_FieldList = readOutFieldDataToLoadedMap(mapData);
 		
 		//START MOVEMENT HANDLER
 		MovementHandler.startMovementTimer();
@@ -319,11 +317,35 @@ public class GameHandler {
 	
 //==========================================================================================================
 	/**
-	 * Updates the View- and Build Area if called with a 1 sek delay in total (0.5 sek each)
+	 * Finish the game
+	 */
+	public static void finishGame(GameFinishCause cause, List<ClientPlayer> winner) {
+		
+		//TODO
+		
+		//TODO change to game finish screen
+		
+		// resetAllGameData() on switch to menu
+		
+	}
+	
+	public static void resetAllGameData( ) {
+		
+		//TODO!
+		
+	}
+	
+//==========================================================================================================
+	/**
+	 * Updates the View- and Build Area
 	 */
 	public static void updateViewAndBuildArea() {
 		
-		new Timer().schedule(new TimerTask() {
+		Game_RoundHandler.calculateViewRange();
+		Game_RoundHandler.calculateBuildArea();
+		
+		//WHY DELAY?!
+		/*new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
 				Game_RoundHandler.calculateViewRange();
@@ -334,7 +356,7 @@ public class GameHandler {
 					}
 				}, 1000);
 			}
-		}, 1000);
+		}, 1000); */
 		
 	}
 
@@ -344,14 +366,14 @@ public class GameHandler {
 	 * Load the field data out of the String
 	 * @param fieldData - String - The data of the fields
 	 */
-	public static void readOutFieldDataToLoadedMap(String fieldData) {
+	public static Field[][] readOutFieldDataToLoadedMap(String fieldData) {
 		
-		GameData.gameMap_FieldList = new Field[StandardData.mapWidth][StandardData.mapHight];
+		Field[][] map = new Field[StandardData.mapWidth][StandardData.mapHight];
 		
 		//FILL DEFAULT
 		for(int x = 0 ; x < StandardData.mapWidth ; x++) {
 			for(int y = 0 ; y < StandardData.mapHight ; y++) {
-				GameData.gameMap_FieldList[x][y] = new Field(FieldType.Flatland, x, y);
+				map[x][y] = new Field(FieldType.Flatland, x, y);
 			}
 		}
 		
@@ -363,13 +385,14 @@ public class GameHandler {
 			int X = Integer.parseInt(splitData[1]);
 			int Y = Integer.parseInt(splitData[2]);
 			if(type == FieldType.Ressource) {
-				GameData.gameMap_FieldList[X][Y] = new Field_Ressource(X, Y);
+				map[X][Y] = new Field_Ressource(X, Y);
 			}else {
-				GameData.gameMap_FieldList[X][Y] = new Field(type, X, Y);
+				map[X][Y] = new Field(type, X, Y);
 			}
 
 		}
 		
+		return map;
 	}
 	
 //==========================================================================================================
@@ -449,14 +472,8 @@ public class GameHandler {
 		
 		new InfoMessage_Located(buildingName+" has been build", ImportanceType.NORMAL, targetField.X, targetField.Y, true);
 		
-		switch (buildingName) {
-		case "Headquarter":
-			new Building_Headquarter(playerID, targetField);
-			break;
-		default:
-			ConsoleOutput.printMessageInConsole("A createBuilding packet found no building for the buildingName '"+buildingName+"'!", true);
-			break;
-		}
+		//THIS CREATION SHOULD ONLY BE USED TO CREATE THE HQs AT TEH GAME STRAT!!!
+		Game_UnitsHandler.createNewBuilding(playerID, new FieldCoordinates(targetField), buildingName);
 		
 		GameHandler.updateViewAndBuildArea();
 		

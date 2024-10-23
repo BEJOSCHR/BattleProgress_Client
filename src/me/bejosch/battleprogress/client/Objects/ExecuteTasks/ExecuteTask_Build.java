@@ -14,22 +14,9 @@ import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
-import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Airport;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Artillery;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Barracks;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Converter;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Garage;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Hospital;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Laboratory;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Mine;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Reactor;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Turret;
-import me.bejosch.battleprogress.client.Objects.Buildings.Building_Workshop;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
 import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
@@ -111,50 +98,8 @@ public class ExecuteTask_Build extends ExecuteTask{
 		this.performedAction = true;
 		this.animationIsRunning = false;
 		
-		Building newBuilding = null;
-		
 		//CREATE NEW BUILDING
-		switch (buildingName) {
-		case "Headquarter":
-			newBuilding = new Building_Headquarter(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Mine":
-			newBuilding = new Building_Mine(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Reactor":
-			newBuilding = new Building_Reactor(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Turret":
-			newBuilding = new Building_Turret(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Artillery":
-			newBuilding = new Building_Artillery(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Hospital":
-			newBuilding = new Building_Hospital(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Workshop":
-			newBuilding = new Building_Workshop(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Barracks":
-			newBuilding = new Building_Barracks(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Garage":
-			newBuilding = new Building_Garage(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Airport":
-			newBuilding = new Building_Airport(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Laboratory":
-			newBuilding = new Building_Laboratory(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Converter":
-			newBuilding = new Building_Converter(playerID, targetCoordinate.getConnectedField());
-			break;
-		default:
-			ConsoleOutput.printMessageInConsole("A BUILD executeTask found no building for the given buildingName [BuildingName: "+buildingName+"]", true);
-			break;
-		}
+		Building newBuilding = Game_UnitsHandler.createNewBuilding(this.playerID, this.targetCoordinate, this.buildingName);
 		
 		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that) and exclude HQ
 		if(newBuilding != null && this.execSimulation && this.playerID == ProfilData.thisClient.getID() && !this.buildingName.equalsIgnoreCase("Headquarter")) {

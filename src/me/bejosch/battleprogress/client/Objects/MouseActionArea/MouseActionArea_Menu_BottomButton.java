@@ -116,7 +116,7 @@ public class MouseActionArea_Menu_BottomButton extends MouseActionArea {
 			//LEFT
 			switch(this.pos) {
 			case 0: //MAPEDITOR
-				OverAllManager.switchTo_Menu_CreateMap();
+				OverAllManager.switchTo_CreateMap();
 				break;
 			case 1: //SETTINGS
 				OnTopWindowHandler.openOTW(new OnTopWindow_Settings_Gameplay());

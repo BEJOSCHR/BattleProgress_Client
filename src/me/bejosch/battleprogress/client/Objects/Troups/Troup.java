@@ -14,6 +14,7 @@ import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
+import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
@@ -94,6 +95,8 @@ public class Troup {
 		this.connectedField = connectedField_;
 		this.troupType = troupType_;
 		connectedField.troup = this;
+		
+		if(StandardData.spielStatus == SpielStatus.Spectate) { return; }
 		
 		if(SpielModus.isGameModus1v1()) {
 			//1v1

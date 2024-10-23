@@ -8,6 +8,7 @@ import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
+import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building_Headquarter;
@@ -84,6 +85,25 @@ public class Field {
 				g.drawLine(realX, realY, realX, realY+StandardData.fieldSize);
 			}
 			
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			
+			int realX = SpectateHandler.getPixlesByCoordinateX(this.X);
+			int realY = SpectateHandler.getPixlesByCoordinateX(this.Y);
+			
+			g.drawImage(img, realX, realY, null);
+			
+			//Always visible (TODO add change of visibility)
+			g.setColor(new Color(100, 100, 100, 165));
+			g.fillRect(realX, realY, StandardData.fieldSize+1, StandardData.fieldSize+1);
+			
+			if(StandardData.showGrid == true) {
+				g.setColor(Color.WHITE);
+				g.drawLine(realX+StandardData.fieldSize, realY+StandardData.fieldSize, realX+StandardData.fieldSize, realY);
+				g.drawLine(realX, realY, realX+StandardData.fieldSize, realY);
+				g.drawLine(realX+StandardData.fieldSize, realY+StandardData.fieldSize, realX, realY+StandardData.fieldSize);
+				g.drawLine(realX, realY, realX, realY+StandardData.fieldSize);
+			}
+			
 		}
 		
 	}
@@ -107,7 +127,7 @@ public class Field {
 			g.drawLine(realX+StandardData.fieldSize, realY, realX+StandardData.fieldSize, realY+StandardData.fieldSize);
 			g.drawLine(realX, realY+StandardData.fieldSize, realX+StandardData.fieldSize, realY+StandardData.fieldSize);
 			
-		}else {
+		}else if(StandardData.spielStatus == SpielStatus.Game) {
 			
 			int realX = Funktions.getPixlesByCoordinate(this.X, true, false);
 			int realY = Funktions.getPixlesByCoordinate(this.Y, false, false);
@@ -117,6 +137,20 @@ public class Field {
 			g.drawLine(realX, realY, realX, realY+StandardData.fieldSize);
 			g.drawLine(realX+StandardData.fieldSize, realY, realX+StandardData.fieldSize, realY+StandardData.fieldSize);
 			g.drawLine(realX, realY+StandardData.fieldSize, realX+StandardData.fieldSize, realY+StandardData.fieldSize);
+			
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			
+			int realX = SpectateHandler.getPixlesByCoordinateX(this.X);
+			int realY = SpectateHandler.getPixlesByCoordinateX(this.Y);
+			
+			g.drawImage(img, realX, realY, null);
+			
+			g.setColor(color);
+			g.drawLine(realX, realY, realX+StandardData.fieldSize, realY);
+			g.drawLine(realX, realY, realX, realY+StandardData.fieldSize);
+			g.drawLine(realX+StandardData.fieldSize, realY, realX+StandardData.fieldSize, realY+StandardData.fieldSize);
+			g.drawLine(realX, realY+StandardData.fieldSize, realX+StandardData.fieldSize, realY+StandardData.fieldSize);
+			
 			
 		}
 		

@@ -37,6 +37,7 @@ import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
 import me.bejosch.battleprogress.client.Handler.ChatHandler;
 import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
+import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
 import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
@@ -770,6 +771,19 @@ public class MinaClient {
 		//GAME SYNC DATA - RoundNumber
 		case 700:
 			Game_ReconnectHandler.addGameAction(content);
+			break;
+//========================================================================
+		//SPECTATE SYNC DATA - General Game Data
+		case 750:
+			SpectateHandler.setGeneralGameData(content);
+			break;
+		//SPECTATE SYNC DATA - RoundNumber
+		case 751:
+			SpectateHandler.setRoundAndExecuteID(content);
+			break;
+		//GAME SYNC DATA - RoundNumber
+		case 752:
+			SpectateHandler.addGameAction(content);
 			break;
 //========================================================================
 		//Client Game Ping

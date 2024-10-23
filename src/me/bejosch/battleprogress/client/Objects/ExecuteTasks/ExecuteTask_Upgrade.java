@@ -12,19 +12,12 @@ import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
-import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseActionArea_Checkbox_SkipAllTaskDisplays;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Air.Troup_Air_HeavyHelicopter;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Air.Troup_Air_MediumHelicopter;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Soldier.Troup_Land_HeavySoldier;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Soldier.Troup_Land_MediumSoldier;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle.Troup_Land_HeavyTank;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle.Troup_Land_MediumTank;
 
 public class ExecuteTask_Upgrade extends ExecuteTask{
 
@@ -97,33 +90,8 @@ public class ExecuteTask_Upgrade extends ExecuteTask{
 		troupOld2.delete(true);
 		
 		//CREATE NEW TROUP
-		Troup troup = null;
-		switch (this.upgradeTroupName) {
-		//================= VEHICLE
-		case "Medium Tank":
-			troup = new Troup_Land_MediumTank(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Heavy Tank":
-			troup = new Troup_Land_HeavyTank(playerID, targetCoordinate.getConnectedField());
-			break;
-		//================= SOLDIER
-		case "Medium Soldier":
-			troup = new Troup_Land_MediumSoldier(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Heavy Soldier":
-			troup = new Troup_Land_HeavySoldier(playerID, targetCoordinate.getConnectedField());
-			break;
-		//================= AIR
-		case "Medium Heli":
-			troup = new Troup_Air_MediumHelicopter(playerID, targetCoordinate.getConnectedField());
-			break;
-		case "Heavy Heli":
-			troup = new Troup_Air_HeavyHelicopter(playerID, targetCoordinate.getConnectedField());
-			break;
-		default:
-			ConsoleOutput.printMessageInConsole("A UPGRADE executeTask found no upgrade troup for the given troupName [TroupName: "+this.upgradeTroupName+"]", true);
-			break;
-		}
+		Troup troup = Game_UnitsHandler.createNewUpgradeTroup(this.playerID, this.targetCoordinate, this.upgradeTroupName);
+		
 		if(troup != null) { troup.totalHealth = (int) Math.round(troup.totalHealth*percentageLeft); } //SET DAMAGED HP
 		
 		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)

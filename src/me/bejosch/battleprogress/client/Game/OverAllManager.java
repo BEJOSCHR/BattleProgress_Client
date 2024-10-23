@@ -1,20 +1,16 @@
 package me.bejosch.battleprogress.client.Game;
 
-import java.util.HashMap;
-
 import me.bejosch.battleprogress.client.Data.CreateMapData;
-import me.bejosch.battleprogress.client.Data.LobbyData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
-import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.DiscordAPI.DiscordAPI;
 import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Handler.CreateMapHandler;
-import me.bejosch.battleprogress.client.Handler.LobbyHandler;
 import me.bejosch.battleprogress.client.Handler.MouseHandler;
 import me.bejosch.battleprogress.client.Handler.MovementHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
+import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Window.Animations.AnimationDisplay;
 import me.bejosch.battleprogress.client.Window.Buttons.Buttons;
 import me.bejosch.battleprogress.client.Window.ScrollPanes.ScrollPanes;
@@ -29,9 +25,26 @@ public class OverAllManager {
 	/**
 	 * Switch to the Menu part
 	 */
-	public static void switchTo_Menu_HauptMenu(boolean closeOTW) {
+	public static void switchTo_Menu(boolean closeOTW) {
 		
-		DiscordAPI.setNewPresence("Mainmenu", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
+		if(StandardData.spielStatus == SpielStatus.GameFinish || StandardData.spielStatus == SpielStatus.Game) {
+			//Return from game
+			GameHandler.resetAllGameData();
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			//Return from spectate
+			SpectateHandler.stopSpectate();
+		}else if(StandardData.spielStatus == SpielStatus.CreateMap) {
+			//Return from CreateMap
+			//TODO
+		}else if(StandardData.spielStatus == SpielStatus.Replay) {
+			//Return from Replay
+			//TODO
+		}else if(StandardData.spielStatus == SpielStatus.GameLobby) {
+			//Return from Lobby (custome game create)
+			//TODO
+		}
+		
+		DiscordAPI.setNewPresence("Menu", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		MovementHandler.stopMovementTimer();
 		
 		if(closeOTW == true) {
@@ -53,7 +66,7 @@ public class OverAllManager {
 	/**
 	 * Switch to the Menu part
 	 */
-	public static void switchTo_Menu_CreateMap() {
+	public static void switchTo_CreateMap() {
 		
 		AnimationDisplay.stopAllAnimations();
 		Buttons.hideAllButtons();
@@ -61,7 +74,8 @@ public class OverAllManager {
 		TextAreas.hideAlltextAreas();
 		ScrollPanes.hideAllScrollPanes();
 		
-		WindowData.Frame.requestFocus();
+		DiscordAPI.setNewPresence("Mapeditor", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
+		
 		CreateMapHandler.startCreateMapHandler();
 		
 		OnTopWindowHandler.closeOTW();
@@ -89,9 +103,11 @@ public class OverAllManager {
 	/**
 	 * Switch to the Game part
 	 */
-	public static void switchTo_Game_Lobby() {
+	public static void switchTo_CustomGame_Lobby() {
 		
-		AnimationDisplay.stopAllAnimations();
+		//TODO
+		
+		/*AnimationDisplay.stopAllAnimations();
 		Buttons.hideAllButtons();
 		TextFields.hideAlltextFields();
 		TextAreas.hideAlltextAreas();
@@ -113,7 +129,7 @@ public class OverAllManager {
 		
 		WindowData.Frame.requestFocus();
 		
-		LobbyHandler.updateLobbyData();
+		LobbyHandler.updateLobbyData();*/
 		
 	}
 	
@@ -130,6 +146,8 @@ public class OverAllManager {
 		ScrollPanes.hideAllScrollPanes();
 		
 		OnTopWindowHandler.closeOTW();
+		
+		DiscordAPI.setNewPresence("Spectating", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		
 		//
 		
@@ -150,6 +168,8 @@ public class OverAllManager {
 		ScrollPanes.hideAllScrollPanes();
 		
 		OnTopWindowHandler.closeOTW();
+		
+		DiscordAPI.setNewPresence("Watching replay", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		
 		//
 		
@@ -173,6 +193,8 @@ public class OverAllManager {
 		
 		StandardData.spielStatus = SpielStatus.Game;
 		StandardData.showGrid = false;
+		
+		//DC UPDATE IN GAME INIT
 		
 		WindowData.Frame.requestFocus();
 		

@@ -151,8 +151,8 @@ public class Funktions {
 		int width = StandardData.fieldSize-(spaceToTheSides*2);
 		g.fillRect(fieldPixleX+spaceToTheSides, fieldPixleY+spaceToTheSides, thickness, width);
 		g.fillRect(fieldPixleX+spaceToTheSides, fieldPixleY+spaceToTheSides, width, thickness);
-		g.fillRect(fieldPixleX+spaceToTheSides+width, fieldPixleY+spaceToTheSides, thickness, width);
-		g.fillRect(fieldPixleX+spaceToTheSides, fieldPixleY+spaceToTheSides+width, width, thickness);
+		g.fillRect(fieldPixleX+spaceToTheSides+width, fieldPixleY+spaceToTheSides, thickness, width+thickness);
+		g.fillRect(fieldPixleX+spaceToTheSides, fieldPixleY+spaceToTheSides+width, width+thickness, thickness);
 		
 	}
 	

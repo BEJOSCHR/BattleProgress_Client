@@ -14,7 +14,6 @@ import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
-import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -22,10 +21,6 @@ import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
 import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseActionArea_Checkbox_SkipAllTaskDisplays;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Air.Troup_Air_LightHelicopter;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Troup_Land_Commander;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Soldier.Troup_Land_LightSoldier;
-import me.bejosch.battleprogress.client.Objects.Troups.Troups_Land.Vehicle.Troup_Land_LightTank;
 
 public class ExecuteTask_Produce extends ExecuteTask{
 
@@ -99,30 +94,8 @@ public class ExecuteTask_Produce extends ExecuteTask{
 		this.performedAction = true;
 		this.animationIsRunning = false;
 		
-		Troup newTroup = null;
-		
 		//CREATE NEW TROUP
-		switch (troupName) {
-		//================= LAND
-		case "Commander":
-			newTroup = new Troup_Land_Commander(playerID, targetCoordinate.getConnectedField());
-			break;
-		//================= VEHICLE
-		case "Light Tank":
-			newTroup = new Troup_Land_LightTank(playerID, targetCoordinate.getConnectedField());
-			break;
-		//================= SOLDIER
-		case "Light Soldier":
-			newTroup = new Troup_Land_LightSoldier(playerID, targetCoordinate.getConnectedField());
-			break;
-		//================= AIR
-		case "Light Heli":
-			newTroup = new Troup_Air_LightHelicopter(playerID, targetCoordinate.getConnectedField());
-			break;
-		default:
-			ConsoleOutput.printMessageInConsole("A PRODUCE executeTask found no troup for the given troupName [TroupName: "+troupName+"]", true);
-			break;
-		}
+		Troup newTroup = Game_UnitsHandler.createNewTroup(this.playerID, this.targetCoordinate, this.troupName);
 		
 		//SIMULATION COST REDUCTION (is normaly reduced by creating the task, sim doesnt have that)
 		if(newTroup != null && this.execSimulation && this.playerID == ProfilData.thisClient.getID()) {
