@@ -8,6 +8,7 @@ import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
+import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.FriendRemove.OnTopWindow_FriendRemove;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.PlayerChat.OnTopWindow_PlayerChat;
 import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
@@ -105,7 +106,7 @@ public class MouseActionArea_Menu_FriendListButton extends MouseActionArea {
 			//INVITE OR SPECTATE
 			if(connectedFriendListSection.getRepresentedClientPlayer().isInGame()) {
 				//INGAME - Spectate
-				//TODO
+				SpectateHandler.startSpectate(connectedFriendListSection.getRepresentedClientPlayer());
 			}else {
 				//Invite
 				if(ProfilData.sendGroupInvite.contains(connectedFriendListSection.getRepresentedClientPlayer()) == false && (ProfilData.otherGroupClient == null || ProfilData.otherGroupClient.getID() != connectedFriendListSection.getRepresentedClientPlayer().getID()) ) {

@@ -1,10 +1,16 @@
 package me.bejosch.battleprogress.client.Objects.Buildings;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
+import me.bejosch.battleprogress.client.Data.SpectateData;
+import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
 import me.bejosch.battleprogress.client.Game.Handler.Game_UnitsHandler;
+import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
 import me.bejosch.battleprogress.client.Objects.UnitStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -23,9 +29,12 @@ public class Building_Headquarter extends Building {
 	public Building_Headquarter(int playerID_, Field connectedField_) {
 		super(playerID_, connectedField_);
 		
-		calculate_ViewRange();
-		calculate_ShotRange();
-		calculate_ProduceRange();
+		if(StandardData.spielStatus == SpielStatus.Game) {
+			calculate_ViewRange();
+			calculate_ShotRange();
+			calculate_ProduceRange();
+		}
+		
 	}
 
 	@Override
@@ -73,7 +82,22 @@ public class Building_Headquarter extends Building {
 	
 	@Override
 	public void draw_Field(Graphics g, boolean createMapModus) {
+		
 		super.draw_Field(g, createMapModus);
+		
+		//DRAW PLAYER NAME
+		if(StandardData.spielStatus == SpielStatus.Spectate) {
+			int realX_spec = (this.connectedField.X * StandardData.fieldSize)+SpectateData.scroll_LR_count;
+			int realY_spec = (this.connectedField.Y * StandardData.fieldSize)+SpectateData.scroll_UD_count;
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Arial", Font.BOLD, 16));
+			String name = ClientPlayerHandler.getNewClientPlayer(this.playerID).getName();
+			int nameWidth = g.getFontMetrics().stringWidth(name);
+			g.drawString(name, realX_spec+StandardData.fieldSize/2-nameWidth/2, realY_spec+StandardData.fieldSize+20);
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			//TODO
+		}
+		
 	}
 	
 	//SPECIAL FOR HQ ON START

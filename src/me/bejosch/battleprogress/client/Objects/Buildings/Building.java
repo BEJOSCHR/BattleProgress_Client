@@ -8,15 +8,16 @@ import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.CreateMapData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.SpectateData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
-import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -86,9 +87,8 @@ public class Building {
 		this.connectedField = connectedField_;
 		connectedField.building = this;
 		
-		if(StandardData.spielStatus == SpielStatus.Spectate) { return; }
-		
-		if(GameData.gameMode != null) {
+		switch(StandardData.spielStatus) {
+		case Game:
 			if(SpielModus.isGameModus1v1()) {
 				//1v1
 				if(GameData.playingPlayer[0].getID() == playerID) {
@@ -118,13 +118,21 @@ public class Building {
 					ConsoleOutput.printMessageInConsole("Adding building to player list found no matching player! (2v2 - ID: "+playerID+")", true);
 				}
 			}
-		}else {
-			//CreateMap modus
+			load_TypeSettings();
+			load_ActionTasks();
+			break;
+		case CreateMap:
 			CreateMapData.HQdisplayList.add(this);
+			break;
+		case Replay:
+			load_TypeSettings();
+			break;
+		case Spectate:
+			load_TypeSettings();
+			break;
+		default:
+			break;
 		}
-		
-		load_TypeSettings();
-		load_ActionTasks();
 		
 		//CALCULATED ON ROUND CHANGE
 //		calculate_ViewRange();
@@ -288,16 +296,15 @@ public class Building {
 	 */
 	public void draw_Field(Graphics g, boolean createMapModus) {
 		
-		if(createMapModus == false) {
-			//GAME MODUS
+		switch(StandardData.spielStatus) {
+		case Game:
 			int realX = (this.connectedField.X * StandardData.fieldSize)+GameData.scroll_LR_count;
 			int realY = (this.connectedField.Y * StandardData.fieldSize)+GameData.scroll_UD_count;
 			
 			//IMG
 			g.drawImage(img, realX+Images.buildingFactor, realY+Images.buildingFactor, null);
 			//HEALTH
-			int abstandX = 9, abstandY = StandardData.fieldSize-12, height = 4;
-			Funktions.drawHealthbar(g, realX+abstandX, realY+abstandY, StandardData.fieldSize-abstandX*2, height, maxHealth, totalHealth);
+			Funktions.drawHealthbar(g, realX+GameData.healthBar_abstandX, realY+GameData.healthBar_abstandY, StandardData.fieldSize-GameData.healthBar_abstandX*2, GameData.healthBar_height, maxHealth, totalHealth);
 			//COLOR
 			g.setColor(Funktions.getColorByPlayerID(this.playerID));
 			g.drawRoundRect(realX+2, realY+2, StandardData.fieldSize-4, StandardData.fieldSize-4, 6, 6);
@@ -314,13 +321,31 @@ public class Building {
 			}
 			//TARGET FIELD
 			draw_targetField(g);
+			break;
+		case CreateMap:
+			int realX_cm = (this.connectedField.X * StandardData.fieldSize)+CreateMapData.scroll_CM_LR_count;
+			int realY_cm = (this.connectedField.Y * StandardData.fieldSize)+CreateMapData.scroll_CM_UD_count;
 			
-		}else {
-			//CREATE MAP MODUS
-			int realX = (this.connectedField.X * StandardData.fieldSize)+CreateMapData.scroll_CM_LR_count;
-			int realY = (this.connectedField.Y * StandardData.fieldSize)+CreateMapData.scroll_CM_UD_count;
+			g.drawImage(img, realX_cm+Images.buildingFactor, realY_cm+Images.buildingFactor, null);
+			break;
+		case Replay:
+			//TODO
+			break;
+		case Spectate:
+			int realX_spec = (this.connectedField.X * StandardData.fieldSize)+SpectateData.scroll_LR_count;
+			int realY_spec = (this.connectedField.Y * StandardData.fieldSize)+SpectateData.scroll_UD_count;
 			
-			g.drawImage(img, realX+Images.buildingFactor, realY+Images.buildingFactor, null);
+			//IMG
+			g.drawImage(img, realX_spec+Images.buildingFactor, realY_spec+Images.buildingFactor, null);
+			//HEALTH
+			Funktions.drawHealthbar(g, realX_spec+GameData.healthBar_abstandX, realY_spec+GameData.healthBar_abstandY, StandardData.fieldSize-GameData.healthBar_abstandX*2, GameData.healthBar_height, maxHealth, totalHealth);
+			//COLOR
+			g.setColor(SpectateHandler.getColorByPlayerID(this.playerID));
+			g.drawRoundRect(realX_spec+2, realY_spec+2, StandardData.fieldSize-4, StandardData.fieldSize-4, 6, 6);
+			
+			break;
+		default:
+			break;
 		}
 		
 	}

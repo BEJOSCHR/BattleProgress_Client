@@ -122,6 +122,7 @@ public class Animation_MovingCircleDisplay extends Animation {
 	public void changeAction() {
 		
 		if(cancled == true) { return; }
+		if(this.goField == null || this.toField == null) { this.cancle(); } //Happens sometimes, no clue why
 		
 		int goPixleX = Funktions.getPixlesByCoordinate(goField.X, true, false);
 		int goPixleY = Funktions.getPixlesByCoordinate(goField.Y, false, false);

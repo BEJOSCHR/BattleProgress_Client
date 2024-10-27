@@ -55,6 +55,9 @@ public class GameData {
 	public static final int actionbar_Height = 60, actionbar_WidthPerTask = 60, actionbar_BottomBorder = 35, actionbar_SpaceBetweenTask = 10, actionbar_backgroundOverlappingSize = 5;
 	public static final int actionbar_X = 300, actionbar_Y = WindowData.FrameHeight-actionbar_Height-actionbar_backgroundOverlappingSize-actionbar_BottomBorder;
 	
+	//HealthBar
+	public static final int healthBar_abstandX = 9, healthBar_abstandY = StandardData.fieldSize-12, healthBar_height = 4;
+	
 	//MainDisplayBox (Actionbar)
 	public static int displayBox_border = 40, displayBox_size = StandardData.fieldSize+displayBox_border*2, displayBox_textYMoving = 3;
 	public static int displayBox_realX = GameData.actionbar_X-GameData.actionbar_backgroundOverlappingSize-1-displayBox_size, displayBox_realY = WindowData.FrameHeight-displayBox_size-GameData.actionbar_BottomBorder;
@@ -97,7 +100,7 @@ public class GameData {
 	public static boolean coordsUpdatedNeeded = true;
 	
 	//InfoMessages
-	public static List<InfoMessage> notificationList = new ArrayList<InfoMessage>();
+	public static CopyOnWriteArrayList<InfoMessage> notificationList = new CopyOnWriteArrayList<InfoMessage>();
 	
 	//FieldMessage
 	public static FieldMessage activeMessage = null;

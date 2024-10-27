@@ -51,9 +51,7 @@ public class KeyHandler implements KeyListener {
 		//============== DEBUG ==============
 		if(e.getKeyCode() == KeyEvent.VK_I) {
 			DebugWindow.startDebug();
-		}
-		//============== DEBUG ==============
-		if(e.getKeyCode() == KeyEvent.VK_U) {
+		}else if(e.getKeyCode() == KeyEvent.VK_U) {
 			ConsoleOutput.printMessageInConsole("Reloading all Images...", true);
 			new Thread(new TimerTask() {
 				@Override
@@ -62,8 +60,27 @@ public class KeyHandler implements KeyListener {
 					ConsoleOutput.printMessageInConsole("... done!", true);
 				}
 			}, "ReloadImages").start();
+		}else if(e.getKeyCode() == KeyEvent.VK_T) {
+			
+			Images.updateFieldImages(false);
+		
+		}else if(e.getKeyCode() == KeyEvent.VK_O) {
+			
+			DebugWindow.startCoordinatesDebug();
+			
+		}
+		//============== DEBUG ==============
+		
+		//General
+		if(e.getKeyCode() == KeyEvent.VK_SPACE) {	
+			if(StandardData.showGrid == false) {
+				StandardData.showGrid = true;
+			}else {
+				StandardData.showGrid = false;
+			}
 		}
 		
+		//Movement Update
 		MovementHandler.updateKeys_RELEASE(e.getKeyCode());
 		
 		if(OnTopWindowData.onTopWindow != null) { //GENERAL OTW PRIO

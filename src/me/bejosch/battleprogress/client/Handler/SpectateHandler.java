@@ -1,5 +1,6 @@
 package me.bejosch.battleprogress.client.Handler;
 
+import java.awt.Color;
 import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,7 +13,9 @@ import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.UnitData;
 import me.bejosch.battleprogress.client.Enum.GameActionType;
+import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
+import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Game.OverAllManager;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
 import me.bejosch.battleprogress.client.Game.Handler.Game_DictionaryHandler;
@@ -25,6 +28,7 @@ import me.bejosch.battleprogress.client.Objects.GameAction;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
+import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
 import me.bejosch.battleprogress.client.Objects.OnTopWindow.GameSyncStatus.OnTopWindow_GameSyncStatus;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
@@ -38,7 +42,30 @@ public class SpectateHandler {
 		//Open info loading oth
 		OnTopWindowHandler.openOTW(new OnTopWindow_GameSyncStatus("Loading!"), false);
 		//Request spectate data from server
-		MinaClient.sendData(750, GameData.gameID+"");
+		MinaClient.sendData(750, spectateTarget.getID()+"");
+		
+		//MAAS
+		if(SpectateData.initSpectateMaas == false) {
+			
+			int X = GameData.readyButton_X, Y = GameData.readyButton_Y, maße = GameData.readyButton_maße;
+			new MouseActionArea(X+25, Y+110-15, X+maße-25, Y+110+15, "MAA_Spectate_Exit", null, ShowBorderType.ShowAlways, Color.WHITE, Color.ORANGE) {
+				@Override
+				public boolean isActiv() {
+					if(StandardData.spielStatus == SpielStatus.Spectate && SpectateData.finishedInitLoading == true) {
+						return true;
+					}else {
+						return false;
+					}
+				}
+				@Override
+				public void performAction_LEFT_RELEASE() {
+					//Stop spectate is called from the overall handler below
+					OverAllManager.switchTo_Menu(true);
+				}
+			};
+			
+			SpectateData.initSpectateMaas = true;
+		}
 		
 	}
 	
@@ -46,10 +73,31 @@ public class SpectateHandler {
 		
 		//Reset spectate data
 		SpectateData.lastExecuteIndex = 0;
-		//TODO
+		SpectateData.actions.clear();
+		SpectateData.buildings.clear();
+		SpectateData.clickedField = null;
+		SpectateData.hoveredField = null;
+		SpectateData.finishedInitLoading = false;
+		SpectateData.gameID = -1;
+		SpectateData.targetExecuteID = -1;
+		SpectateData.gameIsRunning = false;
+		SpectateData.gameMap_FieldList = null;
+		SpectateData.gameMode = null;
+		SpectateData.mapName = null;
+		SpectateData.playingPlayer = null;
+		SpectateData.round = 1;
+		SpectateData.scroll_LR_count = 0;
+		SpectateData.scroll_UD_count = 0;
+		
+		//RoundTimer
+		if(SpectateData.roundTimer != null) {
+			SpectateData.roundTimer.cancel();
+			SpectateData.roundTimer = null;
+			SpectateData.roundTime = 0;
+		}
 		
 		//Inform server
-		MinaClient.sendData(753, GameData.gameID+"");
+		MinaClient.sendData(753, SpectateData.gameID+"");
 		
 		MovementHandler.stopMovementTimer();
 		
@@ -101,6 +149,11 @@ public class SpectateHandler {
 		//MAP TRANSFER
 		SpectateData.mapName = startMapName;
 		SpectateData.gameMap_FieldList = GameHandler.readOutFieldDataToLoadedMap(startMapData);
+		for(int x = 0 ; x < StandardData.mapWidth ; x++) { //Make all fields visible
+			for(int y = 0 ; y < StandardData.mapHight ; y++) {
+				SpectateData.gameMap_FieldList[x][y].visible = true;
+			}
+		}
 		//START MOVEMENT HANDLER
 		MovementHandler.startMovementTimer();
 		
@@ -114,7 +167,7 @@ public class SpectateHandler {
 				if(millis-UnitData.lastDataContainerReceived >= 1000*2) { //Last receive longer ago than 2 sec
 					ConsoleOutput.printMessageInConsole("Spectate - General done", true);
 					this.cancel();
-					MinaClient.sendData(751, GameData.gameID+""); //Inform server to continue to next step
+					MinaClient.sendData(751, SpectateData.gameID+""); //Inform server to continue to next step
 				}
 				
 			}
@@ -143,7 +196,7 @@ public class SpectateHandler {
 			@Override
 			public void run() {
 				ConsoleOutput.printMessageInConsole("Spectate - Meta done", true);
-				MinaClient.sendData(752, GameData.gameID+""); //Inform server to continue to next step
+				MinaClient.sendData(752, SpectateData.gameID+""); //Inform server to continue to next step
 			}
 		}, 500);
 		
@@ -156,10 +209,10 @@ public class SpectateHandler {
 		//playerID;type;round;x;y;newX;newY;amount;text;executeID
 		GameAction action = new GameAction(content);
 		SpectateData.actions.add(action);
-		updateGameSyncOTW("Loading game progress ("+SpectateData.actions.size()+")");
 		
 		if(SpectateData.finishedInitLoading == false) {
 			//CHECK IF LAST EXECID RECEIVED aka COMPLETE
+			updateGameSyncOTW("Loading game progress ("+SpectateData.actions.size()+")");
 			if(action.executeID == SpectateData.targetExecuteID-1) {
 				//DONE
 				ConsoleOutput.printMessageInConsole("Game sync completely received! [Spectate]", true);
@@ -177,7 +230,7 @@ public class SpectateHandler {
 					}
 				});
 				//EXECUTE
-				simulateActions();
+				simulateActions(true);
 				
 				//FNISH UP
 				finishInitLoading();
@@ -202,7 +255,7 @@ public class SpectateHandler {
 					}
 				});
 				//THEN SIMULATE (methode includes, that nothing is double simulated)
-				simulateActions();
+				simulateActions(false);
 			}
 			
 		}
@@ -210,11 +263,14 @@ public class SpectateHandler {
 		
 	}
 	
-	public static void simulateActions() {
+	public static void simulateActions(boolean withOtwUpdate) {
 		
+		ConsoleOutput.printMessageInConsole("Sim: "+SpectateData.lastExecuteIndex+" -> "+(SpectateData.actions.size()-1), true);
 		for(int i = SpectateData.lastExecuteIndex ; i < SpectateData.actions.size() ; i++) {
 			
-			updateGameSyncOTW("Simulating game progress ("+(i+1)+"/"+SpectateData.actions.size()+")");
+			if(withOtwUpdate == true) {
+				updateGameSyncOTW("Simulating game progress ("+(i+1)+"/"+SpectateData.actions.size()+")");
+			}
 			
 			GameAction action = SpectateData.actions.get(i);
 			
@@ -224,7 +280,7 @@ public class SpectateHandler {
 			
 		}
 		
-		SpectateData.lastExecuteIndex = SpectateData.actions.size()-1;
+		SpectateData.lastExecuteIndex = SpectateData.actions.size();
 		
 	}
 	
@@ -242,7 +298,7 @@ public class SpectateHandler {
 			}
 			break;
 		case BUILD:
-			SpectateData.buildings.add(Game_UnitsHandler.createNewBuilding(action.playerId, new FieldCoordinates(action.newX, action.newY), action.text));
+			SpectateData.buildings.add(Game_UnitsHandler.createNewBuilding(action.playerId, new FieldCoordinates(action.x, action.y), action.text));
 			break;
 		case HEAL:
 			Building target_b2 = getBuilding(action.newX, action.newY);
@@ -295,6 +351,8 @@ public class SpectateHandler {
 			
 		case ROUND_END: //Do nothing realy (just needed to have min 1 action per round to sim round endings)
 			ConsoleOutput.printMessageInConsole(" > Round "+action.round+" done [Spec]", true);
+			SpectateData.round = action.round+1;
+			SpectateData.roundTime = GameData.roundDuration;
 			break;
 		case CHATMESSAGE: //NOT SYNCED (YET)
 			break;
@@ -317,7 +375,19 @@ public class SpectateHandler {
 		
 		//No area update required (will be needed with separate visibilities and updated each round change)
 		
-		//RoundTimer simulate/show?
+		//RoundTimer
+		SpectateData.roundTime = GameData.roundDuration;
+		if(SpectateData.roundTimer == null) {
+			SpectateData.roundTimer = new Timer();
+			SpectateData.roundTimer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					if(SpectateData.roundTime > 0) {
+						SpectateData.roundTime--;
+					}
+				}
+			}, 0, 1000);
+		}
 		
 		OnTopWindowHandler.closeOTW(); //JUST CLOSE WINDOW, GAME IS LOADED/SYNCED
 		ConsoleOutput.printMessageInConsole("Game sync finished [Spectate]", true);
@@ -335,6 +405,28 @@ public class SpectateHandler {
 			ConsoleOutput.printMessageInConsole("WARNING! Wrong or none otw open during game sync! [SPEC] ["+status+"]", true);
 		}
 		
+		
+	}
+	
+//==========================================================================================================
+	/**
+	 * Get the Color of a player by his ID
+	 * @param playerID - int - The ID of the player
+	 * @return Color - The color which represents this player
+	 */
+	public static Color getColorByPlayerID(int playerID) {
+		
+		if(playerID == SpectateData.playingPlayer[0].getID()) {
+			return Color.RED;
+		}else if(playerID == SpectateData.playingPlayer[1].getID()) {
+			return Color.BLUE;
+		}else if(playerID == SpectateData.playingPlayer[2].getID()) {
+			return Color.GREEN;
+		}else if(playerID == SpectateData.playingPlayer[3].getID()) {
+			return Color.YELLOW;
+		}else {
+			return Color.ORANGE;
+		}
 		
 	}
 	

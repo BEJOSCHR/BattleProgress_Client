@@ -1,6 +1,7 @@
 package me.bejosch.battleprogress.client.Game;
 
 import me.bejosch.battleprogress.client.Data.CreateMapData;
+import me.bejosch.battleprogress.client.Data.MenuData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.WindowData;
 import me.bejosch.battleprogress.client.DiscordAPI.DiscordAPI;
@@ -46,6 +47,9 @@ public class OverAllManager {
 		
 		DiscordAPI.setNewPresence("Menu", "", "mainicon", "BattleProgress", "unranked", "Unranked", System.currentTimeMillis());
 		MovementHandler.stopMovementTimer();
+		
+		MenuData.rfl_OpenCloseFactor = 0;
+		MenuData.friendListOpened = false;
 		
 		if(closeOTW == true) {
 			AnimationDisplay.stopAllAnimations();

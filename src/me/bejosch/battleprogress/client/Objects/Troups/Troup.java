@@ -9,15 +9,16 @@ import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.CreateMapData;
 import me.bejosch.battleprogress.client.Data.ProfilData;
+import me.bejosch.battleprogress.client.Data.SpectateData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
-import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.GameHandler;
+import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -67,7 +68,6 @@ public class Troup {
 	public FieldCoordinates targetUpgradePosition = null; //If not null an other troup at this cords has this troup as an upgrade target so this troup should not be allowed to do anything
 	
 	public boolean canFly = false;
-	public boolean hide = false;
 	
 	
 //==========================================================================================================
@@ -96,40 +96,52 @@ public class Troup {
 		this.troupType = troupType_;
 		connectedField.troup = this;
 		
-		if(StandardData.spielStatus == SpielStatus.Spectate) { return; }
+		switch(StandardData.spielStatus) {
+		case Game:
+			if(SpielModus.isGameModus1v1()) {
+				//1v1
+				if(GameData.playingPlayer[0].getID() == playerID) {
+					//Player1
+					GameData.player1_troups.add(this);
+				}else if(GameData.playingPlayer[1].getID() == playerID) {
+					//Player2
+					GameData.player2_troups.add(this);
+				}else {
+					ConsoleOutput.printMessageInConsole("Adding troup to player list found no matching player! (1v1 - ID: "+playerID+")", true);
+				}
+			}else {
+				//2v2
+				if(GameData.playingPlayer[0].getID() == playerID) {
+					//Player1
+					GameData.player1_troups.add(this);
+				}else if(GameData.playingPlayer[1].getID() == playerID) {
+					//Player2
+					GameData.player2_troups.add(this);
+				}else if(GameData.playingPlayer[2].getID() == playerID) {
+					//Player3
+					GameData.player3_troups.add(this);
+				}else if(GameData.playingPlayer[3].getID() == playerID) {
+					//Player4
+					GameData.player4_troups.add(this);
+				}else {
+					ConsoleOutput.printMessageInConsole("Adding troup to player list found no matching player! (2v2 - ID: "+playerID+")", true);
+				}
+			}
+			load_TypeSettings();
+			load_ActionTasks();
+			break;
+		case CreateMap:
+			break;
+		case Replay:
+			load_TypeSettings();
+			break;
+		case Spectate:
+			load_TypeSettings();
+			break;
+		default:
+			break;
 		
-		if(SpielModus.isGameModus1v1()) {
-			//1v1
-			if(GameData.playingPlayer[0].getID() == playerID) {
-				//Player1
-				GameData.player1_troups.add(this);
-			}else if(GameData.playingPlayer[1].getID() == playerID) {
-				//Player2
-				GameData.player2_troups.add(this);
-			}else {
-				ConsoleOutput.printMessageInConsole("Adding troup to player list found no matching player! (1v1 - ID: "+playerID+")", true);
-			}
-		}else {
-			//2v2
-			if(GameData.playingPlayer[0].getID() == playerID) {
-				//Player1
-				GameData.player1_troups.add(this);
-			}else if(GameData.playingPlayer[1].getID() == playerID) {
-				//Player2
-				GameData.player2_troups.add(this);
-			}else if(GameData.playingPlayer[2].getID() == playerID) {
-				//Player3
-				GameData.player3_troups.add(this);
-			}else if(GameData.playingPlayer[3].getID() == playerID) {
-				//Player4
-				GameData.player4_troups.add(this);
-			}else {
-				ConsoleOutput.printMessageInConsole("Adding troup to player list found no matching player! (2v2 - ID: "+playerID+")", true);
-			}
 		}
-		
-		load_TypeSettings();
-		load_ActionTasks();
 		
 		//CALCULATED ON ROUND CHANGE
 //		calculate_ViewRange();
@@ -314,12 +326,8 @@ public class Troup {
 	 */
 	public void draw_Field(Graphics g, boolean createMapModus) {
 		
-		if(hide == true) {
-			return;
-		}
-		
-		if(createMapModus == false) {
-			//GAME MODUS
+		switch(StandardData.spielStatus) {
+		case Game:
 			int realX = (this.connectedField.X * StandardData.fieldSize)+GameData.scroll_LR_count;
 			int realY = (this.connectedField.Y * StandardData.fieldSize)+GameData.scroll_UD_count;
 			
@@ -330,8 +338,7 @@ public class Troup {
 			g.setFont(new Font("Arial", Font.BOLD, this.textSize_nameField));
 			g.drawString(name, realX+5, realY+(StandardData.fieldSize-17));
 			//HEALTH
-			int abstandX = 9, abstandY = StandardData.fieldSize-12, height = 4;
-			Funktions.drawHealthbar(g, realX+abstandX, realY+abstandY, StandardData.fieldSize-abstandX*2, height, maxHealth, totalHealth);
+			Funktions.drawHealthbar(g, realX+GameData.healthBar_abstandX, realY+GameData.healthBar_abstandY, StandardData.fieldSize-GameData.healthBar_abstandX*2, GameData.healthBar_height, maxHealth, totalHealth);
 			//COLOR
 			g.setColor(Funktions.getColorByPlayerID(this.playerID));
 			g.drawRoundRect(realX+2, realY+2, StandardData.fieldSize-4, StandardData.fieldSize-4, 6, 6);
@@ -349,14 +356,36 @@ public class Troup {
 			}
 			//TARGET FIELD
 			draw_targetField(g);
+			break;
+		case CreateMap:
+			int realX_cm = (this.connectedField.X * StandardData.fieldSize)+CreateMapData.scroll_CM_LR_count;
+			int realY_cm = (this.connectedField.Y * StandardData.fieldSize)+CreateMapData.scroll_CM_UD_count;
+			
+			g.drawImage(img, realX_cm+Images.troupFactor, realY_cm+Images.troupFactor, null);
+			break;
+		case Replay:
+			//TODO
+			break;
+		case Spectate:
+			int realX_spec = (this.connectedField.X * StandardData.fieldSize)+SpectateData.scroll_LR_count;
+			int realY_spec = (this.connectedField.Y * StandardData.fieldSize)+SpectateData.scroll_UD_count;
+			
+			//IMG
+			g.drawImage(img, realX_spec+Images.troupFactor, realY_spec+Images.troupFactor, null);
+			//NAME
+			g.setColor(Color.WHITE);
+			g.setFont(new Font("Arial", Font.BOLD, this.textSize_nameField));
+			g.drawString(name, realX_spec+5, realY_spec+(StandardData.fieldSize-17));
+			//HEALTH
+			Funktions.drawHealthbar(g, realX_spec+GameData.healthBar_abstandX, realY_spec+GameData.healthBar_abstandY, StandardData.fieldSize-GameData.healthBar_abstandX*2, GameData.healthBar_height, maxHealth, totalHealth);
+			//COLOR
+			g.setColor(SpectateHandler.getColorByPlayerID(this.playerID));
+			g.drawRoundRect(realX_spec+2, realY_spec+2, StandardData.fieldSize-4, StandardData.fieldSize-4, 6, 6);
 			
 			
-		}else {
-			//CREATE MAP MODUS
-			int realX = (this.connectedField.X * StandardData.fieldSize)+CreateMapData.scroll_CM_LR_count;
-			int realY = (this.connectedField.Y * StandardData.fieldSize)+CreateMapData.scroll_CM_UD_count;
-			
-			g.drawImage(img, realX+Images.buildingFactor, realY+Images.buildingFactor, null);
+			break;
+		default:
+			break;
 		}
 		
 	}
@@ -462,10 +491,6 @@ public class Troup {
 	 * @param Y - int - The Y-Coordinate of the ActionBarPart
 	 */
 	public void draw_ActionBar(Graphics g, int X, int Y) {
-		
-		if(hide == true) {
-			return;
-		}
 		
 		int currentDrawNumber = 0;
 		for(Task_Troup task : actionTasks) {

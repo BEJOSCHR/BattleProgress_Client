@@ -88,13 +88,14 @@ public class Field {
 		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
 			
 			int realX = SpectateHandler.getPixlesByCoordinateX(this.X);
-			int realY = SpectateHandler.getPixlesByCoordinateX(this.Y);
+			int realY = SpectateHandler.getPixlesByCoordinateY(this.Y);
 			
 			g.drawImage(img, realX, realY, null);
 			
-			//Always visible (TODO add change of visibility)
-			g.setColor(new Color(100, 100, 100, 165));
-			g.fillRect(realX, realY, StandardData.fieldSize+1, StandardData.fieldSize+1);
+			if(visible == false) {
+				g.setColor(new Color(100, 100, 100, 165));
+				g.fillRect(realX, realY, StandardData.fieldSize+1, StandardData.fieldSize+1);
+			}
 			
 			if(StandardData.showGrid == true) {
 				g.setColor(Color.WHITE);
@@ -141,7 +142,7 @@ public class Field {
 		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
 			
 			int realX = SpectateHandler.getPixlesByCoordinateX(this.X);
-			int realY = SpectateHandler.getPixlesByCoordinateX(this.Y);
+			int realY = SpectateHandler.getPixlesByCoordinateY(this.Y);
 			
 			g.drawImage(img, realX, realY, null);
 			

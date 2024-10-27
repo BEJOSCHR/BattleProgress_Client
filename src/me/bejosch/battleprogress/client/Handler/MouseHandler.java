@@ -150,7 +150,11 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 				}
 			}
 			
-			SpectateData.clickedField = SpectateHandler.getFieldByScreenCoordinates(mX, mY);
+			if(clickType == MouseEvent.BUTTON1) {
+				SpectateData.clickedField = SpectateHandler.getFieldByScreenCoordinates(mX, mY);
+			}else {
+				SpectateData.clickedField = null;
+			}
 			
 		}else if(StandardData.spielStatus == SpielStatus.Replay) {
 			
@@ -218,6 +222,14 @@ public class MouseHandler implements MouseListener, MouseMotionListener, MouseWh
 		}else if(StandardData.spielStatus == SpielStatus.Game) {
 			
 			GameHandler.mousePressedEvent(mX, mY, clickType);
+			
+		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+			
+			
+			
+		}else if(StandardData.spielStatus == SpielStatus.Replay) {
+			
+			
 			
 		}
 		

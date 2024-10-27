@@ -3,7 +3,6 @@ package me.bejosch.battleprogress.client.Objects.Field;
 import me.bejosch.battleprogress.client.Data.SpectateData;
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
-import me.bejosch.battleprogress.client.Enum.SpielStatus;
 
 public class FieldCoordinates {
 
@@ -103,26 +102,28 @@ public class FieldCoordinates {
 	 */
 	public Field getConnectedField() {
 		
-		if(StandardData.spielStatus == SpielStatus.Game) {
+		switch(StandardData.spielStatus) {
+		case Game:
 			try{
 				return GameData.gameMap_FieldList[X][Y];
 			}catch(NullPointerException | IndexOutOfBoundsException error) {
 				error.printStackTrace();
 				return null;
 			}
-		}else if(StandardData.spielStatus == SpielStatus.CreateMap) {
-			//TODO
-			return null;
-		}else if(StandardData.spielStatus == SpielStatus.Spectate) {
+		case CreateMap:
+			return null; //TODO
+		case Replay:
+			return null; //TODO
+		case Spectate:
 			try{
 				return SpectateData.gameMap_FieldList[X][Y];
 			}catch(NullPointerException | IndexOutOfBoundsException error) {
 				error.printStackTrace();
 				return null;
 			}
+		default:
+			return null;
 		}
-		
-		return null;
 		
 	}
 	

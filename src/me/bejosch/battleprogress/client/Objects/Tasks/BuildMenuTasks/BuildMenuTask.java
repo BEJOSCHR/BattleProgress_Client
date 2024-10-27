@@ -85,8 +85,10 @@ public class BuildMenuTask {
 			}
 		}else {
 			//WIRD NICHT MEHR BEWEGT
-			Funktions.drawBorderAroundFields(g, this.targetCoordinate.getConnectedField(), Color.WHITE, 8, 2);
-			Funktions.drawLineBetweenFields(g, this.executeCoordinate.getConnectedField(), this.targetCoordinate.getConnectedField(), Color.CYAN);
+			if(this.targetCoordinate != null) { //Can rarely happen when during drag and drop the round end hit
+				Funktions.drawBorderAroundFields(g, this.targetCoordinate.getConnectedField(), Color.WHITE, 8, 2);
+				Funktions.drawLineBetweenFields(g, this.executeCoordinate.getConnectedField(), this.targetCoordinate.getConnectedField(), Color.CYAN);
+			}
 		}
 		
 	}
