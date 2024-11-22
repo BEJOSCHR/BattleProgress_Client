@@ -71,6 +71,9 @@ public class SpectateHandler {
 	
 	public static void stopSpectate() {
 		
+		//Inform server
+				MinaClient.sendData(753, SpectateData.gameID+"");
+		
 		//Reset spectate data
 		SpectateData.lastExecuteIndex = 0;
 		SpectateData.actions.clear();
@@ -95,9 +98,6 @@ public class SpectateHandler {
 			SpectateData.roundTimer = null;
 			SpectateData.roundTime = 0;
 		}
-		
-		//Inform server
-		MinaClient.sendData(753, SpectateData.gameID+"");
 		
 		MovementHandler.stopMovementTimer();
 		
@@ -285,6 +285,13 @@ public class SpectateHandler {
 	}
 	
 	public static void simulateAction(GameAction action) {
+		
+		if(action.round > SpectateData.round && action.type != GameActionType.ROUND_END) {
+			//Dont sim actions which are in the future of the current round, except round change obviously
+			//This can happen on join during round change of the game on server side, then actions are send
+			//which are synced in a later step again and only this later step is the correct moment to sync them
+			return;
+		}
 		
 		switch(action.type) {
 		
