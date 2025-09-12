@@ -59,7 +59,10 @@ public class MouseActionArea_Menu_GamePickButtons extends MouseActionArea {
 		case 0: return " Normal - 2v2";
 		case 1: return " Normal - 1v1";
 		case 2: return " Ranked - 1v1";
-		case 3: return "Custom Game";
+		case 3: 
+			this.standardColor = Color.DARK_GRAY; //TODO REMOVE WHEN USAGE IS IMPLEMENTED
+			  return "        WIP  ";
+			//return "Custom Game";
 		}
 		return "";
 	}
@@ -108,16 +111,17 @@ public class MouseActionArea_Menu_GamePickButtons extends MouseActionArea {
 			g.setColor(Color.DARK_GRAY.brighter());
 			g.fillRect(xTL, yTL, xBR-xTL, yBR-yTL);
 			
-			g.setColor(Color.WHITE);
+			String name = getNameByPos(position);
+			g.setColor(this.standardColor);
 			g.setFont(new Font("Arial", Font.BOLD, 20));
-			g.drawString(getNameByPos(position), this.xTL+12, this.yTL+(this.yBR-this.yTL)/2+8);
+			g.drawString(name, this.xTL+12, this.yTL+(this.yBR-this.yTL)/2+8);
 			
 			if( (this.position == 1 || this.position == 2) && ProfilData.otherGroupClient != null ) {
 				//1v1 - QUEUES WITH A 2 MAN GROUP
 				this.standardColor = Color.LIGHT_GRAY;
-				g.setColor(standardColor);
-				g.drawLine(xTL, yTL, xBR, yBR);
-				g.drawLine(xTL, yBR, xBR, yTL);
+				//g.setColor(standardColor);
+				//g.drawLine(xTL, yTL, xBR, yBR);
+				//g.drawLine(xTL, yBR, xBR, yTL);
 				String[] hoverText_ = {"You can't join this queue with 2 players in the group!"};
 				this.hoverText = hoverText_;
 			}else {

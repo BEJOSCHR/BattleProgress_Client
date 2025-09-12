@@ -72,7 +72,9 @@ public class MouseActionArea_Menu_BottomButton extends MouseActionArea {
 			//RIGHT
 			switch(this.pos) {
 			case 0:
-				return "  Profile";
+				this.standardColor = Color.DARK_GRAY; //TODO REMOVE WHEN USAGE IS IMPLEMENTED
+				  return "    WIP  ";
+				//return "  Profile";
 			case 1:
 				return " Discord ";
 			}
@@ -154,9 +156,10 @@ public class MouseActionArea_Menu_BottomButton extends MouseActionArea {
 			g.setColor(Color.DARK_GRAY.brighter());
 			g.fillRect(xTL, yTL, xBR-xTL, yBR-yTL);
 			
+			String name = getNameByPosAndSide(pos, left);
 			g.setColor(this.standardColor);
 			g.setFont(new Font("Arial", Font.BOLD, 20));
-			g.drawString(getNameByPosAndSide(pos, left), this.xTL+15, this.yTL+(this.yBR-this.yTL)/2+8);
+			g.drawString(name, this.xTL+15, this.yTL+(this.yBR-this.yTL)/2+8);
 		}
 		
 		super.draw(g);
