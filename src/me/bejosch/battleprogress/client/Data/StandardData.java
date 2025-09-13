@@ -54,7 +54,17 @@ public class StandardData {
 	
 	
 	
-	//TODO DOWN BELOW KEEP HIDDEN!!! 
+	//TODO DOWN BELOW KEEP HIDDEN (DISCORD_API_KEY)!!! 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

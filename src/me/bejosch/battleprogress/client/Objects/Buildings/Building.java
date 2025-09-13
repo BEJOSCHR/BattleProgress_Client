@@ -597,9 +597,17 @@ public class Building {
 		
 		totalHealth -= damageCount;
 		
-		if(totalHealth <= 0) {
+		if(!shouldBeDestroyedAtRoundEnd && totalHealth <= 0) {
 			totalHealth = 0;
 			shouldBeDestroyedAtRoundEnd = true;
+			
+			//ProgressPointAdd
+			if(this.name.equalsIgnoreCase("Headquarter")) {
+				GameHandler.addProgressPoints(GameData.progressPoints_kill_hq, this.playerID, new FieldCoordinates(this.connectedField));
+			}else {
+				GameHandler.addProgressPoints(GameData.progressPoints_kill_building, this.playerID, new FieldCoordinates(this.connectedField));
+			}
+			
 		}
 		
 	}

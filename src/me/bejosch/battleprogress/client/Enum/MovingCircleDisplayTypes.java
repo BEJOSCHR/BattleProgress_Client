@@ -12,6 +12,8 @@ public enum MovingCircleDisplayTypes {
 	
 	Energy,
 	Material,
-	Research;
+	Research,
+	
+	ProgressPoints;
 	
 }

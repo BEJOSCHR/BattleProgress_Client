@@ -59,6 +59,8 @@ public class Game_DrawOverlay {
 		}catch(NullPointerException error) {} //NULLPOINTER HAPPENS AT THE START BECAUSE DRAW COME BEFOR GAME INITIALISE
 		//Headline Info
 		draw_HeadlineInfo(g);
+		//ProgressPointDisplay
+		draw_ProgressPointDisplay(g);
 		//Round change Info
 		draw_RoundChangeInfo(g);
 		//Notifications
@@ -193,9 +195,37 @@ public class Game_DrawOverlay {
 		
 	}
 	
+	//TODO NOTIFICATIONS
+	
 //==========================================================================================================
 	/**
-	 * Draws the info in the top Headline
+	 * Draws the ProgressPoint Display in the top right
+	 */
+	public static void draw_ProgressPointDisplay(Graphics g) {
+		
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(GameData.progressPoints_x, GameData.progressPoints_y, GameData.progressPoints_width, GameData.progressPoints_height);
+		g.setColor(GameData.progressPoints_color);
+		g.drawRect(GameData.progressPoints_x, GameData.progressPoints_y, GameData.progressPoints_width, GameData.progressPoints_height);
+		
+		g.setFont(new Font("Arial", Font.BOLD, 18));
+		int target = (SpielModus.isGameModus1v1() ? GameData.progressPoints_target_1v1 : GameData.progressPoints_target_2v2);
+		String progressPointDisplay = GameData.progressPoints+"/"+target;
+		int progressPointDisplayWidth = g.getFontMetrics().stringWidth(progressPointDisplay);
+		g.drawString(progressPointDisplay, GameData.progressPoints_x+(GameData.progressPoints_width/2)-(progressPointDisplayWidth/2), GameData.progressPoints_y+GameData.progressPoints_height-30);
+		
+		int border_lr = 5, width = GameData.progressPoints_width-2*border_lr, x = GameData.progressPoints_x+border_lr;
+		int border_d = 10, height = 10, y = GameData.progressPoints_y+GameData.progressPoints_height-height-border_d;
+		//Inverse count (from 100 down to 0) with inverted colors so we increase from left to right instead of right to left as in the red color of normal healthbars
+		Funktions.drawHealthbar(g, x, y, width, height, target, Math.min(target, GameData.progressPoints), GameData.progressPoints_color, Color.WHITE);
+		
+	}
+	
+	//TODO ROUND CHANGE INFO
+	
+//==========================================================================================================
+	/**
+	 * Draws the info in the top middle if round is changing
 	 */
 	public static void draw_RoundChangeInfo(Graphics g) {
 		
@@ -320,7 +350,7 @@ public class Game_DrawOverlay {
 	
 //==========================================================================================================
 	/**
-	 * Draws the Notifivations of the Game at the TopRight corner
+	 * Draws the Notifications of the Game at the TopRight corner
 	 */
 	public static void draw_Notifications(Graphics g) {
 		

@@ -19,7 +19,10 @@ import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Enum.GameFinishCause;
 import me.bejosch.battleprogress.client.Enum.GenerelIconType;
 import me.bejosch.battleprogress.client.Enum.ImportanceType;
+import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
+import me.bejosch.battleprogress.client.Enum.ShowBorderType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
+import me.bejosch.battleprogress.client.Enum.SpielStatus;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.TimeManager;
 import me.bejosch.battleprogress.client.Handler.ClientPlayerHandler;
@@ -27,8 +30,10 @@ import me.bejosch.battleprogress.client.Handler.MovementHandler;
 import me.bejosch.battleprogress.client.Handler.OnTopWindowHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.ClientPlayer;
+import me.bejosch.battleprogress.client.Objects.DictonaryInfoDescription;
 import me.bejosch.battleprogress.client.Objects.RoundStatsContainer;
 import me.bejosch.battleprogress.client.Objects.Animations.Animation_GameStartDisplay;
+import me.bejosch.battleprogress.client.Objects.Animations.Animation_MovingCircleDisplay;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -48,6 +53,7 @@ import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea_
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea_generalIconButtons;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseActionArea_Checkbox;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.Checkbox.MouseActionArea_Checkbox_SkipAllTaskDisplays;
+import me.bejosch.battleprogress.client.Objects.OnTopWindow.UnitDetailInfo.OnTopWindow_UnitDetailInfo;
 import me.bejosch.battleprogress.client.Objects.Tasks.BuildMenuTasks.BuildMenuTask;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
@@ -241,6 +247,23 @@ public class GameHandler {
 		for(int i = 0 ; i < GameData.maxDisplayedInfoMessages ; i++) {
 			new MouseActionArea_InfoMessages(i);
 		}
+		//	ProgressPointsDisplay
+		String[] hoverMessage_8 = {"ProgressPoints"};
+		new MouseActionArea(GameData.progressPoints_x, GameData.progressPoints_y, GameData.progressPoints_x+GameData.progressPoints_width, GameData.progressPoints_y+GameData.progressPoints_height, "ProgressPointsDisplay", hoverMessage_8, ShowBorderType.ShowAlways, GameData.progressPoints_color, Color.WHITE) {
+			@Override
+			public boolean isActiv() {
+				if(StandardData.spielStatus == SpielStatus.Game) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+			@Override
+			public void performAction_LEFT_RELEASE() {
+				DictonaryInfoDescription did = Game_DictionaryHandler.getDictionaryInfoDescription("ProgressPoints");
+				OnTopWindowHandler.openOTW(new OnTopWindow_UnitDetailInfo(did, false));
+			}
+		};
 		//	MiniMap Settings
 		int borderDistance_Left = 26, borderDistance_Down = 50, size = 16, space = size+5, startX = WindowData.FrameWidth-borderDistance_Left, startY = WindowData.FrameHeight-borderDistance_Down-(space*5);
 		String[] hoverMessage_20 = {"Show/Hide all"};
@@ -312,6 +335,22 @@ public class GameHandler {
 		}
 		
 		return null;
+		
+	}
+	
+//==========================================================================================================
+	
+	public static void addProgressPoints(int amount, int destroyed_owner_id, FieldCoordinates destroyed_field) {
+		
+		
+		if(!checkPlayerIDForAllied(destroyed_owner_id, ProfilData.thisClient.getID())) {
+			//If the destroyed building/troup wasnt from this client or his ally, increase progressPoints (only visual, real win check is on server side of course)
+			
+			//Dont add amount here, the animation is adding it
+			FieldCoordinates to_field = new FieldCoordinates(Funktions.getCoordinateByPixles(GameData.progressPoints_x+20, true, false), Funktions.getCoordinateByPixles(GameData.progressPoints_y+GameData.progressPoints_height-20, false, false));
+			new Animation_MovingCircleDisplay(MovingCircleDisplayTypes.ProgressPoints, amount, destroyed_field, to_field, false);
+			
+		}
 		
 	}
 	

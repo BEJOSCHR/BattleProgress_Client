@@ -95,18 +95,33 @@ public class Funktions {
 	 * @param totalHealth - int - The total health value of the referenced object
 	 */
 	public static void drawHealthbar(Graphics g, int X, int Y, int width, int height, int maxHealth, int totalHealth) {
-		
 		Color green = new Color(50, 205, 50, 255), red = new Color(238, 0, 0, 255);
+		drawHealthbar(g, X, Y, width, height, maxHealth, totalHealth, green, red);
+	}
+	/**
+	 * Draws a healthbar with the given values
+	 * @param g - {@link Graphics} - The graphic where everything should be drawn on
+	 * @param X - int x-coordinate of the top-left-corner in pixels on the screen
+	 * @param Y - int y-coordinate of the top-left-corner in pixels on the screen
+	 * @param width - int - The width of the healthbar
+	 * @param height - int - The height of the healthbar
+	 * @param maxHealth - int - The max health value of the referenced object
+	 * @param totalHealth - int - The total health value of the referenced object
+	 * @param blank - {@link Color} - The color when the bar is not filled
+	 * @param filled - {@link Color} - The color when the bar is filled
+	 */
+	public static void drawHealthbar(Graphics g, int X, int Y, int width, int height, int maxHealth, int totalHealth, Color blank, Color filled) {
+		
 		float greenAnteil = (float)((double)totalHealth/(double)maxHealth);
 		int greenWidth = Math.round((float)(width*greenAnteil));
 		int redWidth = width-greenWidth;
 		
 		//BALKEN + MITTEL STRICH
-		g.setColor(green);
+		g.setColor(blank);
 		g.fillRect(X+1, Y+1, greenWidth-1, height-1);
 		g.setColor(Color.DARK_GRAY);
 		g.drawLine(X+greenWidth, Y, X+greenWidth, Y+height);
-		g.setColor(red);
+		g.setColor(filled);
 		g.fillRect(X+1+greenWidth, Y+1, redWidth-1, height-1);
 		
 		//RAHMEN
@@ -265,6 +280,41 @@ public class Funktions {
 			}else {
 				//Y
 				return (fieldCoordinate * StandardData.fieldSize)+GameData.scroll_UD_count;
+			}
+		}
+		
+	}
+	
+	/**
+	 * Inverse to getPixlesByCoordinate() method
+	 * @param pixels, the screen pixel coordinate
+	 * @param isItX, x or y axis
+	 * @param isItCreateMap, create map or real game
+	 * @return the field that is currently on that screenPixelCoordinate
+	 */
+	public static int getCoordinateByPixles(int pixels, boolean isItX, boolean isItCreateMap) {
+		
+		if(StandardData.fieldSize == 0) {
+			return 0; //Should never happen, since fieldSize is needed to let the game function at all
+		}
+		
+		if(isItCreateMap == true) {
+			//CREATE MAP
+			if(isItX == true) {
+				//X
+				return (pixels-CreateMapData.scroll_CM_LR_count)/StandardData.fieldSize;
+			}else {
+				//Y
+				return (pixels-CreateMapData.scroll_CM_UD_count)/StandardData.fieldSize;
+			}
+		}else {
+			//NORMAL GAME
+			if(isItX == true) {
+				//X
+				return (pixels-GameData.scroll_LR_count)/StandardData.fieldSize;
+			}else {
+				//Y
+				return (pixels-GameData.scroll_UD_count)/StandardData.fieldSize;
 			}
 		}
 		

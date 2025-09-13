@@ -648,9 +648,13 @@ public class Troup {
 		
 		totalHealth -= damageCount;
 		
-		if(totalHealth <= 0) {
+		if(!shouldBeDeletedAtRoundEnd && totalHealth <= 0) {
 			totalHealth = 0;
 			shouldBeDeletedAtRoundEnd = true;
+			
+			//ProgressPointAdd
+			GameHandler.addProgressPoints(GameData.progressPoints_kill_troup, this.playerID, new FieldCoordinates(this.connectedField));
+			
 		}
 		
 	}

@@ -11,6 +11,7 @@ import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.AnimationType;
 import me.bejosch.battleprogress.client.Enum.MovingCircleDisplayTypes;
+import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
 import me.bejosch.battleprogress.client.Game.Handler.Game_RoundHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
@@ -82,7 +83,6 @@ public class Animation_MovingCircleDisplay extends Animation {
 //				displayColor = new Color(160, 032, 240); //DARK PURPLE
 				value = -1; //NO VALUE
 				break;
-				
 			case Energy:
 				calledName = "Energy";
 				displayColor = new Color(102, 204, 255); //BLUE
@@ -94,6 +94,10 @@ public class Animation_MovingCircleDisplay extends Animation {
 			case Research:
 				calledName = "Research";
 				displayColor = new Color(255, 0, 255); //PURPLE
+				break;
+			case ProgressPoints:
+				calledName = "ProgressPoints";
+				displayColor = GameData.progressPoints_color;
 				break;
 			default:
 				ConsoleOutput.printMessageInConsole("A movingCircleAnmiation has been created without a startTypeAction for this type [Type: "+displayType+"]", true);
@@ -241,8 +245,11 @@ public class Animation_MovingCircleDisplay extends Animation {
 			pixleY = goPixleY+getYValueByFunktion(distanceTravledOnX)-((int)(yOffSet*yOffSetFactor));
 		}
 		
-		GameData.gameMap_FieldList[goField.X][goField.Y].drawHighlight(g, Color.YELLOW);
-		GameData.gameMap_FieldList[toField.X][toField.Y].drawHighlight(g, Color.YELLOW);
+		if(this.displayType != MovingCircleDisplayTypes.Material && this.displayType != MovingCircleDisplayTypes.Energy && this.displayType != MovingCircleDisplayTypes.Research && this.displayType != MovingCircleDisplayTypes.ProgressPoints) {
+			//Dont highlight fields on ressource/progress animations (only troup/building related stuff)
+			GameData.gameMap_FieldList[goField.X][goField.Y].drawHighlight(g, Color.YELLOW);
+			GameData.gameMap_FieldList[toField.X][toField.Y].drawHighlight(g, Color.YELLOW);
+		}
 		g.setColor(Color.ORANGE);
 		g.drawLine(goPixleX, goPixleY, toPixleX, toPixleY);
 		
@@ -267,9 +274,9 @@ public class Animation_MovingCircleDisplay extends Animation {
 				g.drawString(""+value, pixleX-4, pixleY+6);
 			}
 		}
-		g.setColor(Color.WHITE);
+		/*g.setColor(Color.WHITE); //Player should be clever enough to understand the action without a name
 		g.setFont(new Font("Arial", Font.BOLD, 12));
-		g.drawString(""+calledName, pixleX-19, pixleY+28);
+		g.drawString(""+calledName, pixleX-19, pixleY+28);*/
 		
 		super.drawPart(g);
 	}
@@ -284,6 +291,10 @@ public class Animation_MovingCircleDisplay extends Animation {
 			//FINISH EXECUTE TASK
 			if(this.displayType == MovingCircleDisplayTypes.Energy || this.displayType == MovingCircleDisplayTypes.Material || this.displayType == MovingCircleDisplayTypes.Research) {
 				Game_RoundHandler.endRoundEconomicsUpdate();
+			}else if(this.displayType == MovingCircleDisplayTypes.ProgressPoints) {
+				//Increase ProgressPointsDisplay
+				int maxAmount = (SpielModus.isGameModus1v1() ? GameData.progressPoints_target_1v1 : GameData.progressPoints_target_2v2);
+				GameData.progressPoints = Math.min(maxAmount, GameData.progressPoints+this.value); //Cap to maxAmount
 			}else if(RoundData.currentExecuteTask != null) {
 				RoundData.currentExecuteTask.performAction(); //PERFORM TASK
 			}else {

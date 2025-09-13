@@ -70,7 +70,6 @@ public class GameData {
 	//BuildMenu - Changing Data
 	public static boolean dragAndDropInputActive_BuildingMenu = false;
 	public static MouseActionArea_BuildMenu_BuildingField currentActive_MAA_BuildingTask = null;
-	
 	public static List<BuildMenuType> buildMenu_possibleCategory = new ArrayList<BuildMenuType>();
 	public static List<BuildMenuTask> buildMenu_displayedBuildings = new ArrayList<BuildMenuTask>();
 	public static BuildMenuType buildMenu_displayedType = null;
@@ -96,7 +95,7 @@ public class GameData {
 	//MouseActionAreas
 	public static CopyOnWriteArrayList<MouseActionArea> mouseActionAreas = new CopyOnWriteArrayList<MouseActionArea>();
 	//DisplayMessages
-	public static int startX = WindowData.FrameWidth-20, startY = 40, space_MAArea = 7, maxDisplayedInfoMessages = 10;
+	public static int startX = WindowData.FrameWidth-20, startY = StandardData.gIcon_y+StandardData.gIcon_maße+StandardData.gIcon_y, space_MAArea = 7, maxDisplayedInfoMessages = 10;
 	public static boolean coordsUpdatedNeeded = true;
 	
 	//InfoMessages
@@ -131,8 +130,22 @@ public class GameData {
 	public static List<Troup> player4_troups = new ArrayList<>();
 	
 	//INGAME VALUES:
-	public static int roundDuration = 5*60; //IN SEC
-	public static int ressourceFieldProducingRoundNumber = 30; //How many round a ressourceField should be producing after a mine was build on it (stops if the mine gets destroyed, but don't reset)
+	public static int roundDuration = 3*60; //IN SEC
+	public static int ressourceFieldProducingRoundNumber = 20; //How many round a ressourceField should be producing after a mine was build on it (stops if the mine gets destroyed, but don't reset)
+	
+	//PROGRESS POINTS
+	//	Keep synced with server side! on the target and kill amounts, otherwise the client display will be not the same as server is counting
+	public static int progressPoints = 0;
+	public static final int progressPoints_target_1v1 = 100;
+	public static final int progressPoints_target_2v2 = 200;
+	public static final int progressPoints_kill_building = 10;
+	public static final int progressPoints_kill_troup = 5;
+	public static final int progressPoints_kill_hq = 100;
+	//	Client side only
+	public static final int progressPoints_borderRight = 20/*StandardData.gIcon_x*/, progressPoints_borderTop = StandardData.gIcon_y;
+	public static final int progressPoints_width = 135-progressPoints_borderRight, progressPoints_height = StandardData.gIcon_maße;
+	public static final int progressPoints_x = WindowData.FrameWidth-progressPoints_width-progressPoints_borderRight, progressPoints_y = 0+progressPoints_borderTop;
+	public static final Color progressPoints_color = new Color(28, 189, 47); //new Color(23, 255, 50); //Green
 	
 	//DICTIONARY
 	public static List<DictonaryInfoDescription> dictonaryInfoDescriptions = new ArrayList<DictonaryInfoDescription>();
