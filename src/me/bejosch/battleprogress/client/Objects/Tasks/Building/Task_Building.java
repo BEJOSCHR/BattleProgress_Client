@@ -70,6 +70,10 @@ public class Task_Building implements Task {
 	public void action_Left_Release() {
 		
 	}
+	@Override
+	public void action_Left_Release(Field customTargetField) {
+		
+	}
 
 
 

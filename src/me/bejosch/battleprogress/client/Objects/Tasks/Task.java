@@ -25,6 +25,10 @@ public interface Task {
 	 */
 	public void action_Left_Release();
 	/**
+	 * Called by the task if the LEFT mouse key is released (With custom targetfield)
+	 */
+	public void action_Left_Release(Field customTargetField);
+	/**
 	 * Called by the task if the RIGHT mouse key is pressed
 	 */
 	public void action_Right_Press();

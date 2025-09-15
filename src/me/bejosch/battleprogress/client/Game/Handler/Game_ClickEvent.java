@@ -5,8 +5,10 @@ import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.ProfilData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
+import me.bejosch.battleprogress.client.Enum.FieldType;
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
+import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
 import me.bejosch.battleprogress.client.Objects.MouseActionArea.MouseActionArea;
 import me.bejosch.battleprogress.client.Objects.Tasks.Building.Task_Building;
 import me.bejosch.battleprogress.client.Objects.Tasks.Building.Task_Building_Attack;
@@ -17,6 +19,7 @@ import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Attack;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Heal;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Move;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Repair;
+import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Upgrade;
 import me.bejosch.battleprogress.client.Objects.Troups.Troup;
 import me.bejosch.battleprogress.client.ServerConnection.MinaClient;
 
@@ -84,6 +87,11 @@ public class Game_ClickEvent {
 				if(GameData.clickedField == null) {
 					GameData.clickedField = choosenField;
 				}else {
+					if(choosenField.type == FieldType.Mountain) {
+						//Unreachable anyway
+						new FieldMessage("Unreachable", choosenField.X, choosenField.Y, 3);
+						return;
+					}
 					Building building = GameHandler.getBuildingByCoordinates(GameData.clickedField.X, GameData.clickedField.Y);
 					Building targetBuilding = choosenField.building;
 					Troup troup = GameHandler.getTroupByCoordinates(GameData.clickedField.X, GameData.clickedField.Y);
@@ -91,7 +99,7 @@ public class Game_ClickEvent {
 					if(building != null && building.playerID == ProfilData.thisClient.getID()) {
 						boolean hit = false;
 						for(Task_Building bTask : building.actionTasks) {
-							if(bTask instanceof Task_Building_Attack) {
+							if(bTask instanceof Task_Building_Attack && choosenField.visible) {
 								//ATTACK - ON ENEMY BUILDING OR TROUP?
 								if(targetBuilding != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetBuilding.playerID) == false) {
 									bTask.action_Left_Press();
@@ -103,7 +111,7 @@ public class Game_ClickEvent {
 									hit = true; break;
 								}
 							}
-							if(bTask instanceof Task_Building_Heal) {
+							if(bTask instanceof Task_Building_Heal && choosenField.visible) {
 								//HEAL - ON ALLY TROUP?
 								if(targetTroup != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetTroup.playerID) == true) {
 									bTask.action_Left_Press();
@@ -111,7 +119,7 @@ public class Game_ClickEvent {
 									hit = true; break;
 								}
 							}
-							if(bTask instanceof Task_Building_Repair) {
+							if(bTask instanceof Task_Building_Repair && choosenField.visible) {
 								//REPAIR - ON ALLY BUILDING?
 								if(targetBuilding != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetBuilding.playerID) == true) {
 									bTask.action_Left_Press();
@@ -124,9 +132,10 @@ public class Game_ClickEvent {
 					}else if(troup != null && troup.playerID == ProfilData.thisClient.getID()) {
 						boolean hit = false;
 						for(Task_Troup tTask : troup.actionTasks) {
-							if(tTask instanceof Task_Troup_Attack) {
+							if(tTask instanceof Task_Troup_Attack && choosenField.visible) {
 								//ATTACK - ON ENEMY BUILDING OR TROUP?
 								if(targetBuilding != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetBuilding.playerID) == false) {
+									troup.updateMultiMoveTask(null);
 									tTask.action_Left_Press();
 									tTask.action_Left_Release();
 									hit = true; break;
@@ -136,25 +145,49 @@ public class Game_ClickEvent {
 									hit = true; break;
 								}
 							}
-							if(tTask instanceof Task_Troup_Move) {
+							if(tTask instanceof Task_Troup_Move) { //Can be invisible!
 								//MOVE - TARGET FIELD EMPTY
-								if(targetBuilding == null && targetTroup == null) {
-									tTask.action_Left_Press();
-									tTask.action_Left_Release();
-									hit = true; break;
+								if(choosenField != null && troup.fieldIsIn_MOVE_Range(choosenField)) { //Special (multi) move task handling
+									//Is visible, so normal move task
+									if(targetBuilding == null && targetTroup == null) {
+										troup.updateMultiMoveTask(null);
+										tTask.action_Left_Press();
+										tTask.action_Left_Release();
+										hit = true; break;
+									}
+								}else {
+									//Destination out of range, so multi move task init
+									if(!choosenField.visible || (targetBuilding == null && targetTroup == null) ) {
+										//Is invisible anyway or has no building or troup
+										troup.updateMultiMoveTask(choosenField);
+										troup.applyMultiMoveTask(tTask);
+										hit = true; break;
+									}
 								}
 							}
-							if(tTask instanceof Task_Troup_Heal) {
-								//HEAL - ON ALLY TROUP?
-								if(targetTroup != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetTroup.playerID) == true) {
-									tTask.action_Left_Press();
-									tTask.action_Left_Release();
-									hit = true; break;
-								}
-							}
-							if(tTask instanceof Task_Troup_Repair) {
+							if(tTask instanceof Task_Troup_Repair && choosenField.visible) {
 								//REPAIR - ON ALLY BUILDING?
 								if(targetBuilding != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetBuilding.playerID) == true) {
+									troup.updateMultiMoveTask(null);
+									tTask.action_Left_Press();
+									tTask.action_Left_Release();
+									hit = true; break;
+								}
+							}
+							//Heal and Upgrade have the same target checks, so need to differentiate
+							if(tTask instanceof Task_Troup_Upgrade && choosenField.visible) {
+								//HEAL - ON ALLY TROUP AND UPGRADEABLE?
+								if(targetTroup != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetTroup.playerID) == true && troup.fieldIsIn_UPGRADE_Range(targetTroup.connectedField)) {
+									troup.updateMultiMoveTask(null);
+									tTask.action_Left_Press();
+									tTask.action_Left_Release();
+									hit = true; break;
+								}
+							}
+							if(tTask instanceof Task_Troup_Heal && choosenField.visible) {
+								//HEAL - ON ALLY TROUP AND NOT UPGRADEABLE?
+								if(targetTroup != null && GameHandler.checkPlayerIDForAllied(ProfilData.thisClient.getID(), targetTroup.playerID) == true && !troup.fieldIsIn_UPGRADE_Range(targetTroup.connectedField)) {
+									troup.updateMultiMoveTask(null);
 									tTask.action_Left_Press();
 									tTask.action_Left_Release();
 									hit = true; break;
@@ -164,7 +197,7 @@ public class Game_ClickEvent {
 						if(!hit) { 
 							GameData.clickedField = choosenField; 
 						}else { 
-							GameData.clickedField = null; 
+							GameData.clickedField = null;
 						}
 					}else {
 						GameData.clickedField = choosenField;

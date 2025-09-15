@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.CreateMapData;
@@ -14,6 +15,7 @@ import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Data.Game.GameData;
 import me.bejosch.battleprogress.client.Data.Game.RoundData;
 import me.bejosch.battleprogress.client.Enum.FieldType;
+import me.bejosch.battleprogress.client.Enum.ImportanceType;
 import me.bejosch.battleprogress.client.Enum.SpielModus;
 import me.bejosch.battleprogress.client.Enum.TroupType;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
@@ -22,6 +24,8 @@ import me.bejosch.battleprogress.client.Handler.SpectateHandler;
 import me.bejosch.battleprogress.client.Main.ConsoleOutput;
 import me.bejosch.battleprogress.client.Objects.Field.Field;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
+import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
+import me.bejosch.battleprogress.client.Objects.InfoMessage.InfoMessage_Located;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Attack;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Heal;
@@ -30,6 +34,7 @@ import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Repair;
 import me.bejosch.battleprogress.client.Objects.Tasks.Troup.Task_Troup_Upgrade;
 import me.bejosch.battleprogress.client.PathFinding.Path;
 import me.bejosch.battleprogress.client.PathFinding.PathFinding_Algorithmus;
+import me.bejosch.battleprogress.client.PathFinding.PathFinding_FieldObject;
 import me.bejosch.battleprogress.client.Window.Images.Images;
 
 public class Troup {
@@ -66,6 +71,8 @@ public class Troup {
 	
 	public boolean shouldBeDeletedAtRoundEnd = false; //If true this troup will be deleted at the next round end (by damage taken or delete dask)
 	public FieldCoordinates targetUpgradePosition = null; //If not null an other troup at this cords has this troup as an upgrade target so this troup should not be allowed to do anything
+	
+	public Field multiMoveDestination = null;
 	
 	public boolean canFly = false;
 	
@@ -147,6 +154,65 @@ public class Troup {
 //		calculate_ViewRange();
 //		calculate_MoveRange();
 //		calculate_ShotRange();
+		
+	}
+	
+	public void updateMultiMoveTask(Field destinationField) {
+		
+		this.multiMoveDestination = destinationField;
+		
+	}
+	public void applyMultiMoveTask(Task_Troup tTask) {
+		
+		if(this.multiMoveDestination != null) {
+			
+			Field roundDestinationField = null;
+			Path fullPath = new PathFinding_Algorithmus(this.connectedField, this.multiMoveDestination, false).getPath(999999, true, this.canFly);
+			if(this.multiMoveDestination == this.connectedField) {
+				//UNIT IS ON THE DESTINATION, nothing to do
+				this.updateMultiMoveTask(null);
+				return;
+			}
+			if(fullPath.pathWay.isEmpty() || this.multiMoveDestination != fullPath.pathWay.getFirst().getReferencedFieldCoordinates().getConnectedField()) {
+				//No path or incomplete path found
+				new FieldMessage("Unreachable", this.multiMoveDestination.X, this.multiMoveDestination.Y, 3);
+				this.updateMultiMoveTask(null);
+				return; //Incomplete path 
+			}
+			
+			//Walk the full path back to the first field that is in move range
+			LinkedList<PathFinding_FieldObject> fields = fullPath.pathWay;
+			for(int i = 0 ; i < fields.size() ; i++) {
+				PathFinding_FieldObject pf = fields.get(i);
+				Field f = pf.getReferencedFieldCoordinates().getConnectedField();
+				if(fieldIsIn_MOVE_Range(f)) {
+					roundDestinationField = f; //New target field for this rounds move task
+					break;
+				}
+			}
+			
+			//Simulate clicks to activate the move task
+			Field tmpDest = this.multiMoveDestination;
+			tTask.action_Left_Press(); //This unsets the destination, so tmp save it and reset it afterwards
+			this.updateMultiMoveTask(tmpDest);
+			tTask.action_Left_Release(roundDestinationField);
+			
+			if(tTask.targetCoordinates == null) {
+				//Setup task failed, so inform player that multimove has ended
+				List<String> message = new ArrayList<String>();
+				message.add(this.name+" can't reach his destination!");
+				new InfoMessage_Located(message, ImportanceType.NORMAL, this.multiMoveDestination.X, this.multiMoveDestination.Y, false);
+				//new FieldMessage("Destination blocked", this.multiMoveDestination.X, this.multiMoveDestination.Y, 3);
+				this.updateMultiMoveTask(null);
+			}else if(tTask.targetCoordinates.getConnectedField() == this.multiMoveDestination) {
+				//Destination is the target of current round, so end multiMoveTask
+				List<String> message = new ArrayList<String>();
+				message.add(this.name+" will reach his destination!");
+				new InfoMessage_Located(message, ImportanceType.NORMAL, this.multiMoveDestination.X, this.multiMoveDestination.Y, false);
+				this.updateMultiMoveTask(null);
+			}
+			
+		}
 		
 	}
 	

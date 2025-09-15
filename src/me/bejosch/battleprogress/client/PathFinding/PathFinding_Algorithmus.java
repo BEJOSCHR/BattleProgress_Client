@@ -1,6 +1,7 @@
-package me.bejosch.battleprogress.client.PathFinding;
+ package me.bejosch.battleprogress.client.PathFinding;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.bejosch.battleprogress.client.Data.StandardData;
@@ -13,8 +14,8 @@ public class PathFinding_Algorithmus {
 	public static final int cost_straight = 10, cost_diagonal = 14;
 	
 	public FieldCoordinates start, finish;
-	public List<PathFinding_FieldObject> open = new ArrayList<PathFinding_FieldObject>();
-	public List<PathFinding_FieldObject> close = new ArrayList<PathFinding_FieldObject>();
+	public LinkedList<PathFinding_FieldObject> open = new LinkedList<PathFinding_FieldObject>();
+	public LinkedList<PathFinding_FieldObject> close = new LinkedList<PathFinding_FieldObject>();
 	
 	boolean cancled = false;
 	
@@ -43,7 +44,7 @@ public class PathFinding_Algorithmus {
 	public Path getPath(int maxSichtweite, boolean ignoreOtherBuildingOrTroup, boolean canGoOverWater) {
 		
 		if(cancled == true) {
-			List<PathFinding_FieldObject> pathWay = new ArrayList<>();
+			LinkedList<PathFinding_FieldObject> pathWay = new LinkedList<>();
 			pathWay.add(new PathFinding_FieldObject(this, this.start.X, this.start.Y, 0));
 			return new Path(this.start, this.finish, pathWay);
 		}
@@ -58,7 +59,7 @@ public class PathFinding_Algorithmus {
 			
 			if(current == null) {
 				//INCOMPLETE / NO WAY FOUND
-				List<PathFinding_FieldObject> pathWay2 = new ArrayList<>();
+				LinkedList<PathFinding_FieldObject> pathWay2 = new LinkedList<>();
 				return new Path(this.start, this.finish, pathWay2);
 			}
 			this.open.remove(current);
@@ -95,7 +96,7 @@ public class PathFinding_Algorithmus {
 		}
 		
 		//RECREATE PATH
-		List<PathFinding_FieldObject> pathWay = new ArrayList<>();
+		LinkedList<PathFinding_FieldObject> pathWay = new LinkedList<>();
 		PathFinding_FieldObject lastField = this.close.get(this.close.size()-1);
 		while(true) {
 			//SOLANGE BIS START ERREICHT IST
@@ -103,7 +104,7 @@ public class PathFinding_Algorithmus {
 			lastField = lastField.parent;
 			if(lastField == null) {
 				//INCOMPLETE PATH
-				List<PathFinding_FieldObject> pathWay1 = new ArrayList<>();
+				LinkedList<PathFinding_FieldObject> pathWay1 = new LinkedList<>();
 				pathWay1.add(new PathFinding_FieldObject(this, this.start.X, this.start.Y, 0)); // FILLED FOR SHOWING IT SELF
 				return new Path(this.start, this.finish, pathWay1);
 			}

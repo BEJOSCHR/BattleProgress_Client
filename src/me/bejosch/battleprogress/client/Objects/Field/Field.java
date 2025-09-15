@@ -195,4 +195,10 @@ public class Field {
 		
 	}
 	
+	
+	@Override
+	public String toString() {
+		return this.type+" ("+this.X+":"+this.Y+")";
+	}
+	
 }

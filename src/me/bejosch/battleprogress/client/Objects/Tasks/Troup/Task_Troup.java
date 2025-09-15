@@ -70,7 +70,10 @@ public class Task_Troup implements Task {
 	public void action_Left_Release() {
 		
 	}
-
+	@Override
+	public void action_Left_Release(Field customTargetField) {
+		
+	}
 
 
 	@Override
@@ -85,6 +88,7 @@ public class Task_Troup implements Task {
 		
 		if(this.isActiveTask == true) {
 			this.removeFromActiveTask();
+			this.troup.updateMultiMoveTask(null);
 			GameData.dragAndDropTaskInputActive = false;
 		}
 		

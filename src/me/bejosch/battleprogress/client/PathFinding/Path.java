@@ -2,7 +2,7 @@ package me.bejosch.battleprogress.client.PathFinding;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.List;
+import java.util.LinkedList;
 
 import me.bejosch.battleprogress.client.Data.StandardData;
 import me.bejosch.battleprogress.client.Funktions.Funktions;
@@ -11,9 +11,9 @@ import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 public class Path {
 
 	public FieldCoordinates start, finish;
-	public List<PathFinding_FieldObject> pathWay = null;
+	public LinkedList<PathFinding_FieldObject> pathWay = null;
 	
-	public Path(FieldCoordinates start_, FieldCoordinates finish_, List<PathFinding_FieldObject> pathWay_) {
+	public Path(FieldCoordinates start_, FieldCoordinates finish_, LinkedList<PathFinding_FieldObject> pathWay_) {
 		
 		this.start = start_;
 		this.finish = finish_;

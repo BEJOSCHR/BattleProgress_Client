@@ -1,7 +1,6 @@
 package me.bejosch.battleprogress.client.Objects.Tasks.Troup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
 import me.bejosch.battleprogress.client.Objects.Field.FieldMessage;
@@ -28,7 +27,7 @@ public class Task_Troup_Remove extends Task_Troup{
 			this.setToActiveTask();
 			
 			this.targetCoordinates = new FieldCoordinates(this.troup.connectedField);
-			List<PathFinding_FieldObject> pathWay = new ArrayList<>();
+			LinkedList<PathFinding_FieldObject> pathWay = new LinkedList<>();
 			this.targetPath = new Path(new FieldCoordinates(this.troup.connectedField), new FieldCoordinates(this.troup.connectedField), pathWay);
 		}else {
 			//TARGET OF AN UPGRADE

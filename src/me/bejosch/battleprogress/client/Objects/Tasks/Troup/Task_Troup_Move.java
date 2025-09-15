@@ -40,12 +40,17 @@ public class Task_Troup_Move extends Task_Troup{
 		}
 		
 	}
+	
 	@Override
 	public void action_Left_Release() {
+		this.action_Left_Release(GameData.hoveredField); //This is the deafualt way like all other tasks, just use the hover field
+	}
+	@Override
+	public void action_Left_Release(Field customTargetField) { //But we need customField for multiMovementCapabilities
 		
 		if(GameData.dragAndDropTaskInputActive == true) {
 			GameData.dragAndDropTaskInputActive = false; //RESETT
-			Field targetField = GameData.hoveredField;
+			Field targetField = customTargetField; //GameData.hoveredField;
 			if(targetField != null) {
 				if(this.troup.targetUpgradePosition == null) {
 					//NOT TARGETED AS AN UPGRADE PARTNER
@@ -85,7 +90,7 @@ public class Task_Troup_Move extends Task_Troup{
 				}
 			}else {
 				//MISSING HOVERED FIELD (TARGET FIELD)
-				new InfoMessage_Located("Not a valid target field!", ImportanceType.LOW, this.troup.connectedField.X, this.troup.connectedField.Y, true);
+				new InfoMessage_Located(this.troup.name+" has no longer a valid destination!", ImportanceType.NORMAL, this.troup.connectedField.X, this.troup.connectedField.Y, false);
 				this.removeFromActiveTask();
 			}
 		}

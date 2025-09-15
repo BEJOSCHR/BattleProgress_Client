@@ -1,7 +1,6 @@
 package me.bejosch.battleprogress.client.Objects.Tasks.Building;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import me.bejosch.battleprogress.client.Objects.Buildings.Building;
 import me.bejosch.battleprogress.client.Objects.Field.FieldCoordinates;
@@ -25,7 +24,7 @@ public class Task_Building_Destroy extends Task_Building{
 		this.setToActiveTask();
 		
 		this.targetCoordinates = new FieldCoordinates(this.building.connectedField);
-		List<PathFinding_FieldObject> pathWay = new ArrayList<>();
+		LinkedList<PathFinding_FieldObject> pathWay = new LinkedList<>();
 		this.targetPath = new Path(new FieldCoordinates(this.building.connectedField), new FieldCoordinates(this.building.connectedField), pathWay);
 		
 	}

@@ -427,7 +427,17 @@ public class Game_RoundHandler {
 			//CLOSE CHAT
 			//WHY? GameHandler.getMouseActionAreaByName("Chat_Hide").performAction_LEFT_RELEASE();
 			
-			OnTopWindowHandler.openOTW(new OnTopWindow_RoundSummary());
+			//APPLY MULTI MOVE TASK
+			for(Troup troup : Funktions.getAllTroupList()) {
+				for(Task_Troup tTask : troup.actionTasks) {
+					if(tTask instanceof Task_Troup_Move) {
+						troup.applyMultiMoveTask(tTask);
+					}
+				}
+			}
+			
+			//TODO annoying opening each round, only in testing or general?
+			//OnTopWindowHandler.openOTW(new OnTopWindow_RoundSummary());
 			
 		}
 		
