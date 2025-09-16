@@ -90,7 +90,6 @@ public class Task_Troup_Upgrade extends Task_Troup {
 								EconomicData.materialAmount -= this.upgradeTroupCost; //REMOVE COST
 								this.targetCoordinates = new FieldCoordinates(targetField); //SET TARGET FIELD
 								this.targetPath = new PathFinding_Algorithmus(new FieldCoordinates(this.troup.connectedField), new FieldCoordinates(targetField), true).getPath(this.troup.actionRange, true, this.troup.canFly);
-								GameData.clickedField = null; 
 								
 								targetField.troup.targetUpgradePosition = new FieldCoordinates(this.troup.connectedField);
 								

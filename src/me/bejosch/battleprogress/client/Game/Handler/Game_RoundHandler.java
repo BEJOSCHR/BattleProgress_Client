@@ -330,7 +330,7 @@ public class Game_RoundHandler {
 				}
 			}, 1000*8);
 		}else {
-			//SIMULATION SO NOW ANIMATION/DELAY AND NO NEXT CALL [instant cancel/execute]
+			//SIMULATION SO NO ANIMATION/DELAY AND NO NEXT CALL [instant cancel/execute]
 			RoundData.currentExecuteTask = null;
 			for(ResourceProductionContainer rpc : rpcs_research) {
 				ResearchData.researchPoints += rpc.getAmount();

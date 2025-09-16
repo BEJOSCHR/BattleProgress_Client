@@ -109,8 +109,8 @@ public class Game_DrawMap {
 		
 		for(Building building : buildings) {
 			try{
-				if(building.connectedField.X >= minX && building.connectedField.X <= maxX && building.connectedField.Y >= minY && building.connectedField.Y <= maxY) {
-					//IN RANGE ON THE SCREEN
+				if(building.connectedField == GameData.clickedField || building.connectedField.X >= minX && building.connectedField.X <= maxX && building.connectedField.Y >= minY && building.connectedField.Y <= maxY) {
+					//CLICKEDFIELD OR IN RANGE ON THE SCREEN
 					if(building.connectedField.visible == true || building instanceof Building_Headquarter) {
 						//ONLY HQ DRAW AND VISIBLE FIELDS
 						building.draw_Field(g, false);
@@ -132,8 +132,8 @@ public class Game_DrawMap {
 		
 		for(Troup troup : troups) {
 			try{
-				if(troup.connectedField.X >= minX && troup.connectedField.X <= maxX && troup.connectedField.Y >= minY && troup.connectedField.Y <= maxY) {
-					//IN RANGE ON THE SCREEN
+				if(troup.connectedField == GameData.clickedField || troup.connectedField.X >= minX && troup.connectedField.X <= maxX && troup.connectedField.Y >= minY && troup.connectedField.Y <= maxY) {
+					//CLICKEDFIELD OR IN RANGE ON THE SCREEN
 					if(troup.connectedField.visible == true) {
 						//ONLY DRAW VISIBLE FIELDS
 						troup.draw_Field(g, false);

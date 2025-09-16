@@ -166,49 +166,57 @@ public class Troup {
 		
 		if(this.multiMoveDestination != null) {
 			
-			Field roundDestinationField = null;
-			Path fullPath = new PathFinding_Algorithmus(this.connectedField, this.multiMoveDestination, false).getPath(999999, true, this.canFly);
 			if(this.multiMoveDestination == this.connectedField) {
-				//UNIT IS ON THE DESTINATION, nothing to do
+				//UNIT IS ON THE DESTINATION, so announce it
+				List<String> message = new ArrayList<String>();
+				message.add(this.name+" has reached its destination!");
+				new InfoMessage_Located(message, ImportanceType.NORMAL, this.multiMoveDestination.X, this.multiMoveDestination.Y, false);
 				this.updateMultiMoveTask(null);
 				return;
 			}
+			
+			Path fullPath = new PathFinding_Algorithmus(this.connectedField, this.multiMoveDestination, false).getPath(999999, true, true); // Ignore this.canFly here, so we can path towards water as land unit but then fail there anyway
 			if(fullPath.pathWay.isEmpty() || this.multiMoveDestination != fullPath.pathWay.getFirst().getReferencedFieldCoordinates().getConnectedField()) {
 				//No path or incomplete path found
 				new FieldMessage("Unreachable", this.multiMoveDestination.X, this.multiMoveDestination.Y, 3);
-				this.updateMultiMoveTask(null);
+				//this.updateMultiMoveTask(null); //Dont unset, keep moving towards destination, even if unreachable
 				return; //Incomplete path 
 			}
 			
+			//At this point we need to clear current set task for the troup, otherwise the targetFieldIsBlocked later interferes with the move task this unit already has
+			if(this.activeTask != null) {
+				Field tmpDest = this.multiMoveDestination;
+				this.activeTask.action_Right_Release(); //This unsets the destination, so tmp save it and reset it afterwards
+				this.updateMultiMoveTask(tmpDest);
+			}
+			
 			//Walk the full path back to the first field that is in move range
+			Field roundDestinationField = null;
 			LinkedList<PathFinding_FieldObject> fields = fullPath.pathWay;
 			for(int i = 0 ; i < fields.size() ; i++) {
 				PathFinding_FieldObject pf = fields.get(i);
 				Field f = pf.getReferencedFieldCoordinates().getConnectedField();
-				if(fieldIsIn_MOVE_Range(f)) {
+				//Can be visited and is not visited already by another task:
+				if(fieldIsIn_MOVE_Range(f) && !tTask.targetFieldIsBlocked(f)) {
 					roundDestinationField = f; //New target field for this rounds move task
 					break;
 				}
 			}
 			
 			//Simulate clicks to activate the move task
-			Field tmpDest = this.multiMoveDestination;
-			tTask.action_Left_Press(); //This unsets the destination, so tmp save it and reset it afterwards
-			this.updateMultiMoveTask(tmpDest);
-			tTask.action_Left_Release(roundDestinationField);
+			if(roundDestinationField != null) {
+				Field tmpDest = this.multiMoveDestination;
+				tTask.action_Left_Press(); //This unsets the destination, so tmp save it and reset it afterwards
+				this.updateMultiMoveTask(tmpDest);
+				tTask.action_Left_Release(roundDestinationField);
+			}
 			
-			if(tTask.targetCoordinates == null) {
+			if(roundDestinationField == null || tTask.targetCoordinates == null) {
 				//Setup task failed, so inform player that multimove has ended
 				List<String> message = new ArrayList<String>();
-				message.add(this.name+" can't reach his destination!");
+				message.add(this.name+" can't reach its destination!");
 				new InfoMessage_Located(message, ImportanceType.NORMAL, this.multiMoveDestination.X, this.multiMoveDestination.Y, false);
 				//new FieldMessage("Destination blocked", this.multiMoveDestination.X, this.multiMoveDestination.Y, 3);
-				this.updateMultiMoveTask(null);
-			}else if(tTask.targetCoordinates.getConnectedField() == this.multiMoveDestination) {
-				//Destination is the target of current round, so end multiMoveTask
-				List<String> message = new ArrayList<String>();
-				message.add(this.name+" will reach his destination!");
-				new InfoMessage_Located(message, ImportanceType.NORMAL, this.multiMoveDestination.X, this.multiMoveDestination.Y, false);
 				this.updateMultiMoveTask(null);
 			}
 			
@@ -511,6 +519,17 @@ public class Troup {
 	 * Draws the target Field (for move and attack and so on...) for this troup
 	 */
 	public void draw_targetField(Graphics g) {
+		
+		//Special multiMove Display if unit is clicked
+		if(this.multiMoveDestination != null && GameData.clickedField == this.connectedField) {
+			//Dont draw the real path! it would show where enemy units and buildings are in the fog of war!
+			Color c = Color.LIGHT_GRAY;
+			if(this.activeTask != null && this.activeTask.targetCoordinates != null) {
+				//Show connection of current round change to multiRoundDestination
+				Funktions.drawLineBetweenFields(g, this.activeTask.targetCoordinates.getConnectedField(), this.multiMoveDestination, c);
+			}
+			this.multiMoveDestination.drawHighlight(g, c);
+		}
 		
 		if(this.activeTask != null) {
 			//HAT ACTIVE TASK

@@ -45,7 +45,8 @@ public class Field_Ressource extends Field {
 				this.building.totalHealth = 0;
 				this.building.shouldBeDestroyedAtRoundEnd = true;
 				//VERBRAUCHT
-				//TODO PER PACKET LÖSEN!!! this.changeType(FieldType.RessourceVerbraucht);
+				//TODO PER PACKET LÃ–SEN!!! 
+				this.changeType(FieldType.Consumed);
 				
 			}
 		}else {

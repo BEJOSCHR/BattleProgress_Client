@@ -128,7 +128,15 @@ public class Game_ClickEvent {
 								}
 							}
 						}
-						if(!hit) { GameData.clickedField = choosenField; }
+						if(!hit) { 
+							//Never unset with left click! Only via right click feels more planable
+							//GameData.clickedField = choosenField;
+							if(choosenField.visible && (targetBuilding != null || targetTroup != null) ) {
+								new FieldMessage("Blocked", choosenField.X, choosenField.Y, 1);
+							}else {
+								new FieldMessage("Nothing to do", choosenField.X, choosenField.Y, 1); //Blank text, no reason
+							}
+						}
 					}else if(troup != null && troup.playerID == ProfilData.thisClient.getID()) {
 						boolean hit = false;
 						for(Task_Troup tTask : troup.actionTasks) {
@@ -195,9 +203,16 @@ public class Game_ClickEvent {
 							}
 						}
 						if(!hit) { 
-							GameData.clickedField = choosenField; 
+							//Never unset with left click! Only via right click feels more planable
+							//GameData.clickedField = choosenField;
+							if(choosenField.visible && (targetBuilding != null || targetTroup != null) ) {
+								new FieldMessage("Blocked", choosenField.X, choosenField.Y, 1);
+							}else {
+								new FieldMessage("Nothing to do", choosenField.X, choosenField.Y, 1); //Blank text, no reason
+							}
 						}else { 
-							GameData.clickedField = null;
+							//Unset automaticaly is annoying if you miss clicked, otherwise you need to unclick with right click everytime hmm
+							//GameData.clickedField = null;
 						}
 					}else {
 						GameData.clickedField = choosenField;
